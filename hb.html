@@ -2915,6 +2915,11 @@
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
+        if (codeModal?.classList.contains('is-open')) {
+          resetBirthdayCode();
+          return;
+        }
+
         closeModal();
         closeCommandPanel();
         return;
@@ -2940,11 +2945,16 @@
     });
 
     document.querySelector('[data-close-secret]')?.addEventListener('click', closeModal);
+    document.querySelector('[data-close-code]')?.addEventListener('click', resetBirthdayCode);
     document.querySelector('[data-close-command]')?.addEventListener('click', closeCommandPanel);
     secretModalRestart?.addEventListener('click', resetExperience);
 
     secretModal?.addEventListener('click', (event) => {
       if (event.target === secretModal) closeModal();
+    });
+
+    codeModal?.addEventListener('click', (event) => {
+      if (event.target === codeModal) resetBirthdayCode();
     });
 
     commandPanel?.addEventListener('click', (event) => {
