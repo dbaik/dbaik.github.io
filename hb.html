@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, zаебал!</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+        :root {
+            --bg-dark: #050510;
+            --bg-card: #0f0f1e;
+            --cyan: #00ffcc;
+            --green: #00ff88;
+            --magenta: #ff00ff;
+            --yellow: #ffff00;
+            --white: #ffffff;
+
+            --font-pixel: 'Press Start 2P', system-ui, sans-serif;
+            --font-terminal: 'VT323', monospace;
+
+            --card-width: 820px;
+            --card-min-height: 520px;
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            background: #000;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0a0a1f, #1a0033, #000000);
+            font-family: var(--font-pixel);
+            color: var(--cyan);
+        }
+
+        .card {
+            position: relative;
+            width: min(var(--card-width), 100%);
+            min-height: var(--card-min-height);
+            overflow: hidden;
+            border: 6px solid var(--cyan);
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            box-shadow:
+                0 0 80px var(--cyan),
+                0 0 40px var(--magenta),
+                inset 0 0 60px rgba(0, 255, 204, 0.2);
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 3;
+            padding: 20px 16px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 4px solid var(--magenta);
+        }
+
+        .card-title {
+            font-size: clamp(13px, 3vw, 28px);
+            line-height: 1.45;
+            text-shadow:
+                0 0 10px var(--cyan),
+                0 0 20px var(--magenta);
+            animation: glitch-title 1.5s infinite alternate;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            min-height: calc(var(--card-min-height) - 84px);
+            padding-bottom: 68px;
+        }
+
+        .card-left,
+        .card-right {
+            display: flex;
+        }
+
+        .card-left {
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            background: rgba(10, 10, 30, 0.6);
+        }
+
+        .card-right {
+            flex: 1.3;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 30px 30px;
+        }
+
+        .profile-card {
+            position: relative;
+            width: 280px;
+            height: 360px;
+            overflow: hidden;
+            border: 4px solid var(--magenta);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            box-shadow:
+                0 0 28px var(--magenta),
+                inset 0 0 35px rgba(0, 255, 204, 0.18);
+        }
+
+        .profile-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0.08),
+                    transparent 34%,
+                    rgba(0, 0, 0, 0.86)
+                ),
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent 0,
+                    transparent 3px,
+                    rgba(0, 255, 255, 0.08) 3px,
+                    rgba(0, 255, 255, 0.08) 5px
+                );
+        }
+
+        .profile-image {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .profile-top,
+        .profile-bottom {
+            position: absolute;
+            z-index: 3;
+            background: rgba(0, 10, 25, 0.88);
+            border: 2px solid var(--cyan);
+            box-shadow: 0 0 16px rgba(0, 255, 204, 0.58);
+        }
+
+        .profile-top {
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 0 0 8px 0;
+            font-size: 11px;
+            line-height: 1;
+            color: var(--cyan);
+            text-shadow: 0 0 8px var(--cyan);
+        }
+
+        .terminal-icon {
+            color: var(--magenta);
+            text-shadow: 0 0 8px var(--magenta);
+        }
+
+        .profile-bottom {
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            display: grid;
+            grid-template-columns: 42px 1fr 42px;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .profile-badge,
+        .profile-trophy {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 2px solid var(--magenta);
+            color: var(--magenta);
+            font-size: 18px;
+            text-shadow: 0 0 8px currentColor;
+            box-shadow: 0 0 12px rgba(255, 0, 255, 0.65);
+        }
+
+        .profile-trophy {
+            border-color: var(--cyan);
+            color: var(--yellow);
+            box-shadow: 0 0 12px rgba(0, 255, 204, 0.65);
+        }
+
+        .profile-meta {
+            font-size: 8px;
+            line-height: 1.8;
+            color: var(--white);
+            text-shadow: 0 0 6px var(--cyan);
+        }
+
+        .profile-meta span {
+            color: var(--cyan);
+        }
+
+        .profile-meta div:first-child {
+            color: var(--magenta);
+        }
+
+        .birthday-title {
+            margin-bottom: 25px;
+            font-size: clamp(28px, 4.6vw, 38px);
+            line-height: 1.12;
+            color: var(--white);
+            text-shadow:
+                0 0 15px var(--cyan),
+                0 0 30px var(--magenta);
+        }
+
+        .birthday-accent {
+            display: inline-block;
+            margin-top: 6px;
+            color: var(--magenta);
+            font-size: clamp(32px, 5vw, 42px);
+        }
+
+        .birthday-subtext {
+            margin-bottom: 30px;
+            font-family: var(--font-terminal);
+            font-size: 22px;
+            line-height: 1.25;
+            color: var(--green);
+        }
+
+        .code-window {
+            max-width: 100%;
+            overflow: hidden;
+            border: 2px solid var(--cyan);
+            background: #000;
+            box-shadow: 0 0 18px rgba(0, 255, 204, 0.35);
+        }
+
+        .code-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.55);
+            font-family: var(--font-terminal);
+            font-size: 18px;
+            color: var(--cyan);
+            background: rgba(0, 255, 204, 0.07);
+        }
+
+        .code-badge {
+            display: inline-grid;
+            place-items: center;
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--cyan);
+            font-size: 14px;
+        }
+
+        .code-block {
+            width: 100%;
+            max-width: 100%;
+            padding: 15px;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.45;
+            color: var(--cyan);
+            white-space: pre;
+        }
+
+        .token-keyword {
+            color: var(--magenta);
+        }
+
+        .token-string {
+            color: var(--green);
+        }
+
+        .token-number {
+            color: var(--yellow);
+        }
+
+        .card-footer {
+            position: absolute;
+            left: 22px;
+            right: 22px;
+            bottom: 15px;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 10px 14px;
+            border: 2px solid rgba(0, 255, 204, 0.45);
+            background: rgba(0, 0, 0, 0.62);
+            color: var(--magenta);
+            font-size: 14px;
+            line-height: 1.2;
+            text-align: center;
+            text-shadow: 0 0 10px var(--magenta);
+            box-shadow: 0 0 18px rgba(0, 255, 204, 0.35);
+        }
+
+        .footer-line {
+            width: 120px;
+            height: 2px;
+            flex-shrink: 0;
+            opacity: 0.9;
+            background: repeating-linear-gradient(
+                to right,
+                var(--magenta) 0,
+                var(--magenta) 4px,
+                transparent 4px,
+                transparent 10px
+            );
+        }
+
+        .footer-icon {
+            flex-shrink: 0;
+            font-size: 18px;
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .scanlines,
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .scanlines {
+            z-index: 5;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 2px,
+                rgba(0, 255, 255, 0.08) 2px,
+                rgba(0, 255, 255, 0.08) 4px
+            );
+            animation: scan 6s linear infinite;
+        }
+
+        .particles {
+            z-index: 2;
+        }
+
+        @keyframes scan {
+            from {
+                transform: translateY(-100%);
+            }
+
+            to {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes glitch-title {
+            0% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-3px, 3px);
+            }
+
+            40% {
+                transform: translate(3px, -3px);
+            }
+
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding: 12px;
+            }
+
+            .card {
+                min-height: auto;
+                border-width: 4px;
+                box-shadow:
+                    0 0 30px var(--cyan),
+                    0 0 20px var(--magenta),
+                    inset 0 0 30px rgba(0, 255, 204, 0.15);
+            }
+
+            .card-header {
+                padding: 16px 12px;
+            }
+
+            .card-content {
+                flex-direction: column;
+                min-height: auto;
+                padding-bottom: 78px;
+            }
+
+            .card-left {
+                padding: 22px 16px 10px;
+            }
+
+            .card-right {
+                align-items: center;
+                padding: 22px 18px 28px;
+                text-align: center;
+            }
+
+            .profile-card {
+                width: min(300px, 82vw);
+                height: 360px;
+            }
+
+            .profile-top {
+                font-size: 10px;
+                padding: 7px 12px;
+            }
+
+            .profile-bottom {
+                grid-template-columns: 34px 1fr 34px;
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .profile-badge,
+            .profile-trophy {
+                width: 32px;
+                height: 32px;
+                font-size: 15px;
+            }
+
+            .profile-meta {
+                font-size: 7px;
+                line-height: 1.7;
+            }
+
+            .birthday-title {
+                margin-bottom: 20px;
+            }
+
+            .birthday-subtext {
+                margin-bottom: 22px;
+                font-size: clamp(20px, 6vw, 24px);
+            }
+
+            .code-window {
+                width: 100%;
+                text-align: left;
+            }
+
+            .code-block {
+                font-size: 12px;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+
+            .card-footer {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                gap: 8px;
+                padding: 8px 10px;
+                font-size: 10px;
+            }
+
+            .footer-line {
+                width: 34px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 8px;
+            }
+
+            .card {
+                border-radius: 8px;
+            }
+
+            .card-header {
+                padding: 14px 10px;
+            }
+
+            .card-left {
+                padding-top: 18px;
+            }
+
+            .card-right {
+                padding: 18px 14px 28px;
+            }
+
+            .profile-card {
+                width: min(280px, 86vw);
+                height: 330px;
+            }
+
+            .profile-meta {
+                font-size: 6.5px;
+            }
+
+            .birthday-subtext br {
+                display: none;
+            }
+
+            .code-block {
+                font-size: 11px;
+            }
+
+            .card-footer {
+                font-size: 9px;
+            }
+
+            .footer-icon {
+                font-size: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="card">
+        <header class="card-header">
+            <h1 class="card-title">◉ FRONTEND BIRTHDAY PROTOCOL ◉</h1>
+        </header>
+
+        <section class="card-content">
+            <div class="card-left">
+                <article class="profile-card">
+                    <img
+                        src="assets/profile.png"
+                        alt="Dev profile"
+                        class="profile-image"
+                    >
+
+                    <div class="profile-top">
+                        <span class="terminal-icon">&gt;_</span>
+                        <span>DEV PROFILE</span>
+                    </div>
+
+                    <div class="profile-bottom">
+                        <div class="profile-badge">♥</div>
+
+                        <div class="profile-meta">
+                            <div><span>ROLE:</span> LEGENDARY DEV</div>
+                            <div><span>STACK:</span> HTML • CSS • JS</div>
+                            <div><span>CODING SINCE:</span> BEFORE IT WAS COOL</div>
+                        </div>
+
+                        <div class="profile-trophy">🏆</div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="card-right">
+                <div class="birthday-title">
+                    HAPPY<br>
+                    BIRTHDAY,<br>
+                    <span class="birthday-accent">zаебал!</span>
+                </div>
+
+                <p class="birthday-subtext">
+                    Пусть всё компилится с первого раза,<br>
+                    а баги пусть живут где-нибудь подальше от тебя
+                </p>
+
+                <div class="code-window">
+                    <div class="code-title">
+                        <span class="code-badge">JS</span>
+                        <span>birthday.js</span>
+                    </div>
+
+                    <pre class="code-block"><code><span class="token-keyword">const</span> celebration = {
+  status: <span class="token-string">"EPIC"</span>,
+  level: <span class="token-number">9999</span>,
+  message: <span class="token-string">"С днём рождения, легенда!"</span>
+};</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <footer class="card-footer">
+            <span class="footer-icon">🎂</span>
+            <span class="footer-line"></span>
+            <span>MADE WITH ♥ AND TOO MUCH CSS • 2026</span>
+            <span class="footer-line"></span>
+            <span class="footer-icon">&lt;/&gt;</span>
+        </footer>
+
+        <div class="scanlines"></div>
+        <div class="particles" id="particles"></div>
+    </main>
+
+    <script>
+        const card = document.querySelector('.card');
+        const particles = document.getElementById('particles');
+        const colors = ['#00ffcc', '#ff00ff'];
+
+        function createParticle() {
+            if (!particles || particles.childElementCount > 120) return;
+
+            const particle = document.createElement('div');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            particle.style.position = 'absolute';
+            particle.style.width = '6px';
+            particle.style.height = '6px';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.borderRadius = '50%';
+            particle.style.background = color;
+            particle.style.opacity = `${Math.random() * 0.8 + 0.4}`;
+            particle.style.boxShadow = `0 0 12px ${color}`;
+
+            particles.appendChild(particle);
+
+            requestAnimationFrame(() => {
+                particle.style.transition = 'transform 4s linear, opacity 4s linear';
+                particle.style.transform = `translateY(-${window.innerHeight + 100}px)`;
+                particle.style.opacity = '0';
+            });
+
+            window.setTimeout(() => {
+                particle.remove();
+            }, 4200);
+        }
+
+        function burstParticles(count = 60) {
+            for (let index = 0; index < count; index += 1) {
+                window.setTimeout(createParticle, index * 8);
+            }
+        }
+
+        const particleInterval = window.setInterval(createParticle, 80);
+
+        card.addEventListener('click', () => {
+            burstParticles();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            window.clearInterval(particleInterval);
+        });
+    </script>
+</body>
+</html>
+            <span>MADE WITH ♥ AND TOO MUCH CSS • 2026</span>
+            <span class="footer-line"></span>
+            <span class="footer-icon">&lt;/&gt;</span>
+        </footer>
+
+        <div class="scanlines"></div>
+        <div class="particles" id="particles"></div>
+    </main>
+
+    <script>
+        const card = document.querySelector('.card');
+        const particles = document.getElementById('particles');
+        const colors = ['#00ffcc', '#ff00ff'];
+
+        function createParticle() {
+            if (!particles || particles.childElementCount > 120) return;
+
+            const particle = document.createElement('div');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            particle.style.position = 'absolute';
+            particle.style.width = '6px';
+            particle.style.height = '6px';
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.borderRadius = '50%';
+            particle.style.background = color;
+            particle.style.opacity = `${Math.random() * 0.8 + 0.4}`;
+            particle.style.boxShadow = `0 0 12px ${color}`;
+
+            particles.appendChild(particle);
+
+            requestAnimationFrame(() => {
+                particle.style.transition = 'transform 4s linear, opacity 4s linear';
+                particle.style.transform = `translateY(-${window.innerHeight + 100}px)`;
+                particle.style.opacity = '0';
+            });
+
+            window.setTimeout(() => {
+                particle.remove();
+            }, 4200);
+        }
+
+        function burstParticles(count = 60) {
+            for (let index = 0; index < count; index += 1) {
+                window.setTimeout(createParticle, index * 8);
+            }
+        }
+
+        const particleInterval = window.setInterval(createParticle, 80);
+
+        card.addEventListener('click', () => {
+            burstParticles();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            window.clearInterval(particleInterval);
+        });
+    </script>
+</body>
+</html>
