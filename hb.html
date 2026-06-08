@@ -2332,7 +2332,7 @@
       <div class="card-left">
         <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
           <span class="egg-counter__label">SECRET HUNTER</span>
-          <span class="egg-counter__value" id="eggCounterValue">0/15</span>
+          <span class="egg-counter__value" id="eggCounterValue">0/16</span>
           <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
         </button>
 
@@ -2519,6 +2519,7 @@
       matrix: 'Matrix layer. Таблица стилей смотрит первой',
       legendary: 'Legendary mode. CSS держится на характере и наглости',
       coffee: 'Coffee mode. Проект получил кофеин напрямую в runtime',
+      brew: 'Brew mode. Экран вспенился, дедлайн отвернулся',
       bugfix: 'Bugfix complete. Баги делают вид, что их не было',
       frontend: 'Набрано frontend. Верстка подняла бровь',
       birthday: 'Набрано birthday. Праздник забрал root-доступ',
@@ -2541,7 +2542,7 @@
     ];
 
     const foundEggs = new Set(loadFoundEggs());
-    const commandHintList = ['party', 'matrix', 'deploy', 'coffee', 'legendary', 'zaebal', 'clear'];
+    const commandHintList = ['party', 'matrix', 'deploy', 'coffee', 'brew', 'frontend', 'birthday', 'legendary', 'zaebal', 'clear'];
 
     function renderCommandHints(commandsList) {
       return [
@@ -2587,12 +2588,19 @@
         addCommandLog('&gt; Ты и так легенда, просто пока не все в курсе');
       },
       coffee() {
-        unlockEgg('coffee');
-        coffeeMode();
+        triggerCoffeeEgg();
         addCommandLog('&gt; Кофеин +100500. Теперь ты бог');
       },
+      frontend() {
+        triggerFrontendEgg();
+        addCommandLog('&gt; Frontend режим поднят. Верстка сделала вид, что так и было');
+      },
+      birthday() {
+        triggerBirthdayEgg();
+        addCommandLog('&gt; Birthday режим активирован. Торт пошёл в атаку');
+      },
       brew() {
-        unlockEgg('coffee');
+        unlockEgg('brew');
         beerMode();
         addCommandLog('Brew выполнен: экран вспенился, дедлайн делает вид, что не видел.');
       },
@@ -2612,6 +2620,40 @@
         addCommandLog('&gt; Сам заебал, но я тебя люблю');
       }
     };
+
+    function triggerFrontendEgg() {
+      unlockEgg('frontend');
+      keyboardMode(
+        'is-keyboard-frontend',
+        14000,
+        'FRONTEND РЕЖИМ',
+        'Ты набрал frontend. Скобки полезли на экран: интерфейс решил доказать, что у него есть архитектура.',
+        '{ }',
+        42
+      );
+    }
+
+    function triggerBirthdayEgg() {
+      unlockEgg('birthday');
+      keyboardMode(
+        'is-keyboard-birthday',
+        14000,
+        'BIRTHDAY РЕЖИМ',
+        'Ты набрал birthday. Торт пошёл в атаку, потому что обычное поздравление было бы слишком скучным.',
+        '🎂',
+        36
+      );
+    }
+
+    function triggerCoffeeEgg() {
+      unlockEgg('coffee');
+      coffeeMode(
+        5000,
+        true,
+        'COFFEE РЕЖИМ',
+        'Ты набрал coffee. Клавиатура пролила кофе, страница проснулась и начала командовать.'
+      );
+    }
 
     function loadFoundEggs() {
       try {
@@ -3517,39 +3559,17 @@
 
       if (typedBuffer.includes('frontend')) {
         typedBuffer = '';
-        unlockEgg('frontend');
-        keyboardMode(
-          'is-keyboard-frontend',
-          14000,
-          'FRONTEND РЕЖИМ',
-          'Ты набрал frontend. Скобки полезли на экран: интерфейс решил доказать, что у него есть архитектура.',
-          '{ }',
-          42
-        );
+        triggerFrontendEgg();
       }
 
       if (typedBuffer.includes('birthday')) {
         typedBuffer = '';
-        unlockEgg('birthday');
-        keyboardMode(
-          'is-keyboard-birthday',
-          14000,
-          'BIRTHDAY РЕЖИМ',
-          'Ты набрал birthday. Торт пошёл в атаку, потому что обычное поздравление было бы слишком скучным.',
-          '🎂',
-          36
-        );
+        triggerBirthdayEgg();
       }
 
       if (typedBuffer.includes('coffee')) {
         typedBuffer = '';
-        unlockEgg('coffee');
-        coffeeMode(
-          5000,
-          true,
-          'COFFEE РЕЖИМ',
-          'Ты набрал coffee. Клавиатура пролила кофе, страница проснулась и начала командовать.'
-        );
+        triggerCoffeeEgg();
       }
     }
 
