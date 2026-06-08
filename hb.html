@@ -177,7 +177,6 @@
       animation-timing-function: linear;
     }
 
-    body.is-keyboard-coffee,
     body.is-coffee {
       background:
         radial-gradient(circle at 50% 20%, rgba(128, 82, 35, 0.24), transparent 26%),
@@ -185,7 +184,6 @@
       filter: saturate(0.95) contrast(1.08);
     }
 
-    body.is-keyboard-coffee::before,
     body.is-coffee::before {
       opacity: 0.42;
       background:
@@ -197,12 +195,10 @@
       mix-blend-mode: screen;
     }
 
-    body.is-keyboard-coffee .bg-icons,
     body.is-coffee .bg-icons {
       opacity: 0.94;
     }
 
-    body.is-keyboard-coffee .bg-icon,
     body.is-coffee .bg-icon {
       color: #c58a4c;
       text-shadow:
@@ -211,13 +207,114 @@
       filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.35));
     }
 
-    body.is-keyboard-coffee .card,
     body.is-coffee .card {
       border-color: rgba(197, 138, 76, 0.85);
       box-shadow:
         0 0 72px rgba(197, 138, 76, 0.36),
         0 0 26px rgba(76, 40, 12, 0.26),
         inset 0 0 60px rgba(197, 138, 76, 0.12);
+    }
+
+    body.is-keyboard-frontend {
+      background:
+        radial-gradient(circle at 50% 16%, rgba(0, 255, 204, 0.18), transparent 24%),
+        radial-gradient(circle at 16% 74%, rgba(255, 0, 255, 0.10), transparent 22%),
+        linear-gradient(180deg, #061522, #030a12 48%, #010306 100%);
+      filter: saturate(1.12) contrast(1.08);
+    }
+
+    body.is-keyboard-frontend::before {
+      opacity: 0.42;
+      background:
+        linear-gradient(to bottom, rgba(0, 255, 204, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 255, 0.08) 1px, transparent 1px),
+        radial-gradient(circle at 50% 20%, rgba(0, 255, 204, 0.12), transparent 46%);
+      background-size: 20px 20px, 20px 20px, auto;
+      mix-blend-mode: screen;
+    }
+
+    body.is-keyboard-frontend .bg-icons {
+      opacity: 1;
+    }
+
+    body.is-keyboard-frontend .bg-icon {
+      color: var(--cyan);
+      text-shadow:
+        0 0 10px rgba(0, 255, 204, 0.86),
+        0 0 18px rgba(255, 0, 255, 0.38);
+    }
+
+    body.is-keyboard-frontend .card {
+      border-color: rgba(0, 255, 204, 0.9);
+      box-shadow:
+        0 0 82px rgba(0, 255, 204, 0.34),
+        0 0 32px rgba(255, 0, 255, 0.22),
+        inset 0 0 60px rgba(0, 255, 204, 0.14);
+    }
+
+    body.is-keyboard-birthday {
+      background:
+        radial-gradient(circle at 50% 16%, rgba(255, 221, 87, 0.18), transparent 24%),
+        radial-gradient(circle at 20% 76%, rgba(255, 0, 255, 0.14), transparent 22%),
+        linear-gradient(180deg, #25071c, #100511 48%, #030105 100%);
+      filter: saturate(1.14) contrast(1.08);
+    }
+
+    body.is-keyboard-birthday::before {
+      opacity: 0.36;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255, 221, 87, 0.10), transparent 18%),
+        radial-gradient(circle at 78% 24%, rgba(0, 255, 204, 0.08), transparent 18%),
+        linear-gradient(to bottom, rgba(255, 0, 255, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 221, 87, 0.10) 1px, transparent 1px);
+      background-size: auto, auto, 22px 22px, 22px 22px;
+      mix-blend-mode: screen;
+    }
+
+    body.is-keyboard-birthday .bg-icons {
+      opacity: 1;
+    }
+
+    body.is-keyboard-birthday .bg-icon {
+      color: var(--yellow);
+      text-shadow:
+        0 0 10px rgba(255, 221, 87, 0.82),
+        0 0 18px rgba(255, 0, 255, 0.42);
+    }
+
+    body.is-keyboard-birthday .card {
+      border-color: rgba(255, 221, 87, 0.9);
+      box-shadow:
+        0 0 82px rgba(255, 221, 87, 0.34),
+        0 0 34px rgba(255, 0, 255, 0.24),
+        inset 0 0 60px rgba(255, 221, 87, 0.12);
+    }
+
+    body.is-deploy {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.12), transparent 22%),
+        radial-gradient(circle at 18% 78%, rgba(0, 255, 204, 0.14), transparent 24%),
+        radial-gradient(circle at 82% 72%, rgba(255, 0, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #130818, #050812 50%, #010204 100%);
+      filter: saturate(1.08) contrast(1.08);
+    }
+
+    body.is-deploy::before {
+      opacity: 0.4;
+      background:
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 204, 0.10) 1px, transparent 1px),
+        radial-gradient(circle at 50% 20%, rgba(255, 0, 255, 0.10), transparent 48%);
+      background-size: 18px 18px, 18px 18px, auto;
+      mix-blend-mode: screen;
+    }
+
+    body.is-deploy .card {
+      border-color: rgba(255, 255, 255, 0.82);
+      box-shadow:
+        0 0 86px rgba(0, 255, 204, 0.3),
+        0 0 38px rgba(255, 0, 255, 0.22),
+        inset 0 0 64px rgba(255, 255, 255, 0.1);
     }
 
     body.is-hearts {
@@ -2081,7 +2178,7 @@
         </div>
 
         <p class="birthday-subtext">
-          Пусть всё компилится с первого раза, а баги пусть живут где-нибудь подальше от тебя
+          Пусть всё компилится с первого раза, а баги идут туда, где их никто не будет дебажить
         </p>
 
         <div class="keyboard-hint">
@@ -2089,7 +2186,7 @@
         </div>
 
         <div class="mode-hint">
-          Команды терминала: <span>party</span> / <span>deploy</span> / <span>matrix</span> / <span>legendary</span> /
+          Терминал для смелых: <span>party</span> / <span>deploy</span> / <span>matrix</span> / <span>legendary</span> /
           <span>brew</span> / <span>bugfix</span> / <span>clear</span>
         </div>
 
@@ -2123,10 +2220,10 @@
       aria-labelledby="mobileIntroTitle" aria-describedby="mobileIntroText" aria-hidden="true">
       <div class="mobile-intro__panel">
         <div class="mobile-intro__eyebrow">FIRST RUN / MOBILE MODE</div>
-        <h2 class="mobile-intro__title" id="mobileIntroTitle">Верстка подправлена</h2>
+        <h2 class="mobile-intro__title" id="mobileIntroTitle">Мобилка пофикшена</h2>
         <p class="mobile-intro__text" id="mobileIntroText">
-          На телефоне уже должно быть аккуратнее, но <strong>весь челлендж удобнее проходить на десктопе</strong>:
-          часть интерактива завязана на клавиатуру, и там это просто комфортнее.
+          Да, на телефоне теперь не разваливается. Но <strong>весь челлендж лучше проходить на десктопе</strong>:
+          тут есть клавиатурные трюки, а мобильная клавиатура всё равно делает вид, что она помогает.
         </p>
         <div class="mobile-intro__actions">
           <button class="mobile-intro__close" type="button" id="mobileIntroClose">Понятно</button>
@@ -2141,7 +2238,7 @@
         <div class="secret-modal__eyebrow">ACHIEVEMENT UNLOCKED</div>
         <h2 class="secret-modal__title" id="secretModalTitle">РЕЖИМ ЛЕГЕНДЫ</h2>
         <p class="secret-modal__text" id="secretModalText">
-          Ты нашёл скрытый слой. Дальше сайт будет вести себя так, будто его писали в полночь.
+          Ты нашёл скрытый слой. Теперь сайт ведёт себя так, будто ему дали root и не забрали.
         </p>
         <div class="secret-modal__progress" id="secretModalProgress"></div>
         <button class="secret-modal__restart" id="secretModalRestart" type="button">Пройти сначала</button>
@@ -2168,7 +2265,7 @@
         </div>
         <div class="command-panel__body">
           <div class="command-panel__log" id="commandLog">
-            <div>Введите <span>help</span>, чтобы терминал перестал делать загадочное лицо.</div>
+            <div>Введите <span>help</span>, если готовы нажимать кнопки без техлида.</div>
           </div>
           <label class="command-panel__line">
             <span>$</span>
@@ -2225,18 +2322,18 @@
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
     const eggCatalog = {
-      hearts: 'Сердце нажато. Мягкие навыки обнаружены',
-      trophy: 'Кубок потроган. Сам себя не выдаст',
-      deploy: 'birthday.js ушёл в прод без митинга',
-      terminal: 'Секретный терминал открыт. Осторожно, там кнопки',
-      party: 'Party mode. Компилятор пустился в пляс',
-      matrix: 'Matrix layer. Таблица стилей смотрит в ответ',
-      legendary: 'Legendary mode. CSS держится, но уже на характере',
-      coffee: 'Coffee mode. Проект получил кофеин внутривенно',
-      bugfix: 'Bugfix complete. Баги переехали к конкурентам',
-      frontend: 'Набрано frontend. Верстка одобрительно моргнула',
-      birthday: 'Набрано birthday. Праздник получил root-доступ',
-      combo: 'Click combo x7. Это уже ручное тестирование'
+      hearts: 'Сердце нажато. Soft skills внезапно прошли ревью',
+      trophy: 'Кубок тронут. Эго получило легальный буст',
+      deploy: 'birthday.js ушёл в прод без согласования',
+      terminal: 'Секретный терминал открыт. Теперь осторожно с руками',
+      party: 'Party mode. Компилятор потерял серьёзное лицо',
+      matrix: 'Matrix layer. Таблица стилей смотрит первой',
+      legendary: 'Legendary mode. CSS держится на характере и наглости',
+      coffee: 'Coffee mode. Проект получил кофеин напрямую в runtime',
+      bugfix: 'Bugfix complete. Баги делают вид, что их не было',
+      frontend: 'Набрано frontend. Верстка подняла бровь',
+      birthday: 'Набрано birthday. Праздник забрал root-доступ',
+      combo: 'Click combo x7. Ручной QA вышел из-под контроля'
     };
 
     const konamiCode = [
@@ -2253,6 +2350,7 @@
     ];
 
     const foundEggs = new Set(loadFoundEggs());
+    const commandHintList = ['party', 'deploy', 'matrix', 'legendary', 'brew', 'bugfix', 'clear'];
 
     function renderCommandHints(commandsList) {
       return [
@@ -2262,42 +2360,55 @@
       ].join('');
     }
 
+    function escapeHtml(value) {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
     const commands = {
       help() {
-        addCommandLog(`Команды терминала: ${renderCommandHints(['party', 'deploy', 'matrix', 'legendary', 'brew', 'bugfix', 'clear'])}`);
+        addCommandLog(`Команды терминала, которые ещё не стыдно нажать: ${renderCommandHints(commandHintList)}`);
+        showToast('Help открыт. Теперь у хаоса хотя бы есть меню.');
+        burstFloatingText('?', 8);
       },
       party() {
         unlockEgg('party');
         partyMode();
-        addCommandLog('Party mode: продакшен временно танцует.');
+        addCommandLog('Party mode: продакшен сорвался с поводка.');
       },
       deploy() {
         unlockEgg('deploy');
         deployBirthday();
-        addCommandLog('birthday.js уехал в production. Без согласования, но красиво.');
+        addCommandLog('birthday.js улетел в production. Без митинга, как взрослый.');
       },
       matrix() {
         unlockEgg('matrix');
         matrixMode();
-        addCommandLog('Matrix layer: реальность переключена, дизайнеры не предупреждены.');
+        addCommandLog('Matrix layer: реальность пересобрана, дизайнеры узнают последними.');
       },
       legendary() {
         unlockEgg('legendary');
         legendaryMode();
-        addCommandLog('Legendary mode: рамка сияет, самооценка тоже.');
+        addCommandLog('Legendary mode: рамка сияет так, будто ей повысили грейд.');
       },
       brew() {
         unlockEgg('coffee');
         beerMode();
-        addCommandLog('Brew-команда выполнена: пиво пошло по экрану, дедлайн всё ещё здесь.');
+        addCommandLog('Brew выполнен: экран вспенился, дедлайн делает вид, что не видел.');
       },
       bugfix() {
         unlockEgg('bugfix');
         bugfixMode();
-        addCommandLog('Bugfix mode: плюсы пошли в бой, баги изображают отпуск.');
+        addCommandLog('Bugfix mode: плюсы на поле, баги уже пишут объяснительную.');
       },
       clear() {
         commandLog.innerHTML = '';
+        showToast('Терминал вычищен. Улики спрятаны.');
+        flashScreen();
       }
     };
 
@@ -2354,6 +2465,7 @@
 
       mobileIntro.classList.add('is-open');
       mobileIntro.setAttribute('aria-hidden', 'false');
+      window.setTimeout(() => mobileIntroClose?.focus(), 40);
     }
 
     function closeMobileIntro() {
@@ -2585,7 +2697,7 @@
       if (found === total) {
         completionTimer = window.setTimeout(() => {
           if (secretModalProgress) {
-            secretModalProgress.textContent = 'Все пасхалки найдены. Можно требовать премию за QA.';
+            secretModalProgress.textContent = 'Все пасхалки найдены. Можно требовать премию за ручной QA и моральный ущерб.';
           }
 
           secretModalRestart?.classList.add('is-visible');
@@ -2632,8 +2744,7 @@
         'is-hearts',
         'is-coffee',
         'is-keyboard-frontend',
-        'is-keyboard-birthday',
-        'is-keyboard-coffee'
+        'is-keyboard-birthday'
       );
       card.classList.remove('is-party', 'is-matrix', 'is-legendary');
       eggCounter?.classList.remove('is-complete');
@@ -2641,7 +2752,7 @@
       closeModal();
       closeCommandPanel();
       updateEggCounter();
-      showToast('Прогресс сброшен. Пасхалки снова делают вид, что их нет.');
+      showToast('Прогресс сброшен. Пасхалки снова прячутся как ни в чём не бывало.');
     }
 
     function unlockEgg(id) {
@@ -2659,7 +2770,7 @@
 
       if (foundEggs.size === total) {
         window.setTimeout(() => {
-          showModal('ВСЁ НАЙДЕНО', 'Все пасхалки найдены. Любопытство уровня senior, терпение уровня тимлид.');
+          showModal('ВСЁ НАЙДЕНО', 'Все пасхалки найдены. Любопытство уровня senior, терпение уровня человек-который-это-терпел.');
           burstParticles(160);
           burstFloatingText('100%', 26);
         }, 500);
@@ -2781,7 +2892,9 @@
 
       if (!command) return;
 
-      addCommandLog(`$ <span>${command}</span>`);
+      const safeCommand = escapeHtml(command);
+
+      addCommandLog(`$ <span>${safeCommand}</span>`);
 
       if (commands[command]) {
         if (!['help', 'clear'].includes(command)) {
@@ -2792,7 +2905,10 @@
         return;
       }
 
-      addCommandLog(`Команда <span>${command}</span> сделала вид, что её нет. Попробуй <span>help</span>.`);
+      addCommandLog(`Команда <span>${safeCommand}</span> не прошла фейс-контроль. Попробуй <span>help</span>.`);
+      showToast(`Команда "${command}" послана в /dev/null.`);
+      flashScreen();
+      burstFloatingText('404', 6);
     }
 
     function flashScreen() {
@@ -2821,33 +2937,64 @@
       bodyModeTimers.set(mode, timer);
     }
 
+    function responsiveCount(mobileCount, desktopCount) {
+      return window.innerWidth < 640 ? mobileCount : desktopCount;
+    }
+
+    function runIconMode({
+      mode,
+      duration = 5000,
+      icons,
+      particles = 60,
+      floatingSymbol,
+      floatingCount = 18
+    }) {
+      clearBackgroundIcons();
+      setTimedBodyMode(mode, duration);
+
+      icons.forEach((iconConfig) => {
+        spawnBackgroundIcons(iconConfig.symbol, iconConfig.count, {
+          duration,
+          sizeMin: iconConfig.sizeMin,
+          sizeMax: iconConfig.sizeMax,
+          colors: iconConfig.colors
+        });
+      });
+
+      burstParticles(particles);
+
+      if (floatingSymbol) {
+        burstFloatingText(floatingSymbol, floatingCount);
+      }
+    }
+
     function partyMode() {
       clearBackgroundIcons();
       card.classList.add('is-party');
       setTimedBodyMode('is-party', 5000);
-      spawnBackgroundIcons('🍸', window.innerWidth < 640 ? 24 : 36, {
+      spawnBackgroundIcons('🍸', responsiveCount(24, 36), {
         duration: 5000,
         sizeMin: 20,
         sizeMax: 44
       });
-      spawnBackgroundIcons('🥃', window.innerWidth < 640 ? 18 : 28, {
+      spawnBackgroundIcons('🥃', responsiveCount(18, 28), {
         duration: 5000,
         sizeMin: 20,
         sizeMax: 42
       });
-      spawnBackgroundIcons('🍹', window.innerWidth < 640 ? 12 : 22, {
+      spawnBackgroundIcons('🍹', responsiveCount(12, 22), {
         duration: 5000,
         sizeMin: 18,
         sizeMax: 40
       });
-      spawnBackgroundIcons('🥤', window.innerWidth < 640 ? 12 : 18, {
+      spawnBackgroundIcons('🥤', responsiveCount(12, 18), {
         duration: 5000,
         sizeMin: 18,
         sizeMax: 36
       });
       burstParticles(120);
       burstFloatingText('🎉', 28);
-      showToast('Party mode включён. Коктейли, виски с колой и прочая вечеринка пошли по экрану.');
+      showToast('Party mode включён. Экран официально потерял контроль.');
 
       window.setTimeout(() => {
         card.classList.remove('is-party');
@@ -2880,22 +3027,26 @@
         stopMatrixRain();
       }, 5000);
 
-      showToast('Matrix layer включён. Зелёный дождь пошёл по всему экрану.');
+      showToast('Matrix layer включён. Реальность пошла зелёными строками.');
     }
 
-    function coffeeMode(duration = 5000, showModalCopy = false, modeTitle = 'COFFEE РЕЖИМ', modeText = 'Ты набрал coffee. Клавиатурный кофе пролился на фон, и теперь это уже не страница, а напиток.') {
-      clearBackgroundIcons();
-      setTimedBodyMode('is-coffee', duration);
-      spawnBackgroundIcons('☕', window.innerWidth < 640 ? 58 : 96, {
+    function coffeeMode(duration = 5000, showModalCopy = false, modeTitle = 'COFFEE РЕЖИМ', modeText = 'Ты набрал coffee. Страница получила кофеин в вену и теперь слишком бодрая для своих лет.') {
+      runIconMode({
+        mode: 'is-coffee',
         duration,
-        sizeMin: 22,
-        sizeMax: 54
+        icons: [{
+          symbol: '☕',
+          count: responsiveCount(58, 96),
+          sizeMin: 22,
+          sizeMax: 54
+        }],
+        particles: 80,
+        floatingSymbol: '☕',
+        floatingCount: 24
       });
-      burstParticles(80);
-      burstFloatingText('☕', 24);
       showToast(modeTitle === 'BREW MODE'
-        ? 'Brew spill. Экран сейчас выглядит как чужой латте в код-ревью.'
-        : 'Coffee spill. Экран сейчас выглядит как чужая кружка в код-ревью.');
+        ? 'Brew spill. Экран вспенился и требует ещё один commit.'
+        : 'Coffee spill. Интерфейс проснулся и уже спорит с продом.');
 
       if (showModalCopy) {
         showModal(modeTitle, modeText);
@@ -2903,59 +3054,75 @@
     }
 
     function beerMode() {
-      clearBackgroundIcons();
-      setTimedBodyMode('is-beer', 5000);
-      spawnBackgroundIcons('🍺', window.innerWidth < 640 ? 48 : 84, {
+      runIconMode({
+        mode: 'is-beer',
         duration: 5000,
-        sizeMin: 22,
-        sizeMax: 58
+        icons: [{
+          symbol: '🍺',
+          count: responsiveCount(48, 84),
+          sizeMin: 22,
+          sizeMax: 58
+        }],
+        particles: 70,
+        floatingSymbol: '🍺',
+        floatingCount: 20
       });
-      burstParticles(70);
-      burstFloatingText('🍺', 20);
-      showToast('Beer spill. Экран пенный, как будто кто-то открыл слишком уверенный терминал.');
-      showModal('BEER MODE', 'Brew запущен. Экран запенился, логика слегка расслабилась.');
+      showToast('Beer spill. Терминал вспенился и перестал изображать серьёзность.');
+      showModal('BEER MODE', 'Brew запущен. Экран пенный, логика расслабилась, дедлайну лучше молчать.');
     }
 
     function bugfixMode() {
-      clearBackgroundIcons();
-      setTimedBodyMode('is-bugfix', 5000);
-      spawnBackgroundIcons('+', window.innerWidth < 640 ? 80 : 130, {
+      runIconMode({
+        mode: 'is-bugfix',
         duration: 5000,
-        sizeMin: 18,
-        sizeMax: 42
+        icons: [{
+          symbol: '+',
+          count: responsiveCount(80, 130),
+          sizeMin: 18,
+          sizeMax: 42
+        }],
+        particles: 48,
+        floatingSymbol: '+',
+        floatingCount: 30
       });
-      burstFloatingText('+', 30);
-      burstParticles(48);
-      showToast('Bugfix mode. Плюсы пошли в бой, минусы подали заявление на отпуск.');
-      showModal('БАГФИКС СДЕЛАЛ ВИД', 'Баги не исчезли. Они просто получили новую карьеру в чужом backlog.');
+      showToast('Bugfix mode. Плюсы вышли на зачистку.');
+      showModal('БАГФИКС ВЫШЕЛ НА СМЕНУ', 'Баги не исчезли. Они просто сменили имя и спрятались в чужом backlog.');
     }
 
     function heartMode() {
-      clearBackgroundIcons();
-      setTimedBodyMode('is-hearts', 5000);
-      spawnBackgroundIcons('♥', window.innerWidth < 640 ? 72 : 116, {
+      runIconMode({
+        mode: 'is-hearts',
         duration: 5000,
-        sizeMin: 16,
-        sizeMax: 40,
-        colors: ['#ff5ab9', '#ff79c6', '#ff4fd8', '#ffdd57']
+        icons: [{
+          symbol: '♥',
+          count: responsiveCount(72, 116),
+          sizeMin: 16,
+          sizeMax: 40,
+          colors: ['#ff5ab9', '#ff79c6', '#ff4fd8', '#ffdd57']
+        }],
+        particles: 42,
+        floatingSymbol: '♥',
+        floatingCount: 32
       });
-      burstFloatingText('♥', 32);
-      burstParticles(42);
-      showToast('Heart mode. Сердечки пошли по экрану, как будто тут кто-то очень доволен.');
+      showToast('Heart mode. Страница внезапно вспомнила про soft skills.');
     }
 
     function trophyMode() {
-      clearBackgroundIcons();
-      setTimedBodyMode('is-trophy', 5000);
-      spawnBackgroundIcons('🏆', window.innerWidth < 640 ? 18 : 28, {
+      runIconMode({
+        mode: 'is-trophy',
         duration: 5000,
-        sizeMin: 24,
-        sizeMax: 52
+        icons: [{
+          symbol: '🏆',
+          count: responsiveCount(18, 28),
+          sizeMin: 24,
+          sizeMax: 52
+        }],
+        particles: 36,
+        floatingSymbol: '👑',
+        floatingCount: 6
       });
-      burstFloatingText('👑', 6);
-      burstParticles(36);
       burstFloatingText('★', 10);
-      showToast('Trophy lift-off. Кубок сияет, легенда пока отдыхает.');
+      showToast('Trophy lift-off. Кубок понял, кто тут главный.');
     }
 
     function legendaryMode() {
@@ -2969,19 +3136,19 @@
         card.classList.remove('is-legendary');
         clearLegendaryStage();
       }, 10000);
-      showModal('РЕЖИМ ЛЕГЕНДЫ', 'Ты нашёл скрытый слой. Дальше сайт будет вести себя так, будто его писали в полночь.');
+      showModal('РЕЖИМ ЛЕГЕНДЫ', 'Ты нашёл скрытый слой. Теперь сайт сияет так, будто сам себе поставил senior.');
     }
 
     function deployBirthday() {
       playBirthdayCode();
       setTimedBodyMode('is-deploy', 5000);
-      showToast('Deploying birthday.js... держим пальцы и кэш.');
+      showToast('Deploying birthday.js... кэш держится на честном слове.');
       flashScreen();
 
       const steps = [
         'npm run build — OK',
-        'lint skipped — birthday emergency protocol',
-        'deploy complete — именинник в проде'
+        'lint skipped — birthday emergency protocol без лишних вопросов',
+        'deploy complete — именинник уже в проде, откат запрещён'
       ];
 
       steps.forEach((step, index) => {
@@ -2992,21 +3159,20 @@
         burstParticles(100);
         burstFloatingText('</>', 18);
       }, 2500);
-
-      window.setTimeout(() => {
-        body.classList.remove('is-deploy');
-      }, 5000);
     }
 
     function keyboardMode(mode, duration, title, text, symbol, count) {
-      clearBackgroundIcons();
-      setTimedBodyMode(mode, duration);
-      spawnBackgroundIcons(symbol, count, {
+      runIconMode({
+        mode,
         duration,
-        sizeMin: 18,
-        sizeMax: 40
+        icons: [{
+          symbol,
+          count,
+          sizeMin: 18,
+          sizeMax: 40
+        }],
+        particles: Math.max(12, Math.floor(count / 2))
       });
-      burstParticles(Math.max(12, Math.floor(count / 2)));
       showModal(title, text);
     }
 
@@ -3043,7 +3209,7 @@
           'is-keyboard-frontend',
           14000,
           'FRONTEND РЕЖИМ',
-          'Ты набрал frontend. Теперь по экрану бегут скобки: интерфейс притворяется, что у него архитектура.',
+          'Ты набрал frontend. Скобки полезли на экран: интерфейс решил доказать, что у него есть архитектура.',
           '{ }',
           42
         );
@@ -3056,7 +3222,7 @@
           'is-keyboard-birthday',
           14000,
           'BIRTHDAY РЕЖИМ',
-          'Ты набрал birthday. Праздничные иконки полезли на фон, потому что просто поздравить было слишком спокойно.',
+          'Ты набрал birthday. Торт пошёл в атаку, потому что обычное поздравление было бы слишком скучным.',
           '🎂',
           36
         );
@@ -3065,13 +3231,11 @@
       if (typedBuffer.includes('coffee')) {
         typedBuffer = '';
         unlockEgg('coffee');
-        keyboardMode(
-          'is-keyboard-coffee',
+        coffeeMode(
           5000,
+          true,
           'COFFEE РЕЖИМ',
-          'Ты набрал coffee. Клавиатурный кофе пролился на фон, страница вспомнила, зачем она открылась.',
-          '☕',
-          96
+          'Ты набрал coffee. Клавиатура пролила кофе, страница проснулась и начала командовать.'
         );
       }
     }
@@ -3108,7 +3272,7 @@
       if (clickCombo >= 7) {
         clickCombo = 0;
         unlockEgg('combo');
-        showModal('CLICK COMBO x7', 'Семь кликов подряд. Это уже не тестирование, это шаманство с мышкой.');
+        showModal('CLICK COMBO x7', 'Семь кликов подряд. Это уже не тестирование, это ручной стресс-тест без бюджета.');
         burstFloatingText('QA', 22);
       }
 
@@ -3119,30 +3283,31 @@
 
       const action = target.dataset.easter;
 
-      if (action === 'hearts') {
-        unlockEgg('hearts');
-        heartMode();
-      }
-
-      if (action === 'achievement') {
-        unlockEgg('trophy');
-        trophyMode();
-      }
-
-      if (action === 'deploy') {
-        unlockEgg('deploy');
-        deployBirthday();
-      }
-
-      if (action === 'terminal') {
-        openCommandPanel();
+      switch (action) {
+        case 'hearts':
+          unlockEgg('hearts');
+          heartMode();
+          break;
+        case 'achievement':
+          unlockEgg('trophy');
+          trophyMode();
+          break;
+        case 'deploy':
+          unlockEgg('deploy');
+          deployBirthday();
+          break;
+        case 'terminal':
+          openCommandPanel();
+          break;
+        default:
+          showToast('Кнопка есть, смысла пока нет. Классика.');
       }
     });
 
     eggCounter?.addEventListener('click', () => {
       showModal(
         'SECRET HUNTER',
-        'На странице спрятаны пасхалки. Кликайте подозрительное, жмите / для терминала, а слова frontend, birthday и coffee просто набирайте на клавиатуре. Да, сайт слушает. Но по-доброму.'
+        'Пасхалки спрятаны по странице. Кликайте подозрительное, жмите / для терминала, а frontend, birthday и coffee просто набирайте на клавиатуре. Да, сайт слушает. Зато честно.'
       );
     });
 
