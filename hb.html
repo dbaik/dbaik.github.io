@@ -605,6 +605,7 @@
     .card-left,
     .card-right {
       display: flex;
+      padding: 18px 22px 20px;
     }
 
     .card-left {
@@ -613,20 +614,23 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 18px 22px 20px;
-      background: rgba(10, 10, 30, 0.6);
+      background:
+        radial-gradient(ellipse at 48% 50%,
+          rgba(10, 10, 30, 0.72) 0%,
+          rgba(10, 10, 30, 0.54) 48%,
+          rgba(10, 10, 30, 0.22) 68%,
+          rgba(10, 10, 30, 0) 86%);
     }
 
     .card-right {
       flex: 1.22;
       flex-direction: column;
       justify-content: center;
-      padding: 40px 32px 32px;
     }
 
     .profile-card {
       position: relative;
-      width: min(272px, 100%);
+      /* width: min(272px, 100%); */
       overflow: visible;
       border: 4px solid var(--magenta);
       border-radius: 8px;
