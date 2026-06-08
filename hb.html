@@ -478,11 +478,15 @@
       text-align: center;
       background: rgba(0, 0, 0, 0.7);
       border-bottom: 4px solid var(--magenta);
+      overflow: hidden;
     }
 
     .card-title {
       font-size: clamp(13px, 3vw, 24px);
       line-height: 1.45;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: clip;
       text-shadow:
         0 0 10px var(--cyan),
         0 0 20px var(--magenta);
@@ -931,6 +935,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-wrap: nowrap;
       gap: 14px;
       padding: 10px 14px;
       border: 2px solid rgba(0, 255, 204, 0.45);
@@ -939,6 +944,8 @@
       font-size: 11px;
       line-height: 1.2;
       text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
       text-shadow: 0 0 10px var(--magenta);
       box-shadow: 0 0 18px rgba(0, 255, 204, 0.35);
       border-radius: 0 0 6px 6px;
@@ -1072,7 +1079,13 @@
       }
 
       .card-header {
-        padding: 16px 12px;
+        padding: 14px 10px;
+      }
+
+      .card-title {
+        font-size: clamp(11px, 2.8vw, 18px);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
       }
 
       .card-content {
@@ -1148,13 +1161,14 @@
         left: 12px;
         right: 12px;
         bottom: 12px;
-        gap: 8px;
-        padding: 8px 10px;
-        font-size: 10px;
+        gap: 6px;
+        padding: 7px 8px;
+        font-size: clamp(8px, 2.2vw, 10px);
+        line-height: 1;
       }
 
       .footer-line {
-        width: 34px;
+        width: 22px;
       }
     }
 
@@ -1172,7 +1186,11 @@
       }
 
       .card-header {
-        padding: 14px 10px;
+        padding: 12px 8px;
+      }
+
+      .card-title {
+        font-size: clamp(10px, 2.5vw, 14px);
       }
 
       .card-left {
@@ -1205,11 +1223,17 @@
       }
 
       .card-footer {
-        font-size: 9px;
+        gap: 4px;
+        padding: 6px 7px;
+        font-size: 8px;
       }
 
       .footer-icon {
         font-size: 14px;
+      }
+
+      .footer-line {
+        width: 16px;
       }
     }
 
