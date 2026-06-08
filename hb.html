@@ -66,6 +66,10 @@
       transition: background 900ms ease, filter 400ms ease;
     }
 
+    body.modal-open {
+      overflow: hidden;
+    }
+
     body::before {
       content: "";
       position: fixed;
@@ -839,22 +843,6 @@
       font-size: 19px;
     }
 
-    .code-window {
-      max-width: 100%;
-      overflow: hidden;
-      border: 2px solid var(--cyan);
-      background: #000;
-      box-shadow: 0 0 18px rgba(0, 255, 204, 0.35);
-    }
-
-    .code-window.is-collapsed {
-      min-height: 0;
-    }
-
-    .code-window.is-collapsed .code-live {
-      display: none;
-    }
-
     .code-title {
       display: flex;
       align-items: center;
@@ -1260,11 +1248,6 @@
         font-size: 16px;
       }
 
-      .code-window {
-        width: 100%;
-        text-align: left;
-      }
-
       .code-block {
         font-size: 12px;
         white-space: pre-wrap;
@@ -1448,8 +1431,7 @@
         0 0 28px #ff4fd8;
     }
 
-    .card.is-party .profile-card,
-    .card.is-party .code-window {
+    .card.is-party .profile-card {
       border-color: #ff4fd8;
       box-shadow:
         0 0 24px rgba(255, 79, 216, 0.62),
@@ -1482,7 +1464,6 @@
     body.is-matrix .card-header,
     body.is-matrix .card-left,
     body.is-matrix .profile-card,
-    body.is-matrix .code-window,
     body.is-matrix .card-footer,
     body.is-matrix .egg-counter {
       border-color: rgba(0, 255, 136, 0.56);
@@ -2219,7 +2200,7 @@
           <div class="profile-bottom">
             <div class="profile-meta">
               <div><span>ROLE:</span> LEGENDARY DEV</div>
-              <div><span>STACK:</span> HTML • CSS • JS</div>
+              <div><span>STACK:</span> WP • HTML • CSS • JS</div>
               <div><span>CODING SINCE:</span> BEFORE IT WAS COOL</div>
             </div>
 
@@ -2275,8 +2256,8 @@
 
     <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
-    <div class="mobile-intro" id="mobileIntro" role="dialog" aria-modal="true"
-      aria-labelledby="mobileIntroTitle" aria-describedby="mobileIntroText" aria-hidden="true">
+    <div class="mobile-intro" id="mobileIntro" role="dialog" aria-modal="true" aria-labelledby="mobileIntroTitle"
+      aria-describedby="mobileIntroText" aria-hidden="true">
       <div class="mobile-intro__panel">
         <div class="mobile-intro__eyebrow">FIRST RUN / MOBILE MODE</div>
         <h2 class="mobile-intro__title" id="mobileIntroTitle">Мобилка пофикшена</h2>
@@ -2311,7 +2292,8 @@
         <div class="code-modal__eyebrow">CHH-CHH</div>
         <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
         <p class="code-modal__hint">чш-чш, сейчас напечатаем</p>
-        <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output"></div>
+        <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
+        </div>
       </div>
     </div>
 
@@ -2325,7 +2307,8 @@
         <div class="command-panel__body">
           <div class="command-panel__log" id="commandLog">
             <div>&gt;_ zаебал вошёл в чат. Готовьтесь, суки.</div>
-            <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если нужен список разрешённых безобразий.</div>
+            <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если нужен
+              список разрешённых безобразий.</div>
           </div>
           <label class="command-panel__line">
             <span>$</span>
@@ -2580,6 +2563,7 @@
       resetBirthdayCode();
       codeModal.classList.add('is-open');
       codeModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
 
       if (reduceMotion) {
         renderBirthdayCodeFrame('', true);
@@ -2613,6 +2597,7 @@
 
       codeModal.classList.remove('is-open');
       codeModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
     }
 
     function clearBackgroundIcons() {
@@ -3411,6 +3396,7 @@
           unlockEgg('hearts');
           heartMode();
           addCommandLog('&gt; Сделано с душой, too much coffee, матом, CSS и средним пальцем');
+          showModal('СДЕЛАНО С ДУШОЙ', 'Too much coffee, матом, CSS и средним пальцем.');
           break;
         case 'portrait':
           addCommandLog('&gt; Не тыкай в меня, я и так красавчик');
