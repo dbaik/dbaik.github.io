@@ -2325,7 +2325,7 @@
       <div class="card-left">
         <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
           <span class="egg-counter__label">SECRET HUNTER</span>
-          <span class="egg-counter__value" id="eggCounterValue">0/13</span>
+          <span class="egg-counter__value" id="eggCounterValue">0/15</span>
           <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
         </button>
 
@@ -2404,6 +2404,8 @@
       <span class="footer-line"></span>
       <button class="footer-icon footer-action" type="button" data-easter="terminal"
         aria-label="Focus secret terminal">&lt;/&gt;</button>
+      <button class="footer-icon footer-action" type="button" data-easter="share"
+        aria-label="Share birthday protocol">↗</button>
     </footer>
 
     <div class="toast-stack" id="toastStack" aria-live="polite"></div>
@@ -2504,6 +2506,8 @@
       trophy: 'Кубок тронут. Эго получило легальный буст',
       deploy: 'birthday.js ушёл в прод без согласования',
       terminal: 'Секретный терминал активирован. Теперь осторожно с руками',
+      share: 'Share нажали. Теперь этот хаос может пострадать публично',
+      longPress: 'Long press. Терпение проверено, сайт моргнул первым',
       party: 'Party mode. Компилятор потерял серьёзное лицо',
       matrix: 'Matrix layer. Таблица стилей смотрит первой',
       legendary: 'Legendary mode. CSS держится на характере и наглости',
@@ -3102,6 +3106,43 @@
       setCommandPanelExpanded(false);
     }
 
+    async function shareBirthday() {
+      const shareUrl = window.location.protocol === 'file:' ? 'https://dbaik.github.io/hb.html' : window.location.href;
+      const shareData = {
+        title: 'Frontend Fucking Birthday Protocol',
+        text: 'Зацени birthday-протокол. CSS, мат и ручной QA уже внутри.',
+        url: shareUrl
+      };
+
+      unlockEgg('share');
+      addCommandLog('&gt; Share protocol armed. Ссылку можно выпускать в дикую природу');
+
+      try {
+        if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
+          await navigator.share(shareData);
+          showToast('Share улетел. Интернет предупреждён.');
+          burstFloatingText('↗', 12);
+          return;
+        }
+
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(`${shareData.text} ${shareUrl}`);
+          showToast('Share API спит, ссылка скопирована.');
+          burstFloatingText('COPY', 8);
+          return;
+        }
+
+        showModal('SHARE FAILED SUCCESSFULLY', `Скопируй руками: ${shareUrl}`);
+      } catch (error) {
+        if (error?.name === 'AbortError') {
+          showToast('Share отменён. Драма без релиза.');
+          return;
+        }
+
+        showToast('Share споткнулся. Ссылка осталась жива.');
+      }
+    }
+
     function setCommandPanelExpanded(expanded) {
       commandPanel?.classList.toggle('is-open', expanded);
       commandPanel?.setAttribute('aria-expanded', String(expanded));
@@ -3578,6 +3619,9 @@
         case 'terminal':
           openCommandPanel();
           break;
+        case 'share':
+          void shareBirthday();
+          break;
         default:
           showToast('Кнопка есть, смысла пока нет. Классика.');
       }
@@ -3590,6 +3634,7 @@
       window.clearTimeout(longPressTimer);
       longPressTimer = window.setTimeout(() => {
         longPressTriggered = true;
+        unlockEgg('longPress');
         addCommandLog('&gt; Ты серьёзно?');
         showToast('Long press detected. Да, сайт тоже осуждает.');
         burstFloatingText('?', 10);
