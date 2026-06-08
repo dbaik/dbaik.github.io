@@ -579,7 +579,7 @@
     }
 
     .card-title {
-      font-size: clamp(13px, 3vw, 24px);
+      font-size: clamp(13px, 2.4vw, 21px);
       line-height: 1.45;
       white-space: nowrap;
       overflow: hidden;
@@ -664,6 +664,13 @@
       aspect-ratio: 1 / 1;
       overflow: hidden;
       background: #000;
+    }
+
+    .profile-image-button {
+      position: relative;
+      display: block;
+      width: 100%;
+      cursor: pointer;
     }
 
     .profile-image-frame::after {
@@ -1072,6 +1079,10 @@
       text-shadow: 0 0 10px var(--magenta);
     }
 
+    .footer-copy-short {
+      display: none;
+    }
+
     .scanlines,
     .particles {
       position: absolute;
@@ -1276,6 +1287,14 @@
 
       .footer-line {
         width: 22px;
+      }
+
+      .footer-copy-full {
+        display: none;
+      }
+
+      .footer-copy-short {
+        display: inline;
       }
     }
 
@@ -1520,6 +1539,7 @@
     }
 
     .profile-action,
+    .profile-image-button,
     .footer-action,
     .code-title-action,
     .secret-modal__close,
@@ -1531,6 +1551,7 @@
     }
 
     .profile-action,
+    .profile-image-button,
     .footer-action {
       background: transparent;
     }
@@ -1542,12 +1563,14 @@
     }
 
     .code-title-action:hover,
+    .profile-image-button:hover,
     .profile-action:hover,
     .footer-action:hover {
       filter: brightness(1.25);
     }
 
     .code-title-action:focus-visible,
+    .profile-image-button:focus-visible,
     .profile-action:focus-visible,
     .footer-action:focus-visible,
     .egg-counter:focus-visible,
@@ -2186,7 +2209,7 @@
   <div class="legendary-stage" id="legendaryStage" aria-hidden="true"></div>
   <main class="card">
     <header class="card-header">
-      <h1 class="card-title">◉ FRONTEND BIRTHDAY PROTOCOL ◉</h1>
+      <h1 class="card-title">◉ FRONTEND FUCKING BIRTHDAY PROTOCOL ◉</h1>
     </header>
 
     <section class="card-content">
@@ -2199,9 +2222,10 @@
 
           <div class="profile-crown" aria-hidden="true">👑</div>
 
-          <div class="profile-image-frame">
+          <button class="profile-image-frame profile-image-button" type="button" data-easter="portrait"
+            aria-label="Poke the birthday portrait">
             <img src="assets/profile.png" alt="Dev profile" class="profile-image">
-          </div>
+          </button>
 
           <div class="profile-bottom">
             <div class="profile-meta">
@@ -2218,13 +2242,14 @@
 
       <div class="card-right">
         <div class="birthday-title">
-          HAPPY<br>
-          BIRTHDAY,<br>
+          HAPPY FUNKING<br>
+          BIRTHDAY 🎂<br>
           <span class="birthday-accent">zаебал!</span>
         </div>
 
         <p class="birthday-subtext">
-          Пусть всё компилится с первого раза, а баги идут туда, где их никто не будет дебажить
+          Поздравляю, ты стареешь.<br>
+          Пусть Баги боятся тебя, а не наоборот.
         </p>
 
         <div class="keyboard-hint">
@@ -2252,8 +2277,12 @@
     <footer class="card-footer">
       <big>🎂</big>
       <span class="footer-line"></span>
-      <span>MADE WITH <button class="footer-icon footer-action" type="button" data-easter="hearts"
-          aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
+      <span class="footer-copy-full">СДЕЛАНО С <button class="footer-icon footer-action" type="button"
+          data-easter="hearts" aria-label="Launch hearts"><big>♥</big></button> ДУШОЙ, TOO MUCH COFFEE,
+        МАТЕРНЫМИ ВЫРАЖЕНИЯМИ, CSS И СРЕДНИМ ПАЛЬЦЕМ • 2026</span>
+      <span class="footer-copy-short">С <button class="footer-icon footer-action" type="button"
+          data-easter="hearts" aria-label="Launch hearts"><big>♥</big></button>, КОФЕ, МАТОМ, CSS И СРЕДНИМ ПАЛЬЦЕМ
+        • 2026</span>
       <span class="footer-line"></span>
       <button class="footer-icon footer-action" type="button" data-easter="terminal"
         aria-label="Open secret terminal">&lt;/&gt;</button>
@@ -2310,7 +2339,8 @@
         </div>
         <div class="command-panel__body">
           <div class="command-panel__log" id="commandLog">
-            <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если готовы нажимать кнопки без техлида.</div>
+            <div>&gt;_ zаебал вошёл в чат. Готовьтесь, суки.</div>
+            <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если нужен список разрешённых безобразий.</div>
           </div>
           <label class="command-panel__line">
             <span>$</span>
@@ -2363,6 +2393,8 @@
     let konamiIndex = 0;
     let clickCombo = 0;
     let clickComboTimer = null;
+    let longPressTimer = null;
+    let longPressTriggered = false;
 
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
@@ -2395,7 +2427,7 @@
     ];
 
     const foundEggs = new Set(loadFoundEggs());
-    const commandHintList = ['party', 'deploy', 'matrix', 'legendary', 'brew', 'bugfix', 'clear'];
+    const commandHintList = ['party', 'matrix', 'deploy', 'coffee', 'legendary', 'sudo party', 'zаебал', 'заебал', 'clear'];
 
     function renderCommandHints(commandsList) {
       return [
@@ -2423,22 +2455,27 @@
       party() {
         unlockEgg('party');
         partyMode();
-        addCommandLog('Party mode: продакшен сорвался с поводка.');
+        addCommandLog('&gt; Вечеринка активирована. Снимай штаны с продакшена');
       },
       deploy() {
         unlockEgg('deploy');
         deployBirthday();
-        addCommandLog('birthday.js улетел в production. Без митинга, как взрослый.');
+        addCommandLog('&gt; Деплойнул в прод. Если упадёт — сам виноват');
       },
       matrix() {
         unlockEgg('matrix');
         matrixMode();
-        addCommandLog('Matrix layer: реальность пересобрана, дизайнеры узнают последними.');
+        addCommandLog('&gt; Следуй за белым кроликом...');
       },
       legendary() {
         unlockEgg('legendary');
         legendaryMode();
-        addCommandLog('Legendary mode: рамка сияет так, будто ей повысили грейд.');
+        addCommandLog('&gt; Ты и так легенда, просто пока не все в курсе');
+      },
+      coffee() {
+        unlockEgg('coffee');
+        coffeeMode();
+        addCommandLog('&gt; Кофеин +100500. Теперь ты бог');
       },
       brew() {
         unlockEgg('coffee');
@@ -2452,8 +2489,22 @@
       },
       clear() {
         commandLog.innerHTML = '';
-        showToast('Терминал вычищен. Улики спрятаны.');
+        addCommandLog('&gt; Память очищена. Как твоя совесть после дедлайна');
+        showToast('Память очищена. Совесть тоже попробовала.');
         flashScreen();
+      },
+      'sudo party'() {
+        unlockEgg('party');
+        partyMode();
+        addCommandLog('&gt; root@zаебал: вечеринка пошла нахуй');
+      },
+      'заебал'() {
+        heartMode();
+        addCommandLog('&gt; Сам zаебал, но я тебя люблю');
+      },
+      'zаебал'() {
+        heartMode();
+        addCommandLog('&gt; Сам zаебал, но я тебя люблю');
       }
     };
 
@@ -2765,6 +2816,7 @@
       konamiIndex = 0;
       clickCombo = 0;
       window.clearTimeout(clickComboTimer);
+      window.clearTimeout(longPressTimer);
       if (completionTimer) {
         window.clearTimeout(completionTimer);
         completionTimer = null;
@@ -3342,6 +3394,11 @@
     const particleInterval = reduceMotion ? null : window.setInterval(createParticle, 110);
 
     card.addEventListener('click', (event) => {
+      if (longPressTriggered) {
+        longPressTriggered = false;
+        return;
+      }
+
       const target = event.target.closest('[data-easter]');
 
       clickCombo += 1;
@@ -3368,6 +3425,13 @@
         case 'hearts':
           unlockEgg('hearts');
           heartMode();
+          addCommandLog('&gt; Сделано с душой, too much coffee, матом, CSS и средним пальцем');
+          break;
+        case 'portrait':
+          addCommandLog('&gt; Не тыкай в меня, я и так красавчик');
+          showToast('Портрет потроган. Самооценка выдержала.');
+          burstFloatingText('OK', 10);
+          burstParticles(24);
           break;
         case 'achievement':
           unlockEgg('trophy');
@@ -3383,6 +3447,31 @@
         default:
           showToast('Кнопка есть, смысла пока нет. Классика.');
       }
+    });
+
+    card.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      if (event.target.closest('button, input')) return;
+
+      window.clearTimeout(longPressTimer);
+      longPressTimer = window.setTimeout(() => {
+        longPressTriggered = true;
+        addCommandLog('&gt; Ты серьёзно?');
+        showToast('Long press detected. Да, сайт тоже осуждает.');
+        burstFloatingText('?', 10);
+      }, 700);
+    });
+
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach((eventName) => {
+      card.addEventListener(eventName, () => {
+        window.clearTimeout(longPressTimer);
+
+        if (longPressTriggered) {
+          window.setTimeout(() => {
+            longPressTriggered = false;
+          }, 400);
+        }
+      });
     });
 
     eggCounter?.addEventListener('click', () => {
