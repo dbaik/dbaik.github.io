@@ -33,8 +33,8 @@
       --font-pixel: 'Press Start 2P', system-ui, sans-serif;
       --font-terminal: 'VT323', monospace;
 
-      --card-width: 820px;
-      --card-min-height: 520px;
+      --card-width: 880px;
+      --card-min-height: 560px;
       --radius: 12px;
     }
 
@@ -604,30 +604,31 @@
     }
 
     .card-left {
-      flex: 1;
+      flex: 1.08;
       align-items: center;
       justify-content: center;
-      padding: 30px 20px;
+      padding: 28px 22px;
       background: rgba(10, 10, 30, 0.6);
     }
 
     .card-right {
-      flex: 1.3;
+      flex: 1.22;
       flex-direction: column;
       justify-content: center;
-      padding: 40px 30px 30px;
+      padding: 40px 32px 32px;
     }
 
     .profile-card {
       position: relative;
-      width: 280px;
+      width: min(336px, 100%);
       overflow: visible;
       border: 4px solid var(--magenta);
       border-radius: 8px;
       background: var(--bg-dark);
       box-shadow:
-        0 0 28px var(--magenta),
-        inset 0 0 35px rgba(0, 255, 204, 0.18);
+        0 0 36px rgba(255, 0, 255, 0.9),
+        0 0 22px rgba(0, 255, 204, 0.28),
+        inset 0 0 38px rgba(0, 255, 204, 0.18);
     }
 
     .profile-crown {
@@ -691,6 +692,7 @@
       display: block;
       object-fit: cover;
       object-position: center;
+      transform: scale(1.03);
     }
 
     .profile-top,
@@ -766,20 +768,23 @@
     }
 
     .birthday-title {
-      margin-bottom: 25px;
-      font-size: clamp(28px, 4.6vw, 38px);
-      line-height: 1.12;
+      margin-bottom: 26px;
+      font-size: 46px;
+      line-height: 1.02;
       color: var(--white);
+      letter-spacing: 0;
       text-shadow:
-        0 0 15px var(--cyan),
-        0 0 30px var(--magenta);
+        0 0 18px var(--cyan),
+        0 0 34px var(--magenta),
+        0 0 52px rgba(255, 221, 87, 0.18);
     }
 
     .birthday-accent {
       display: inline-block;
-      margin-top: 6px;
+      margin-top: 8px;
       color: var(--magenta);
-      font-size: clamp(32px, 5vw, 42px);
+      font-size: 56px;
+      line-height: 0.98;
     }
 
     .birthday-subtext {
@@ -1202,7 +1207,7 @@
       }
 
       .profile-card {
-        width: min(300px, 82vw);
+        width: min(318px, 84vw);
       }
 
       .profile-top {
@@ -1231,6 +1236,11 @@
 
       .birthday-title {
         margin-bottom: 20px;
+        font-size: 38px;
+      }
+
+      .birthday-accent {
+        font-size: 44px;
       }
 
       .birthday-subtext {
@@ -1299,7 +1309,7 @@
       }
 
       .profile-card {
-        width: min(280px, 86vw);
+        width: min(292px, 86vw);
       }
 
       .profile-meta {
@@ -1354,6 +1364,11 @@
 
       .birthday-title {
         margin-bottom: 16px;
+        font-size: 30px;
+      }
+
+      .birthday-accent {
+        font-size: 35px;
       }
 
       .birthday-subtext {
@@ -1928,6 +1943,21 @@
       animation: flash-out 0.32s ease-out forwards;
     }
 
+    .party-confetti {
+      position: fixed;
+      left: var(--start-x);
+      top: var(--start-y);
+      z-index: 22;
+      width: var(--confetti-w);
+      height: var(--confetti-h);
+      border-radius: 2px;
+      background: var(--confetti-color);
+      box-shadow: 0 0 12px var(--confetti-color);
+      pointer-events: none;
+      opacity: 0;
+      animation: party-confetti-pop var(--confetti-duration) ease-out forwards;
+    }
+
     @keyframes party-glow {
       from {
         box-shadow:
@@ -2025,6 +2055,22 @@
       100% {
         opacity: 0;
         transform: translateY(122vh) scale(1.1);
+      }
+    }
+
+    @keyframes party-confetti-pop {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) rotate(0deg) scale(0.7);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(var(--end-x), var(--end-y)) rotate(var(--rotate)) scale(1.05);
       }
     }
 
@@ -2814,6 +2860,41 @@
       }
     }
 
+    function burstPartyConfetti(count = 90) {
+      if (reduceMotion) return;
+
+      const palette = ['#00ffcc', '#ff00ff', '#ffdd57', '#00ff88', '#ffffff'];
+
+      for (let index = 0; index < count; index += 1) {
+        window.setTimeout(() => {
+          const item = document.createElement('div');
+          const color = palette[Math.floor(Math.random() * palette.length)];
+          const startX = `${Math.random() * 100}vw`;
+          const startY = `${8 + Math.random() * 34}vh`;
+          const endX = `${(Math.random() - 0.5) * 92}vw`;
+          const endY = `${44 + Math.random() * 58}vh`;
+          const duration = 1800 + Math.floor(Math.random() * 1200);
+
+          item.className = 'party-confetti';
+          item.style.setProperty('--start-x', startX);
+          item.style.setProperty('--start-y', startY);
+          item.style.setProperty('--end-x', endX);
+          item.style.setProperty('--end-y', endY);
+          item.style.setProperty('--rotate', `${360 + Math.random() * 900}deg`);
+          item.style.setProperty('--confetti-w', `${4 + Math.random() * 8}px`);
+          item.style.setProperty('--confetti-h', `${10 + Math.random() * 18}px`);
+          item.style.setProperty('--confetti-color', color);
+          item.style.setProperty('--confetti-duration', `${duration}ms`);
+
+          document.body.appendChild(item);
+
+          window.setTimeout(() => {
+            item.remove();
+          }, duration + 120);
+        }, index * 10);
+      }
+    }
+
     function showToast(message) {
       if (!toastStack) return;
 
@@ -2993,6 +3074,7 @@
         sizeMax: 36
       });
       burstParticles(120);
+      burstPartyConfetti(responsiveCount(70, 120));
       burstFloatingText('🎉', 28);
       showToast('Party mode включён. Экран официально потерял контроль.');
 
