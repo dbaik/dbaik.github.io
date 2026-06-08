@@ -806,43 +806,6 @@
       color: var(--green);
     }
 
-    .keyboard-hint {
-      margin: -10px 0 24px;
-      padding: 10px 12px;
-      border: 1px solid rgba(0, 255, 204, 0.38);
-      background: rgba(0, 0, 0, 0.28);
-      color: var(--cyan);
-      font-family: var(--font-terminal);
-      font-size: 13px;
-      line-height: 1.15;
-      text-shadow: 0 0 8px rgba(0, 255, 204, 0.55);
-    }
-
-    .keyboard-hint span {
-      color: var(--yellow);
-      font-size: 20px;
-    }
-
-    .mode-hint {
-      margin: -14px 0 22px;
-      padding: 9px 12px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(0, 0, 0, 0.22);
-      color: var(--green);
-      font-family: var(--font-terminal);
-      font-size: 12px;
-      line-height: 1.15;
-    }
-
-    .mode-hint+.mode-hint {
-      margin-top: -14px;
-    }
-
-    .mode-hint span {
-      color: var(--yellow);
-      font-size: 19px;
-    }
-
     .code-title {
       display: flex;
       align-items: center;
@@ -1243,11 +1206,6 @@
         font-size: clamp(20px, 6vw, 24px);
       }
 
-      .keyboard-hint {
-        margin-bottom: 18px;
-        font-size: 16px;
-      }
-
       .code-block {
         font-size: 12px;
         white-space: pre-wrap;
@@ -1311,11 +1269,6 @@
         display: none;
       }
 
-      .keyboard-hint {
-        font-size: 14px;
-        padding: 8px 10px;
-      }
-
       .code-block {
         font-size: 11px;
       }
@@ -1367,15 +1320,21 @@
         font-size: 19px;
       }
 
-      .keyboard-hint {
-        margin-bottom: 14px;
-        font-size: 12px;
-        padding: 7px 8px;
+      .command-panel__header {
+        font-size: 18px;
       }
 
-      .mode-hint {
-        font-size: 11px;
-        line-height: 1.25;
+      .command-panel__body {
+        font-size: 17px;
+      }
+
+      .command-panel__log {
+        min-height: 78px;
+        max-height: 108px;
+      }
+
+      .command-panel__line {
+        padding: 7px;
       }
 
       .card-footer {
@@ -1512,8 +1471,7 @@
     .profile-image-button,
     .footer-action,
     .code-title-action,
-    .secret-modal__close,
-    .command-panel__close {
+    .secret-modal__close {
       border: 0;
       font: inherit;
       cursor: pointer;
@@ -1546,7 +1504,6 @@
     .egg-counter:focus-visible,
     .secret-modal__close:focus-visible,
     .secret-modal__restart:focus-visible,
-    .command-panel__close:focus-visible,
     .command-panel__line input:focus-visible {
       outline: 3px solid var(--yellow);
       outline-offset: 3px;
@@ -1721,8 +1678,7 @@
       box-shadow: 0 0 14px rgba(0, 255, 204, 0.24);
     }
 
-    .secret-modal,
-    .command-panel {
+    .secret-modal {
       position: absolute;
       inset: 0;
       z-index: 12;
@@ -1733,13 +1689,11 @@
       backdrop-filter: blur(4px);
     }
 
-    .secret-modal.is-open,
-    .command-panel.is-open {
+    .secret-modal.is-open {
       display: grid;
     }
 
-    .secret-modal__panel,
-    .command-panel__window {
+    .secret-modal__panel {
       width: min(520px, 100%);
       border: 3px solid transparent;
       background-clip: padding-box;
@@ -1759,8 +1713,7 @@
         inset 0 0 22px rgba(255, 215, 0, 0.08);
     }
 
-    .secret-modal__close,
-    .command-panel__close {
+    .secret-modal__close {
       position: absolute;
       top: 10px;
       right: 12px;
@@ -1823,8 +1776,16 @@
       justify-content: center;
     }
 
+    .command-panel {
+      width: 100%;
+      margin-top: 4px;
+    }
+
     .command-panel__window {
       position: relative;
+      width: 100%;
+      border: 3px solid transparent;
+      background-clip: padding-box;
       border-color: rgba(0, 255, 204, 0.82);
       background:
         linear-gradient(180deg, rgba(0, 14, 18, 0.98), rgba(0, 6, 10, 0.98));
@@ -1838,7 +1799,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 42px 12px 14px;
+      padding: 12px 14px;
       border-bottom: 2px solid rgba(0, 255, 204, 0.58);
       color: var(--cyan);
       font-family: var(--font-terminal);
@@ -1848,9 +1809,9 @@
     }
 
     .command-panel__body {
-      padding: 14px;
+      padding: 12px;
       font-family: var(--font-terminal);
-      font-size: 22px;
+      font-size: 20px;
       color: var(--green);
       background:
         linear-gradient(180deg, rgba(0, 255, 204, 0.03), transparent),
@@ -1858,8 +1819,8 @@
     }
 
     .command-panel__log {
-      min-height: 120px;
-      max-height: 210px;
+      min-height: 96px;
+      max-height: 136px;
       overflow-y: auto;
       margin-bottom: 12px;
       line-height: 1.2;
@@ -2145,14 +2106,23 @@
         font-size: 11px;
       }
 
-      .secret-modal,
-      .command-panel {
+      .secret-modal {
         padding: 12px;
       }
 
-      .command-panel__body,
       .command-panel__header {
         font-size: 20px;
+        padding: 10px 12px;
+      }
+
+      .command-panel__body {
+        padding: 10px;
+        font-size: 19px;
+      }
+
+      .command-panel__log {
+        min-height: 86px;
+        max-height: 124px;
       }
     }
 
@@ -2213,7 +2183,7 @@
       <div class="card-right">
         <div class="birthday-title">
           HAPPY FUNKING<br>
-          BIRTHDAY 🎂<br>
+          BIRTHDAY<br>
           <span class="birthday-accent">zаебал!</span>
         </div>
 
@@ -2222,12 +2192,24 @@
           Пусть Баги боятся тебя, а не наоборот.
         </p>
 
-        <div class="keyboard-hint">
-          Клавиатурные слова: <span>frontend</span> / <span>birthday</span> / <span>coffee</span>
-        </div>
-
-        <div class="mode-hint">
-          Нажми <span>/</span>, если хочешь открыть секретный терминал и устроить странице допрос.
+        <div class="command-panel" id="commandPanel" aria-labelledby="commandPanelTitle">
+          <div class="command-panel__window">
+            <div class="command-panel__header">
+              <span id="commandPanelTitle">&gt;_ secret-terminal</span>
+            </div>
+            <div class="command-panel__body">
+              <div class="command-panel__log" id="commandLog" aria-live="polite">
+                <div>&gt;_ zаебал вошёл в чат. Готовьтесь, суки.</div>
+                <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если
+                  нужен список разрешённых безобразий.</div>
+              </div>
+              <label class="command-panel__line">
+                <span>$</span>
+                <input id="commandInput" type="text" autocomplete="off" spellcheck="false"
+                  aria-label="Secret command input">
+              </label>
+            </div>
+          </div>
         </div>
 
         <button class="code-title code-title-action" type="button" data-easter="deploy"
@@ -2251,7 +2233,7 @@
           aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
       <span class="footer-line"></span>
       <button class="footer-icon footer-action" type="button" data-easter="terminal"
-        aria-label="Open secret terminal">&lt;/&gt;</button>
+        aria-label="Focus secret terminal">&lt;/&gt;</button>
     </footer>
 
     <div class="toast-stack" id="toastStack" aria-live="polite"></div>
@@ -2297,28 +2279,6 @@
       </div>
     </div>
 
-    <div class="command-panel" id="commandPanel" role="dialog" aria-modal="true" aria-labelledby="commandPanelTitle"
-      aria-hidden="true">
-      <div class="command-panel__window">
-        <div class="command-panel__header">
-          <span id="commandPanelTitle">&gt;_ secret-terminal</span>
-          <button class="command-panel__close" type="button" data-close-command aria-label="Закрыть терминал">×</button>
-        </div>
-        <div class="command-panel__body">
-          <div class="command-panel__log" id="commandLog">
-            <div>&gt;_ zаебал вошёл в чат. Готовьтесь, суки.</div>
-            <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если нужен
-              список разрешённых безобразий.</div>
-          </div>
-          <label class="command-panel__line">
-            <span>$</span>
-            <input id="commandInput" type="text" autocomplete="off" spellcheck="false"
-              aria-label="Secret command input">
-          </label>
-        </div>
-      </div>
-    </div>
-
     <div class="scanlines"></div>
     <div class="particles" id="particles"></div>
   </main>
@@ -2337,7 +2297,6 @@
     const secretModalProgress = document.getElementById('secretModalProgress');
     const secretModalRestart = document.getElementById('secretModalRestart');
     const codeModal = document.getElementById('codeModal');
-    const commandPanel = document.getElementById('commandPanel');
     const commandInput = document.getElementById('commandInput');
     const commandLog = document.getElementById('commandLog');
     const bgIcons = document.getElementById('bgIcons');
@@ -2954,19 +2913,14 @@
     }
 
     function openCommandPanel() {
-      if (!commandPanel || !commandInput) return;
+      if (!commandInput) return;
 
       unlockEgg('terminal');
-      commandPanel.classList.add('is-open');
-      commandPanel.setAttribute('aria-hidden', 'false');
       window.setTimeout(() => commandInput.focus(), 40);
     }
 
     function closeCommandPanel() {
-      if (!commandPanel) return;
-
-      commandPanel.classList.remove('is-open');
-      commandPanel.setAttribute('aria-hidden', 'true');
+      commandInput?.blur();
     }
 
     function addCommandLog(html) {
@@ -2999,10 +2953,6 @@
       addCommandLog(`$ <span>${safeCommand}</span>`);
 
       if (commands[command]) {
-        if (!['help', 'clear'].includes(command)) {
-          closeCommandPanel();
-        }
-
         commands[command]();
         return;
       }
@@ -3472,13 +3422,13 @@
         return;
       }
 
-      if (event.key === '/' && commandPanel && !commandPanel.classList.contains('is-open')) {
+      if (document.activeElement === commandInput) return;
+
+      if (event.key === '/') {
         event.preventDefault();
         openCommandPanel();
         return;
       }
-
-      if (commandPanel?.classList.contains('is-open')) return;
 
       handleKonami(event.key);
       handleSecretTyping(event.key);
@@ -3493,7 +3443,6 @@
 
     document.querySelector('[data-close-secret]')?.addEventListener('click', closeModal);
     document.querySelector('[data-close-code]')?.addEventListener('click', resetBirthdayCode);
-    document.querySelector('[data-close-command]')?.addEventListener('click', closeCommandPanel);
     secretModalRestart?.addEventListener('click', resetExperience);
     mobileIntroClose?.addEventListener('click', closeMobileIntro);
 
@@ -3507,10 +3456,6 @@
 
     codeModal?.addEventListener('click', (event) => {
       if (event.target === codeModal) resetBirthdayCode();
-    });
-
-    commandPanel?.addEventListener('click', (event) => {
-      if (event.target === commandPanel) closeCommandPanel();
     });
 
     updateEggCounter();
