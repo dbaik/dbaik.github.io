@@ -2354,7 +2354,7 @@
     ];
 
     const foundEggs = new Set(loadFoundEggs());
-    const commandHintList = ['party', 'matrix', 'deploy', 'coffee', 'legendary', 'sudo party', 'zаебал', 'заебал', 'clear'];
+    const commandHintList = ['party', 'matrix', 'deploy', 'coffee', 'legendary', 'zaebal', 'clear'];
 
     function renderCommandHints(commandsList) {
       return [
@@ -2420,16 +2420,7 @@
         showToast('Память очищена. Совесть тоже попробовала.');
         flashScreen();
       },
-      'sudo party'() {
-        unlockEgg('party');
-        partyMode();
-        addCommandLog('&gt; root@zаебал: вечеринка пошла нахуй');
-      },
-      'заебал'() {
-        heartMode();
-        addCommandLog('&gt; Сам zаебал, но я тебя люблю');
-      },
-      'zаебал'() {
+      zaebal() {
         heartMode();
         addCommandLog('&gt; Сам zаебал, но я тебя люблю');
       }
