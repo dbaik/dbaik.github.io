@@ -1793,6 +1793,7 @@
     .command-panel {
       width: 100%;
       margin-top: 4px;
+      --terminal-body-height: 260px;
     }
 
     .command-panel__window {
@@ -1869,6 +1870,8 @@
     .command-panel__body {
       position: relative;
       z-index: 3;
+      max-height: var(--terminal-body-height);
+      overflow: hidden;
       padding: 12px;
       font-family: var(--font-terminal);
       font-size: 20px;
@@ -1876,6 +1879,22 @@
       background:
         linear-gradient(180deg, rgba(0, 255, 204, 0.03), transparent),
         linear-gradient(90deg, rgba(255, 0, 255, 0.03), transparent);
+      opacity: 1;
+      transition:
+        max-height 360ms cubic-bezier(0.2, 0.9, 0.2, 1),
+        padding-block 360ms cubic-bezier(0.2, 0.9, 0.2, 1),
+        opacity 180ms ease;
+    }
+
+    .command-panel:not(.is-open) .command-panel__header {
+      border-bottom-color: rgba(0, 255, 204, 0.18);
+    }
+
+    .command-panel:not(.is-open) .command-panel__body {
+      max-height: 0;
+      padding-block: 0;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .command-panel__log {
@@ -2354,12 +2373,12 @@
           Пусть Баги боятся тебя, а не наоборот.
         </p>
 
-        <div class="command-panel" id="commandPanel" aria-labelledby="commandPanelTitle">
+        <div class="command-panel" id="commandPanel" aria-labelledby="commandPanelTitle" aria-expanded="false">
           <div class="command-panel__window">
             <div class="command-panel__header">
               <span id="commandPanelTitle">&gt;_ secret-terminal</span>
             </div>
-            <div class="command-panel__body">
+            <div class="command-panel__body" id="commandPanelBody" aria-hidden="true" inert>
               <div class="command-panel__log" id="commandLog" aria-live="polite">
                 <div>&gt;_ zаебал вошёл в чат. Готовьтесь, суки.</div>
                 <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если
@@ -2367,7 +2386,7 @@
               </div>
               <label class="command-panel__line">
                 <span>$</span>
-                <input id="commandInput" type="text" autocomplete="off" spellcheck="false"
+                <input id="commandInput" type="text" autocomplete="off" spellcheck="false" tabindex="-1"
                   aria-label="Secret command input">
               </label>
             </div>
@@ -2449,6 +2468,7 @@
     const secretModalRestart = document.getElementById('secretModalRestart');
     const codeModal = document.getElementById('codeModal');
     const commandPanel = document.getElementById('commandPanel');
+    const commandPanelBody = document.getElementById('commandPanelBody');
     const commandInput = document.getElementById('commandInput');
     const commandLog = document.getElementById('commandLog');
     const bgIcons = document.getElementById('bgIcons');
@@ -3072,12 +3092,30 @@
       if (!commandInput) return;
 
       unlockEgg('terminal');
+      setCommandPanelExpanded(true);
       activateCommandPanel();
       window.setTimeout(() => commandInput.focus(), 40);
     }
 
     function closeCommandPanel() {
       commandInput?.blur();
+      setCommandPanelExpanded(false);
+    }
+
+    function setCommandPanelExpanded(expanded) {
+      commandPanel?.classList.toggle('is-open', expanded);
+      commandPanel?.setAttribute('aria-expanded', String(expanded));
+
+      if (expanded) {
+        commandPanelBody?.removeAttribute('inert');
+        commandPanelBody?.setAttribute('aria-hidden', 'false');
+        commandInput?.removeAttribute('tabindex');
+        return;
+      }
+
+      commandPanelBody?.setAttribute('inert', '');
+      commandPanelBody?.setAttribute('aria-hidden', 'true');
+      commandInput?.setAttribute('tabindex', '-1');
     }
 
     function activateCommandPanel() {
