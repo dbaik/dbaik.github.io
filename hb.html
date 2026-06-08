@@ -1794,6 +1794,7 @@
     .command-panel__window {
       position: relative;
       width: 100%;
+      overflow: hidden;
       border: 3px solid transparent;
       background-clip: padding-box;
       border-color: rgba(0, 255, 204, 0.82);
@@ -1805,7 +1806,50 @@
         inset 0 0 22px rgba(0, 255, 204, 0.08);
     }
 
+    .command-panel__window::before,
+    .command-panel__window::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: 50%;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.16), transparent),
+        repeating-linear-gradient(to bottom,
+          rgba(0, 255, 204, 0.05) 0,
+          rgba(0, 255, 204, 0.05) 2px,
+          transparent 2px,
+          transparent 6px);
+      opacity: 0;
+    }
+
+    .command-panel__window::before {
+      top: 0;
+      border-bottom: 1px solid rgba(0, 255, 204, 0.36);
+    }
+
+    .command-panel__window::after {
+      bottom: 0;
+      border-top: 1px solid rgba(255, 0, 255, 0.36);
+    }
+
+    .command-panel.is-activating .command-panel__window {
+      animation: terminal-activation-shell 720ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    .command-panel.is-activating .command-panel__window::before {
+      animation: terminal-split-top 720ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    .command-panel.is-activating .command-panel__window::after {
+      animation: terminal-split-bottom 720ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
     .command-panel__header {
+      position: relative;
+      z-index: 3;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1819,6 +1863,8 @@
     }
 
     .command-panel__body {
+      position: relative;
+      z-index: 3;
       padding: 12px;
       font-family: var(--font-terminal);
       font-size: 20px;
@@ -2038,6 +2084,84 @@
       }
     }
 
+    @keyframes terminal-activation-shell {
+      0% {
+        transform: translateX(0);
+        border-color: rgba(0, 255, 204, 0.82);
+        box-shadow:
+          0 0 26px rgba(0, 255, 204, 0.24),
+          0 0 42px rgba(0, 128, 255, 0.18),
+          inset 0 0 22px rgba(0, 255, 204, 0.08);
+      }
+
+      18% {
+        transform: translateX(-4px);
+        border-color: rgba(255, 0, 255, 0.95);
+      }
+
+      36% {
+        transform: translateX(4px);
+      }
+
+      58% {
+        transform: translateX(-2px);
+        box-shadow:
+          0 0 34px rgba(0, 255, 204, 0.48),
+          0 0 58px rgba(255, 0, 255, 0.28),
+          inset 0 0 30px rgba(0, 255, 204, 0.16);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes terminal-split-top {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: translateY(0) skewX(0deg);
+      }
+
+      18% {
+        opacity: 0.95;
+      }
+
+      46% {
+        opacity: 0.9;
+        transform: translateY(-14px) skewX(-8deg);
+      }
+
+      72% {
+        opacity: 0.42;
+        transform: translateY(-5px) skewX(5deg);
+      }
+    }
+
+    @keyframes terminal-split-bottom {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: translateY(0) skewX(0deg);
+      }
+
+      18% {
+        opacity: 0.9;
+      }
+
+      46% {
+        opacity: 0.86;
+        transform: translateY(14px) skewX(8deg);
+      }
+
+      72% {
+        opacity: 0.38;
+        transform: translateY(5px) skewX(-5deg);
+      }
+    }
+
     @keyframes toast-in {
       from {
         opacity: 0;
@@ -2148,6 +2272,18 @@
       }
 
       .particles {
+        display: none;
+      }
+
+      .command-panel.is-activating .command-panel__window {
+        border-color: var(--yellow);
+        box-shadow:
+          0 0 24px rgba(255, 221, 87, 0.34),
+          inset 0 0 20px rgba(0, 255, 204, 0.12);
+      }
+
+      .command-panel.is-activating .command-panel__window::before,
+      .command-panel.is-activating .command-panel__window::after {
         display: none;
       }
     }
@@ -2308,6 +2444,7 @@
     const secretModalProgress = document.getElementById('secretModalProgress');
     const secretModalRestart = document.getElementById('secretModalRestart');
     const codeModal = document.getElementById('codeModal');
+    const commandPanel = document.getElementById('commandPanel');
     const commandInput = document.getElementById('commandInput');
     const commandLog = document.getElementById('commandLog');
     const bgIcons = document.getElementById('bgIcons');
@@ -2326,6 +2463,7 @@
     let legendaryModeTimer = null;
     let legendarySpawnTimer = null;
     let completionTimer = null;
+    let commandActivationTimer = null;
 
     let typedBuffer = '';
     let konamiIndex = 0;
@@ -2930,11 +3068,29 @@
       if (!commandInput) return;
 
       unlockEgg('terminal');
+      activateCommandPanel();
       window.setTimeout(() => commandInput.focus(), 40);
     }
 
     function closeCommandPanel() {
       commandInput?.blur();
+    }
+
+    function activateCommandPanel() {
+      if (!commandPanel) return;
+
+      if (commandActivationTimer) {
+        window.clearTimeout(commandActivationTimer);
+      }
+
+      commandPanel.classList.remove('is-activating');
+      void commandPanel.offsetWidth;
+      commandPanel.classList.add('is-activating');
+
+      commandActivationTimer = window.setTimeout(() => {
+        commandPanel.classList.remove('is-activating');
+        commandActivationTimer = null;
+      }, 760);
     }
 
     function addCommandLog(html) {
