@@ -2222,7 +2222,7 @@
 
     <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
       <span class="egg-counter__label">SECRET HUNTER</span>
-      <span class="egg-counter__value" id="eggCounterValue">0/12</span>
+      <span class="egg-counter__value" id="eggCounterValue">0/13</span>
       <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
     </button>
 
@@ -2326,10 +2326,11 @@
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
     const eggCatalog = {
+      portrait: 'Портрет потроган. Самооценка выдержала',
       hearts: 'Сердце нажато. Soft skills внезапно прошли ревью',
       trophy: 'Кубок тронут. Эго получило легальный буст',
       deploy: 'birthday.js ушёл в прод без согласования',
-      terminal: 'Секретный терминал открыт. Теперь осторожно с руками',
+      terminal: 'Секретный терминал активирован. Теперь осторожно с руками',
       party: 'Party mode. Компилятор потерял серьёзное лицо',
       matrix: 'Matrix layer. Таблица стилей смотрит первой',
       legendary: 'Legendary mode. CSS держится на характере и наглости',
@@ -2339,6 +2340,8 @@
       birthday: 'Набрано birthday. Праздник забрал root-доступ',
       combo: 'Click combo x7. Ручной QA вышел из-под контроля'
     };
+    const eggIds = Object.keys(eggCatalog);
+    const eggIdSet = new Set(eggIds);
 
     const konamiCode = [
       'ArrowUp',
@@ -2428,7 +2431,15 @@
 
     function loadFoundEggs() {
       try {
-        return JSON.parse(window.localStorage.getItem(eggStorageKey)) || [];
+        const parsedEggs = JSON.parse(window.localStorage.getItem(eggStorageKey));
+        const storedEggs = Array.isArray(parsedEggs) ? parsedEggs : [];
+        const validEggs = [...new Set(storedEggs)].filter((id) => eggIdSet.has(id));
+
+        if (validEggs.length !== storedEggs.length) {
+          window.localStorage.setItem(eggStorageKey, JSON.stringify(validEggs));
+        }
+
+        return validEggs;
       } catch {
         return [];
       }
@@ -2694,8 +2705,8 @@
     }
 
     function updateEggCounter() {
-      const total = Object.keys(eggCatalog).length;
-      const found = foundEggs.size;
+      const total = eggIds.length;
+      const found = eggIds.filter((id) => foundEggs.has(id)).length;
 
       if (eggCounterValue) {
         eggCounterValue.textContent = `${found}/${total}`;
@@ -2782,10 +2793,11 @@
       saveFoundEggs();
       updateEggCounter();
 
-      const total = Object.keys(eggCatalog).length;
-      showToast(`Пасхалка найдена: ${eggCatalog[id]} (${foundEggs.size}/${total})`);
+      const total = eggIds.length;
+      const found = eggIds.filter((eggId) => foundEggs.has(eggId)).length;
+      showToast(`Пасхалка найдена: ${eggCatalog[id]} (${found}/${total})`);
 
-      if (foundEggs.size === total) {
+      if (found === total) {
         window.setTimeout(() => {
           showModal('ВСЁ НАЙДЕНО', 'Все пасхалки найдены. Любопытство уровня senior, терпение уровня человек-который-это-терпел.');
           burstParticles(160);
@@ -3340,6 +3352,7 @@
           showModal('СДЕЛАНО С ДУШОЙ', 'Too much coffee, матом, CSS и средним пальцем.');
           break;
         case 'portrait':
+          unlockEgg('portrait');
           addCommandLog('&gt; Не тыкай в меня, я и так красавчик');
           showToast('Портрет потроган. Самооценка выдержала.');
           burstFloatingText('OK', 10);
