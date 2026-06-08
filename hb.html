@@ -609,9 +609,11 @@
 
     .card-left {
       flex: 1.08;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 28px 22px;
+      gap: 10px;
+      padding: 18px 22px 20px;
       background: rgba(10, 10, 30, 0.6);
     }
 
@@ -624,7 +626,7 @@
 
     .profile-card {
       position: relative;
-      width: min(336px, 100%);
+      width: min(272px, 100%);
       overflow: visible;
       border: 4px solid var(--magenta);
       border-radius: 8px;
@@ -1512,7 +1514,7 @@
 
     .egg-counter {
       position: relative;
-      margin: 0 auto 30px;
+      margin: 0 auto;
       z-index: 9;
       display: grid;
       gap: 4px;
@@ -1528,6 +1530,14 @@
         inset 0 0 16px rgba(255, 0, 255, 0.12);
       cursor: pointer;
       text-align: center;
+    }
+
+    .card-left .code-title-action {
+      width: min(272px, 100%);
+      border: 2px solid rgba(0, 255, 204, 0.55);
+      box-shadow:
+        0 0 16px rgba(0, 255, 204, 0.22),
+        inset 0 0 14px rgba(255, 0, 255, 0.08);
     }
 
     .egg-counter:hover {
@@ -2154,6 +2164,12 @@
 
     <section class="card-content">
       <div class="card-left">
+        <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
+          <span class="egg-counter__label">SECRET HUNTER</span>
+          <span class="egg-counter__value" id="eggCounterValue">0/13</span>
+          <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
+        </button>
+
         <article class="profile-card">
           <div class="profile-top">
             <span class="terminal-icon">&gt;_</span>
@@ -2178,6 +2194,12 @@
               aria-label="Unlock achievement">🏆</button>
           </div>
         </article>
+
+        <button class="code-title code-title-action" type="button" data-easter="deploy"
+          aria-label="Deploy birthday script">
+          <span class="code-badge">JS</span>
+          <span>birthday.js</span>
+        </button>
       </div>
 
       <div class="card-right">
@@ -2212,19 +2234,8 @@
           </div>
         </div>
 
-        <button class="code-title code-title-action" type="button" data-easter="deploy"
-          aria-label="Deploy birthday script">
-          <span class="code-badge">JS</span>
-          <span>birthday.js</span>
-        </button>
       </div>
     </section>
-
-    <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
-      <span class="egg-counter__label">SECRET HUNTER</span>
-      <span class="egg-counter__value" id="eggCounterValue">0/13</span>
-      <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
-    </button>
 
     <footer class="card-footer">
       <big>🎂</big>
