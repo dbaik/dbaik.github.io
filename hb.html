@@ -2504,9 +2504,12 @@
     let clickComboTimer = null;
     let longPressTimer = null;
     let longPressTriggered = false;
+    let idleHintTimer = null;
+    let idleHintCursor = 0;
 
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
+    const idleHintDelay = 30000;
     const eggCatalog = {
       portrait: 'Портрет потроган. Самооценка выдержала',
       hearts: 'Сердце нажато. Soft skills внезапно прошли ревью',
@@ -2524,6 +2527,24 @@
       frontend: 'Набрано frontend. Верстка подняла бровь',
       birthday: 'Набрано birthday. Праздник забрал root-доступ',
       combo: 'Click combo x7. Ручной QA вышел из-под контроля'
+    };
+    const eggHints = {
+      portrait: 'Портрет выглядит слишком кликабельным, чтобы ему доверять.',
+      hearts: 'Сердце в футере не просто для красоты. Оно подозрительно живое.',
+      trophy: 'Кубок в профиле хочет, чтобы его признали.',
+      deploy: 'birthday.js не сам себя деплойнет. Хотя очень старается.',
+      terminal: 'Слэш открывает не только путь, но и терминал.',
+      share: 'В футере есть кнопка, которая выпускает хаос наружу.',
+      longPress: 'Иногда страницу надо не кликать, а давить авторитетом.',
+      party: 'Терминал понимает party. К сожалению для продакшена.',
+      matrix: 'Терминал видел белого кролика. Попробуй matrix.',
+      legendary: 'Есть режим легенды. Команда obvious, код не очень.',
+      coffee: 'Кофе можно не пить, а выполнить.',
+      brew: 'Если coffee мало, терминал понимает brew.',
+      bugfix: 'Терминал умеет делать вид, что баги побеждены.',
+      frontend: 'Некоторые слова можно набрать руками или прямо в терминале.',
+      birthday: 'Одно праздничное слово работает и на клавиатуре, и в терминале.',
+      combo: 'Семь быстрых кликов превращают QA в контактный спорт.'
     };
     const eggIds = Object.keys(eggCatalog);
     const eggIdSet = new Set(eggIds);
@@ -2966,6 +2987,38 @@
       }
     }
 
+    function getMissingEggIds() {
+      return eggIds.filter((id) => !foundEggs.has(id));
+    }
+
+    function showIdleEggHint() {
+      const missingEggs = getMissingEggIds();
+
+      if (missingEggs.length === 0) {
+        idleHintTimer = null;
+        return;
+      }
+
+      const eggId = missingEggs[idleHintCursor % missingEggs.length];
+      idleHintCursor += 1;
+
+      showToast(`Подсказка: ${eggHints[eggId]}`);
+      resetIdleHintTimer();
+    }
+
+    function resetIdleHintTimer() {
+      if (idleHintTimer) {
+        window.clearTimeout(idleHintTimer);
+      }
+
+      if (getMissingEggIds().length === 0) {
+        idleHintTimer = null;
+        return;
+      }
+
+      idleHintTimer = window.setTimeout(showIdleEggHint, idleHintDelay);
+    }
+
     function resetExperience() {
       foundEggs.clear();
       saveFoundEggs();
@@ -2974,6 +3027,7 @@
       clickCombo = 0;
       window.clearTimeout(clickComboTimer);
       window.clearTimeout(longPressTimer);
+      resetIdleHintTimer();
       if (completionTimer) {
         window.clearTimeout(completionTimer);
         completionTimer = null;
@@ -3018,6 +3072,7 @@
       foundEggs.add(id);
       saveFoundEggs();
       updateEggCounter();
+      resetIdleHintTimer();
 
       const total = eggIds.length;
       const found = eggIds.filter((eggId) => foundEggs.has(eggId)).length;
@@ -3683,7 +3738,7 @@
     eggCounter?.addEventListener('click', () => {
       showModal(
         'SECRET HUNTER',
-        'Пасхалки спрятаны по странице. Кликайте подозрительное, жмите / для терминала, а frontend, birthday и coffee просто набирайте на клавиатуре. Да, сайт слушает. Зато честно.'
+        'Пасхалки спрятаны по странице. Кликайте подозрительное, жмите / для терминала, а frontend, birthday и coffee можно набрать руками или в терминале. Зависните на 30 секунд — сайт начнёт сдавать своих.'
       );
     });
 
@@ -3743,7 +3798,15 @@
       if (event.target === codeModal) resetBirthdayCode();
     });
 
+    ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach((eventName) => {
+      document.addEventListener(eventName, resetIdleHintTimer, {
+        capture: true,
+        passive: true
+      });
+    });
+
     updateEggCounter();
+    resetIdleHintTimer();
 
     if (window.matchMedia('(max-width: 768px)').matches && !hasSeenMobileIntro()) {
       window.setTimeout(openMobileIntro, 450);
@@ -3752,6 +3815,10 @@
     window.addEventListener('beforeunload', () => {
       if (particleInterval) {
         window.clearInterval(particleInterval);
+      }
+
+      if (idleHintTimer) {
+        window.clearTimeout(idleHintTimer);
       }
     });
   </script>
