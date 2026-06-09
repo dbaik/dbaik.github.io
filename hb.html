@@ -9,7 +9,7 @@
   <title>Frontend Birthday Protocol</title>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
     :root {
       --bg-dark: #050510;
@@ -31,7 +31,7 @@
       --black: #000;
 
       --font-pixel: 'Press Start 2P', system-ui, sans-serif;
-      --font-terminal: 'VT323', monospace;
+      --font-terminal: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
 
       --card-width: 880px;
       --card-min-height: 560px;
@@ -1041,6 +1041,10 @@
       text-shadow: 0 0 10px var(--magenta);
     }
 
+    .footer-icon-heart {
+      padding: 2px;
+    }
+
     .scanlines,
     .particles {
       position: absolute;
@@ -1242,6 +1246,11 @@
         width: 18px;
       }
 
+      .footer-txt {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+      }
     }
 
     @media (max-width: 420px) {
@@ -1306,6 +1315,7 @@
 
       .footer-line {
         width: 14px;
+        display: none;
       }
     }
 
@@ -1324,6 +1334,7 @@
         white-space: normal;
         overflow: visible;
         text-wrap: balance;
+        line-height: 1.5;
       }
 
       .card-right {
@@ -1514,15 +1525,15 @@
       background: transparent;
     }
 
-    .footer-action,
+    /* .footer-action, */
     /* .profile-action, */
     /* .command-hint-chip, */
-    .mobile-intro__close,
+    /* .mobile-intro__close,
     .secret-modal__close,
     .secret-modal__restart {
       min-width: 44px;
       min-height: 44px;
-    }
+    } */
 
     .code-title-action {
       width: 100%;
@@ -2442,8 +2453,8 @@
         <big>🎂</big>
       </button>
       <span class="footer-line"></span>
-      <span>MADE WITH <button class="footer-icon footer-action" type="button" data-easter="hearts"
-          aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
+      <span class="footer-txt">MADE WITH <button class="footer-icon footer-icon-heart footer-action" type="button"
+          data-easter="hearts" aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
       <span class="footer-line"></span>
       <button class="footer-icon footer-action" type="button" data-easter="terminal"
         aria-label="Focus secret terminal">&lt;/&gt;</button>
