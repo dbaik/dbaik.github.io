@@ -752,8 +752,8 @@
 
     .profile-badge,
     .profile-trophy {
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
       border: 2px solid var(--magenta);
@@ -1031,6 +1031,11 @@
 
     .footer-icon {
       flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px;
+      border-radius: 8px;
       font-size: 18px;
       color: var(--magenta);
       text-shadow: 0 0 10px var(--magenta);
@@ -1149,9 +1154,12 @@
       }
 
       .card-title {
-        font-size: clamp(11px, 2.8vw, 18px);
+        font-size: clamp(12px, 3vw, 19px);
         line-height: 1.1;
         letter-spacing: -0.02em;
+        white-space: normal;
+        overflow: visible;
+        text-wrap: balance;
       }
 
       .card-content {
@@ -1188,8 +1196,8 @@
 
       .profile-badge,
       .profile-trophy {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         font-size: 15px;
       }
 
@@ -1219,17 +1227,19 @@
       }
 
       .card-footer {
+        flex-wrap: wrap;
         left: 12px;
         right: 12px;
         bottom: 12px;
         gap: 6px;
         padding: 7px 8px;
-        font-size: clamp(8px, 2.2vw, 10px);
+        font-size: clamp(9px, 2.4vw, 11px);
         line-height: 1;
+        white-space: normal;
       }
 
       .footer-line {
-        width: 22px;
+        width: 18px;
       }
 
     }
@@ -1252,7 +1262,10 @@
       }
 
       .card-title {
-        font-size: clamp(10px, 2.5vw, 14px);
+        font-size: clamp(11px, 2.7vw, 15px);
+        white-space: normal;
+        overflow: visible;
+        text-wrap: balance;
       }
 
       .card-left {
@@ -1280,17 +1293,19 @@
       }
 
       .card-footer {
+        flex-wrap: wrap;
         gap: 4px;
         padding: 6px 7px;
-        font-size: 8px;
+        font-size: 9px;
+        white-space: normal;
       }
 
       .footer-icon {
-        font-size: 14px;
+        font-size: 15px;
       }
 
       .footer-line {
-        width: 16px;
+        width: 14px;
       }
     }
 
@@ -1304,8 +1319,11 @@
       }
 
       .card-title {
-        font-size: 9px;
+        font-size: 10px;
         letter-spacing: -0.03em;
+        white-space: normal;
+        overflow: visible;
+        text-wrap: balance;
       }
 
       .card-right {
@@ -1344,13 +1362,15 @@
       }
 
       .card-footer {
+        flex-wrap: wrap;
         gap: 3px;
         padding: 5px 6px;
-        font-size: 7px;
+        font-size: 8px;
+        white-space: normal;
       }
 
       .footer-icon {
-        font-size: 12px;
+        font-size: 13px;
       }
 
       .footer-line {
@@ -1477,17 +1497,31 @@
     .profile-image-button,
     .footer-action,
     .code-title-action,
-    .secret-modal__close {
+    .secret-modal__close,
+    .mobile-intro__close,
+    .secret-modal__restart,
+    .command-hint-chip {
       border: 0;
       font: inherit;
       cursor: pointer;
       appearance: none;
+      touch-action: manipulation;
     }
 
     .profile-action,
     .profile-image-button,
     .footer-action {
       background: transparent;
+    }
+
+    .footer-action,
+    /* .profile-action, */
+    /* .command-hint-chip, */
+    .mobile-intro__close,
+    .secret-modal__close,
+    .secret-modal__restart {
+      min-width: 44px;
+      min-height: 44px;
     }
 
     .code-title-action {
@@ -2325,14 +2359,14 @@
   <div class="legendary-stage" id="legendaryStage" aria-hidden="true"></div>
   <main class="card">
     <header class="card-header">
-      <h1 class="card-title">◉ FRONTEND FUCKING BIRTHDAY PROTOCOL ◉</h1>
+      <h1 class="card-title">◉ [SYSTEM] BIRTHDAY EVENT TRIGGERED ◉</h1>
     </header>
 
     <section class="card-content">
       <div class="card-left">
         <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
           <span class="egg-counter__label">SECRET HUNTER</span>
-          <span class="egg-counter__value" id="eggCounterValue">0/16</span>
+          <span class="egg-counter__value" id="eggCounterValue">0/17</span>
           <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
         </button>
 
@@ -2404,7 +2438,9 @@
     </section>
 
     <footer class="card-footer">
-      <big>🎂</big>
+      <button class="footer-icon footer-action" type="button" data-easter="cake" aria-label="Cake celebration">
+        <big>🎂</big>
+      </button>
       <span class="footer-line"></span>
       <span>MADE WITH <button class="footer-icon footer-action" type="button" data-easter="hearts"
           aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
@@ -2471,11 +2507,13 @@
     const eggCounter = document.getElementById('eggCounter');
     const eggCounterValue = document.getElementById('eggCounterValue');
     const secretModal = document.getElementById('secretModal');
+    const secretModalClose = document.querySelector('[data-close-secret]');
     const secretModalTitle = document.getElementById('secretModalTitle');
     const secretModalText = document.getElementById('secretModalText');
     const secretModalProgress = document.getElementById('secretModalProgress');
     const secretModalRestart = document.getElementById('secretModalRestart');
     const codeModal = document.getElementById('codeModal');
+    const codeModalClose = document.querySelector('[data-close-code]');
     const commandPanel = document.getElementById('commandPanel');
     const commandPanelBody = document.getElementById('commandPanelBody');
     const commandInput = document.getElementById('commandInput');
@@ -2506,6 +2544,7 @@
     let longPressTriggered = false;
     let idleHintTimer = null;
     let idleHintCursor = 0;
+    let modalRestoreFocus = null;
 
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
@@ -2517,6 +2556,7 @@
       deploy: 'birthday.js ушёл в прод без согласования',
       terminal: 'Секретный терминал активирован. Теперь осторожно с руками',
       share: 'Share нажали. Теперь этот хаос может пострадать публично',
+      cake: 'Cake smash. Торт, сердца и салют пошли врассыпную',
       longPress: 'Long press. Терпение проверено, сайт моргнул первым',
       party: 'Party mode. Компилятор потерял серьёзное лицо',
       matrix: 'Matrix layer. Таблица стилей смотрит первой',
@@ -2535,6 +2575,7 @@
       deploy: 'birthday.js не сам себя деплойнет. Хотя очень старается.',
       terminal: 'Слэш открывает не только путь, но и терминал.',
       share: 'В футере есть кнопка, которая выпускает хаос наружу.',
+      cake: 'Торт в футере не просто украшение. Он тоже умеет праздновать.',
       longPress: 'Иногда страницу надо не кликать, а давить авторитетом.',
       party: 'Терминал понимает party. К сожалению для продакшена.',
       matrix: 'Терминал видел белого кролика. Попробуй matrix.',
@@ -2592,48 +2633,75 @@
         unlockEgg('party');
         partyMode();
         addCommandLog('&gt; Вечеринка активирована. Снимай штаны с продакшена');
+        runTerminalResponse('Вечеринка активирована. Снимай штаны с продакшена');
       },
       deploy() {
         unlockEgg('deploy');
-        deployBirthday();
+        deployBirthday(false);
         addCommandLog('&gt; Деплойнул в прод. Если упадёт — сам виноват');
+        runTerminalResponse([
+          'Деплойнул в прод. Если упадёт — сам виноват',
+          'npm run build — OK',
+          'deploy complete — именинник уже в проде, откат запрещён'
+        ], { gap: 760 });
       },
       matrix() {
         unlockEgg('matrix');
         matrixMode();
         addCommandLog('&gt; Следуй за белым кроликом...');
+        runTerminalResponse('Следуй за белым кроликом...');
       },
       legendary() {
         unlockEgg('legendary');
-        legendaryMode();
+        legendaryMode(false);
         addCommandLog('&gt; Ты и так легенда, просто пока не все в курсе');
+        runTerminalResponse('Ты и так легенда, просто пока не все в курсе');
       },
       coffee() {
-        triggerCoffeeEgg();
+        unlockEgg('coffee');
+        coffeeMode(5000, false, 'COFFEE РЕЖИМ', 'Ты набрал coffee. Страница получила кофеин в вену и теперь слишком бодрая для своих лет.');
         addCommandLog('&gt; Кофеин +100500. Теперь ты бог');
       },
       frontend() {
-        triggerFrontendEgg();
+        unlockEgg('frontend');
+        keyboardMode(
+          'is-keyboard-frontend',
+          14000,
+          'FRONTEND РЕЖИМ',
+          'Ты набрал frontend. Скобки полезли на экран: интерфейс решил доказать, что у него есть архитектура.',
+          '{ }',
+          42,
+          false
+        );
         addCommandLog('&gt; Frontend режим поднят. Верстка сделала вид, что так и было');
       },
       birthday() {
-        triggerBirthdayEgg();
+        unlockEgg('birthday');
+        keyboardMode(
+          'is-keyboard-birthday',
+          14000,
+          'BIRTHDAY РЕЖИМ',
+          'Ты набрал birthday. Торт пошёл в атаку, потому что обычное поздравление было бы слишком скучным.',
+          '🎂',
+          36,
+          false
+        );
         addCommandLog('&gt; Birthday режим активирован. Торт пошёл в атаку');
       },
       brew() {
         unlockEgg('brew');
-        beerMode();
+        beerMode(false);
         addCommandLog('Brew выполнен: экран вспенился, дедлайн делает вид, что не видел.');
       },
       bugfix() {
         unlockEgg('bugfix');
-        bugfixMode();
+        bugfixMode(false);
         addCommandLog('Bugfix mode: плюсы на поле, баги уже пишут объяснительную.');
       },
       clear() {
         commandLog.innerHTML = '';
         addCommandLog('&gt; Память очищена. Как твоя совесть после дедлайна');
-        showToast('Память очищена. Совесть тоже попробовала.');
+        runTerminalResponse('Память очищена. Совесть тоже попробовала.');
         flashScreen();
       },
       zaebal() {
@@ -2737,7 +2805,7 @@
 
       mobileIntro.classList.add('is-open');
       mobileIntro.setAttribute('aria-hidden', 'false');
-      window.setTimeout(() => mobileIntroClose?.focus(), 40);
+      openOverlay(mobileIntroClose);
     }
 
     function closeMobileIntro() {
@@ -2746,6 +2814,7 @@
       mobileIntro.classList.remove('is-open');
       mobileIntro.setAttribute('aria-hidden', 'true');
       markMobileIntroSeen();
+      closeOverlay();
     }
 
     function renderBirthdayCodeFrame(text, finished = false) {
@@ -2771,7 +2840,7 @@
       resetBirthdayCode();
       codeModal.classList.add('is-open');
       codeModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('modal-open');
+      openOverlay(codeModalClose);
 
       if (reduceMotion) {
         renderBirthdayCodeFrame('', true);
@@ -2805,7 +2874,7 @@
 
       codeModal.classList.remove('is-open');
       codeModal.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
+      closeOverlay();
     }
 
     function clearBackgroundIcons() {
@@ -3178,6 +3247,59 @@
       }, 3000);
     }
 
+    function queueToasts(messages, gap = 720) {
+      messages.forEach((message, index) => {
+        window.setTimeout(() => showToast(message), index * gap);
+      });
+    }
+
+    function runTerminalResponse(message, options = {}) {
+      if (Array.isArray(message)) {
+        queueToasts(message, options.gap ?? 720);
+        return;
+      }
+
+      showToast(message);
+    }
+
+    function lockMainContent(locked) {
+      if (!card) return;
+
+      const backgroundSelectors = [
+        '.card-header',
+        '.card-content',
+        '.card-footer'
+      ];
+
+      backgroundSelectors.forEach((selector) => {
+        card.querySelector(selector)?.toggleAttribute('inert', locked);
+      });
+    }
+
+    function openOverlay(focusTarget) {
+      modalRestoreFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      lockMainContent(true);
+      document.body.classList.add('modal-open');
+
+      window.setTimeout(() => {
+        focusTarget?.focus?.();
+      }, 40);
+    }
+
+    function closeOverlay() {
+      lockMainContent(false);
+      document.body.classList.remove('modal-open');
+
+      const restoreTarget = modalRestoreFocus;
+      modalRestoreFocus = null;
+
+      if (restoreTarget?.isConnected) {
+        window.setTimeout(() => {
+          restoreTarget.focus({ preventScroll: true });
+        }, 0);
+      }
+    }
+
     function showModal(title, text) {
       if (!secretModal || !secretModalTitle || !secretModalText) return;
 
@@ -3186,6 +3308,7 @@
       updateEggCounter();
       secretModal.classList.add('is-open');
       secretModal.setAttribute('aria-hidden', 'false');
+      openOverlay(secretModalClose);
       flashScreen();
     }
 
@@ -3194,6 +3317,7 @@
 
       secretModal.classList.remove('is-open');
       secretModal.setAttribute('aria-hidden', 'true');
+      closeOverlay();
     }
 
     function openCommandPanel() {
@@ -3463,7 +3587,7 @@
       }
     }
 
-    function beerMode() {
+    function beerMode(showPopup = true) {
       runIconMode({
         mode: 'is-beer',
         duration: 6000,
@@ -3478,10 +3602,12 @@
         floatingCount: 20
       });
       showToast('Beer spill. Терминал вспенился и перестал изображать серьёзность.');
-      showModal('BEER MODE', 'Brew запущен. Экран пенный, логика расслабилась, дедлайну лучше молчать.');
+      if (showPopup) {
+        showModal('BEER MODE', 'Brew запущен. Экран пенный, логика расслабилась, дедлайну лучше молчать.');
+      }
     }
 
-    function bugfixMode() {
+    function bugfixMode(showPopup = true) {
       runIconMode({
         mode: 'is-bugfix',
         duration: 6000,
@@ -3496,7 +3622,9 @@
         floatingCount: 30
       });
       showToast('Bugfix mode. Плюсы вышли на зачистку.');
-      showModal('БАГФИКС ВЫШЕЛ НА СМЕНУ', 'Баги не исчезли. Они просто сменили имя и спрятались в чужом backlog.');
+      if (showPopup) {
+        showModal('БАГФИКС ВЫШЕЛ НА СМЕНУ', 'Баги не исчезли. Они просто сменили имя и спрятались в чужом backlog.');
+      }
     }
 
     function heartMode() {
@@ -3535,7 +3663,7 @@
       showToast('Trophy lift-off. Кубок понял, кто тут главный.');
     }
 
-    function legendaryMode() {
+    function legendaryMode(showPopup = true) {
       clearLegendaryStage();
       card.classList.add('is-legendary');
       setTimedBodyMode('is-legendary', 10000);
@@ -3546,24 +3674,29 @@
         card.classList.remove('is-legendary');
         clearLegendaryStage();
       }, 10000);
-      showModal('РЕЖИМ ЛЕГЕНДЫ', 'Ты нашёл скрытый слой. Теперь сайт сияет так, будто сам себе поставил senior.');
+      if (showPopup) {
+        showModal('РЕЖИМ ЛЕГЕНДЫ', 'Ты нашёл скрытый слой. Теперь сайт сияет так, будто сам себе поставил senior.');
+      }
     }
 
-    function deployBirthday() {
-      playBirthdayCode();
+    function deployBirthday(showPopup = true) {
+      if (showPopup) {
+        playBirthdayCode();
+      }
+
       setTimedBodyMode('is-deploy', 5000);
       showToast('Deploying birthday.js... кэш держится на честном слове.');
       flashScreen();
 
-      const steps = [
-        'npm run build — OK',
-        'lint skipped — birthday emergency protocol без лишних вопросов',
-        'deploy complete — именинник уже в проде, откат запрещён'
-      ];
-
-      steps.forEach((step, index) => {
-        window.setTimeout(() => showToast(step), 700 * (index + 1));
-      });
+      if (showPopup) {
+        [
+          'npm run build — OK',
+          'lint skipped — birthday emergency protocol без лишних вопросов',
+          'deploy complete — именинник уже в проде, откат запрещён'
+        ].forEach((step, index) => {
+          window.setTimeout(() => showToast(step), 700 * (index + 1));
+        });
+      }
 
       window.setTimeout(() => {
         burstParticles(100);
@@ -3571,7 +3704,7 @@
       }, 2500);
     }
 
-    function keyboardMode(mode, duration, title, text, symbol, count) {
+    function keyboardMode(mode, duration, title, text, symbol, count, showPopup = true) {
       runIconMode({
         mode,
         duration,
@@ -3583,7 +3716,13 @@
         }],
         particles: Math.max(12, Math.floor(count / 2))
       });
-      showModal(title, text);
+
+      if (showPopup) {
+        showModal(title, text);
+        return;
+      }
+
+      showToast(text);
     }
 
     function burstFloatingText(symbol, count = 18) {
@@ -3605,6 +3744,15 @@
           item.remove();
         }, 1450);
       }
+    }
+
+    function cakeMode() {
+      unlockEgg('cake');
+      burstParticles(18);
+      burstFloatingText('♥', 12);
+      window.setTimeout(() => burstFloatingText('🎂', 10), 120);
+      window.setTimeout(() => burstFloatingText('🎉', 14), 220);
+      showToast('Cake smash. Сердца, торт и салют полетели в карточке.');
     }
 
     function handleSecretTyping(key) {
@@ -3677,11 +3825,15 @@
       const action = target.dataset.easter;
 
       switch (action) {
+        case 'cake':
+          cakeMode();
+          addCommandLog('&gt; Торт в футере запустил праздничный разнос');
+          break;
         case 'hearts':
           unlockEgg('hearts');
           heartMode();
-          addCommandLog('&gt; Сделано с душой, too much coffee, матом, и средним пальцем');
-          showModal('СДЕЛАНО С ДУШОЙ', 'Too much coffee, матом, и средним пальцем.');
+          addCommandLog('&gt; Сделано с душой: too much coffee, матом, и средним пальцем');
+          showToast('Сделано с душой: too much coffee, матом, и средним пальцем.');
           break;
         case 'portrait':
           unlockEgg('portrait');
