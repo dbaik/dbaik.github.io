@@ -33,7 +33,7 @@
       --font-pixel: 'Press Start 2P', system-ui, sans-serif;
       --font-terminal: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
 
-      --card-width: 880px;
+      --card-width: 968px;
       --card-min-height: 560px;
       --radius: 12px;
     }
@@ -880,6 +880,10 @@
       color: var(--magenta);
     }
 
+    .code-live .code-comment {
+      color: rgba(255, 255, 255, 0.42);
+    }
+
     .code-live .code-string {
       color: var(--green);
     }
@@ -917,7 +921,7 @@
 
     .code-modal__panel {
       position: relative;
-      width: min(720px, 100%);
+      width: min(500px, 100%);
       max-height: min(78vh, 760px);
       overflow: hidden;
       border: 2px solid rgba(0, 255, 204, 0.72);
@@ -935,14 +939,17 @@
       top: 10px;
       right: 10px;
       z-index: 2;
-      width: 30px;
-      height: 30px;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
       border: 2px solid rgba(0, 255, 204, 0.55);
       background: rgba(0, 0, 0, 0.86);
       color: var(--cyan);
       font-family: var(--font-terminal);
       font-size: 28px;
       line-height: 1;
+      padding: 0;
       cursor: pointer;
     }
 
@@ -1133,6 +1140,13 @@
       }
     }
 
+    @media (max-width: 992px) {
+      .footer-line {
+        width: auto;
+      }
+
+    }
+
     @media (max-width: 768px) {
       body {
         align-items: flex-start;
@@ -1242,10 +1256,6 @@
         white-space: normal;
       }
 
-      .footer-line {
-        width: 18px;
-      }
-
       .footer-txt {
         display: block;
         width: 100%;
@@ -1285,10 +1295,6 @@
         padding: 18px 14px 28px;
       }
 
-      .profile-card {
-        width: min(292px, 86vw);
-      }
-
       .profile-meta {
         font-size: 6.5px;
       }
@@ -1311,11 +1317,6 @@
 
       .footer-icon {
         font-size: 15px;
-      }
-
-      .footer-line {
-        width: 14px;
-        display: none;
       }
     }
 
@@ -1382,10 +1383,6 @@
 
       .footer-icon {
         font-size: 13px;
-      }
-
-      .footer-line {
-        width: 12px;
       }
 
       .toast-stack {
@@ -1910,6 +1907,7 @@
       color: var(--cyan);
       font-family: var(--font-terminal);
       font-size: 22px;
+      font-weight: bold;
       text-align: left;
       text-shadow: 0 0 8px rgba(0, 255, 204, 0.8);
       background: linear-gradient(90deg, rgba(0, 255, 204, 0.08), transparent);
@@ -1922,7 +1920,7 @@
       overflow: hidden;
       padding: 12px;
       font-family: var(--font-terminal);
-      font-size: 20px;
+      font-size: 18px;
       color: var(--green);
       text-align: left;
       background:
@@ -2326,7 +2324,7 @@
 
       .command-panel__body {
         padding: 10px;
-        font-size: 19px;
+        font-size: 17px;
       }
 
       .command-panel__log {
@@ -2497,9 +2495,9 @@
       aria-hidden="true">
       <div class="code-modal__panel">
         <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
-        <div class="code-modal__eyebrow">CHH-CHH</div>
+        <div class="code-modal__eyebrow">// CHH-CHH</div>
         <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
-        <p class="code-modal__hint">чш-чш, сейчас напечатаем</p>
+        <p class="code-modal__hint">тише-тише, сейчас напечатаем</p>
         <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
         </div>
       </div>
@@ -2536,8 +2534,8 @@
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const bodyModeTimers = new Map();
-    const birthdayCodePlain = `const celebration = {\n  status: "EPIC",\n  level: 9999,\n  message: "С Днём рождения, ЛЕГЕНДА!"\n};`;
-    const birthdayCodeFinalHtml = `<span class="code-keyword">const</span> celebration = {\n  status: <span class="code-string">"EPIC"</span>,\n  level: <span class="code-number">9999</span>,\n  message: <span class="code-string">"С Днём рождения, ЛЕГЕНДА!"</span>\n};`;
+    const birthdayCodePlain = `const celebration = {\n  person: "OLEX",\n  level: 9999,\n  status: "EPIC",\n  coffee: Infinity,\n  bugs: 0,\n  message: "С Днём рождения, ЛЕГЕНДА. Багов ноль. Подозрительно, но приятно. Система стабильна, но это временно."\n};\n\nexport default celebration;`;
+    const birthdayCodeFinalHtml = `<span class="code-keyword">const</span> celebration = {\n  person: <span class="code-string">"OLEX"</span>,\n  level: <span class="code-number">9999</span>,\n  status: <span class="code-string">"EPIC"</span>,\n  coffee: <span class="code-number">Infinity</span>,\n  bugs: <span class="code-number">0</span>,\n  message: <span class="code-string">"С Днём рождения, ЛЕГЕНДА. Багов ноль. Подозрительно, но приятно. Система стабильна, но это временно."</span>\n};\n\n<span class="code-keyword">export</span> <span class="code-keyword">default</span> celebration<span class="code-punct">;</span>`;
     let birthdayCodeTimer = null;
     let birthdayCodeRun = 0;
     let matrixRainTimer = null;
