@@ -884,6 +884,51 @@
       color: rgba(255, 255, 255, 0.42);
     }
 
+    .code-live .code-prelude {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 8px;
+      min-height: 1.45em;
+      padding: 2px 4px;
+      color: rgba(0, 255, 204, 0.9);
+      transform: translateX(-1px) skewX(-3deg);
+      text-shadow:
+        0 0 6px rgba(0, 255, 204, 0.22),
+        1px 0 0 rgba(255, 0, 255, 0.35);
+      filter: saturate(1.08) contrast(1.05);
+    }
+
+    .code-live .code-prelude__line {
+      color: inherit;
+      letter-spacing: 0.03em;
+      text-transform: none;
+    }
+
+    .code-live .code-prelude__line--strike {
+      opacity: 0.7;
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      text-decoration-color: rgba(255, 0, 255, 0.92);
+      text-decoration-skip-ink: none;
+      transform: translateY(-1px) rotate(-0.4deg);
+    }
+
+    .code-live .code-prelude__aside {
+      color: #ff4de6;
+      font-family: var(--font-terminal);
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .code-live .code-prelude__aside--blink {
+      animation:
+        prelude-blink 1s linear 1,
+        prelude-jitter 1s steps(2, end) 1;
+    }
+
     .code-live .code-string {
       color: var(--green);
     }
@@ -901,6 +946,25 @@
       width: 1ch;
       color: var(--cyan);
       animation: cursor-blink 0.9s steps(2, start) infinite;
+    }
+
+    @keyframes prelude-blink {
+      0%, 8%, 22%, 34%, 48%, 60%, 74%, 86%, 100% {
+        opacity: 1;
+      }
+
+      12%, 28%, 40%, 54%, 68%, 80%, 92% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes prelude-jitter {
+      0% { transform: translate(0, 0); }
+      18% { transform: translate(-1px, 0); }
+      36% { transform: translate(1px, 0); }
+      54% { transform: translate(-1px, 1px); }
+      72% { transform: translate(1px, -1px); }
+      100% { transform: translate(0, 0); }
     }
 
     .code-modal {
@@ -2534,6 +2598,10 @@
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const bodyModeTimers = new Map();
+    const birthdayCodePreludePlain = 'Lorem ipsum dolor sit amet';
+    const birthdayCodePreludeHoldMs = 700;
+    const birthdayCodePreCodePauseMs = 180;
+    const birthdayCodeAsideBlinkMs = 1000;
     const birthdayCodePlain = `const celebration = {\n  person: "OLEX",\n  level: 9999,\n  status: "EPIC",\n  coffee: Infinity,\n  bugs: 0,\n  message: "С Днём рождения, ЛЕГЕНДА. Багов ноль. Подозрительно, но приятно. Система стабильна, но это временно."\n};\n\nexport default celebration;`;
     const birthdayCodeFinalHtml = `<span class="code-keyword">const</span> celebration = {\n  person: <span class="code-string">"OLEX"</span>,\n  level: <span class="code-number">9999</span>,\n  status: <span class="code-string">"EPIC"</span>,\n  coffee: <span class="code-number">Infinity</span>,\n  bugs: <span class="code-number">0</span>,\n  message: <span class="code-string">"С Днём рождения, ЛЕГЕНДА. Багов ноль. Подозрительно, но приятно. Система стабильна, но это временно."</span>\n};\n\n<span class="code-keyword">export</span> <span class="code-keyword">default</span> celebration<span class="code-punct">;</span>`;
     let birthdayCodeTimer = null;
@@ -2613,7 +2681,7 @@
     ];
 
     const foundEggs = new Set(loadFoundEggs());
-    const commandHintList = ['party', 'matrix', 'deploy', 'brew', 'legendary', 'zaebal', 'clear'];
+    const commandHintList = ['deploy', 'bugfix', 'brew', 'party', 'matrix', 'legendary', 'zaebal', 'clear'];
 
     function renderCommandHints(commandsList) {
       return [
@@ -2843,6 +2911,37 @@
       birthdayCodeLive.replaceChildren(document.createTextNode(text), cursor);
     }
 
+    function renderBirthdayPreludeFrame(text, phase = 'typing') {
+      if (!birthdayCodeLive) return;
+
+      const prelude = document.createElement('span');
+      prelude.className = 'code-prelude';
+
+      const line = document.createElement('span');
+      line.className = phase === 'strike'
+        ? 'code-prelude__line code-prelude__line--strike'
+        : 'code-prelude__line';
+      line.textContent = text;
+      prelude.appendChild(line);
+
+      if (phase !== 'typing') {
+        const aside = document.createElement('span');
+        aside.className = phase === 'reaction'
+          ? 'code-prelude__aside code-prelude__aside--blink'
+          : 'code-prelude__aside';
+        aside.textContent = 'бля';
+        prelude.appendChild(aside);
+      } else {
+        const cursor = document.createElement('span');
+        cursor.className = 'code-cursor';
+        cursor.textContent = '▌';
+        prelude.appendChild(cursor);
+      }
+
+      birthdayCodeLive.classList.remove('is-hidden');
+      birthdayCodeLive.replaceChildren(prelude);
+    }
+
     function playBirthdayCode() {
       if (!birthdayCodeLive || !codeModal) return;
 
@@ -2857,25 +2956,53 @@
       }
 
       const runId = birthdayCodeRun;
-      let index = 0;
+      let preludeIndex = 0;
 
-      const tick = () => {
+      const typePrelude = () => {
         if (runId !== birthdayCodeRun) return;
 
-        if (index <= birthdayCodePlain.length) {
-          renderBirthdayCodeFrame(birthdayCodePlain.slice(0, index));
-          index += 1;
-          birthdayCodeTimer = window.setTimeout(tick, index < 14 ? 35 : index < 40 ? 22 : 14);
+        if (preludeIndex <= birthdayCodePreludePlain.length) {
+          renderBirthdayPreludeFrame(birthdayCodePreludePlain.slice(0, preludeIndex));
+          preludeIndex += 1;
+          birthdayCodeTimer = window.setTimeout(typePrelude, preludeIndex < 14 ? 35 : preludeIndex < 28 ? 24 : 18);
           return;
         }
 
         birthdayCodeTimer = window.setTimeout(() => {
           if (runId !== birthdayCodeRun) return;
-          renderBirthdayCodeFrame('', true);
-        }, 120);
+          renderBirthdayPreludeFrame(birthdayCodePreludePlain, 'reaction');
+
+          birthdayCodeTimer = window.setTimeout(() => {
+            if (runId !== birthdayCodeRun) return;
+            renderBirthdayPreludeFrame(birthdayCodePreludePlain, 'strike');
+
+            birthdayCodeTimer = window.setTimeout(() => {
+              if (runId !== birthdayCodeRun) return;
+            let codeIndex = 0;
+
+            const typeCode = () => {
+              if (runId !== birthdayCodeRun) return;
+
+              if (codeIndex <= birthdayCodePlain.length) {
+                renderBirthdayCodeFrame(birthdayCodePlain.slice(0, codeIndex));
+                codeIndex += 1;
+                birthdayCodeTimer = window.setTimeout(typeCode, codeIndex < 14 ? 35 : codeIndex < 40 ? 22 : 14);
+                return;
+              }
+
+              birthdayCodeTimer = window.setTimeout(() => {
+                if (runId !== birthdayCodeRun) return;
+                renderBirthdayCodeFrame('', true);
+              }, 120);
+            };
+
+              typeCode();
+            }, birthdayCodePreCodePauseMs);
+          }, birthdayCodeAsideBlinkMs);
+        }, birthdayCodePreludeHoldMs);
       };
 
-      tick();
+      typePrelude();
     }
 
     function closeCodeModal() {
