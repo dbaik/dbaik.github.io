@@ -862,6 +862,7 @@
     }
 
     .code-live {
+      position: relative;
       min-height: 170px;
       white-space: pre-wrap;
       word-break: break-word;
@@ -870,6 +871,28 @@
       font-size: 14px;
       line-height: 1.45;
       color: var(--cyan);
+    }
+
+    .code-live.is-complete {
+      animation: code-complete-pulse 900ms cubic-bezier(0.2, 0.8, 0.2, 1) 1;
+    }
+
+    .code-live.is-complete::after {
+      content: "EXECUTED ✓";
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      padding: 3px 6px;
+      border: 1px solid rgba(0, 255, 136, 0.75);
+      color: #00ff88;
+      background: rgba(0, 18, 12, 0.9);
+      font-family: var(--font-terminal);
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 8px rgba(0, 255, 136, 0.8);
+      pointer-events: none;
+      animation: code-complete-badge 900ms steps(2, end) 1 both;
     }
 
     .code-live.is-hidden {
@@ -903,6 +926,12 @@
       color: inherit;
       letter-spacing: 0.03em;
       text-transform: none;
+    }
+
+    .code-live .code-prelude__line--comment {
+      color: rgba(255, 255, 255, 0.46);
+      font-style: italic;
+      letter-spacing: 0.02em;
     }
 
     .code-live .code-prelude__line--strike {
@@ -949,22 +978,114 @@
     }
 
     @keyframes prelude-blink {
-      0%, 8%, 22%, 34%, 48%, 60%, 74%, 86%, 100% {
+
+      0%,
+      8%,
+      22%,
+      34%,
+      48%,
+      60%,
+      74%,
+      86%,
+      100% {
         opacity: 1;
       }
 
-      12%, 28%, 40%, 54%, 68%, 80%, 92% {
+      12%,
+      28%,
+      40%,
+      54%,
+      68%,
+      80%,
+      92% {
         opacity: 0;
       }
     }
 
     @keyframes prelude-jitter {
-      0% { transform: translate(0, 0); }
-      18% { transform: translate(-1px, 0); }
-      36% { transform: translate(1px, 0); }
-      54% { transform: translate(-1px, 1px); }
-      72% { transform: translate(1px, -1px); }
-      100% { transform: translate(0, 0); }
+      0% {
+        transform: translate(0, 0);
+      }
+
+      18% {
+        transform: translate(-1px, 0);
+      }
+
+      36% {
+        transform: translate(1px, 0);
+      }
+
+      54% {
+        transform: translate(-1px, 1px);
+      }
+
+      72% {
+        transform: translate(1px, -1px);
+      }
+
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+
+    @keyframes code-complete-pulse {
+      0% {
+        filter: brightness(1);
+        text-shadow: none;
+        box-shadow: inset 0 0 0 rgba(0, 255, 136, 0);
+      }
+
+      28% {
+        filter: brightness(1.35) saturate(1.25);
+        text-shadow: 0 0 7px rgba(0, 255, 204, 0.5);
+        box-shadow: inset 0 0 34px rgba(0, 255, 136, 0.14);
+      }
+
+      48% {
+        transform: translateX(1px);
+      }
+
+      64% {
+        transform: translateX(-1px);
+      }
+
+      100% {
+        filter: brightness(1);
+        transform: translateX(0);
+        text-shadow: none;
+        box-shadow: inset 0 0 0 rgba(0, 255, 136, 0);
+      }
+    }
+
+    @keyframes code-complete-badge {
+      0% {
+        opacity: 0;
+        transform: translateY(-3px);
+      }
+
+      18%,
+      42% {
+        opacity: 1;
+      }
+
+      30%,
+      54% {
+        opacity: 0.2;
+      }
+
+      68%,
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .code-live.is-complete,
+      .code-live.is-complete::after {
+        animation: none;
+      }
     }
 
     .code-modal {
@@ -998,54 +1119,55 @@
         inset 0 0 24px rgba(0, 255, 204, 0.08);
     }
 
+    .code-modal__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 12px 10px 16px;
+      border-bottom: 1px solid rgba(0, 255, 204, 0.16);
+      background:
+        linear-gradient(90deg, rgba(0, 255, 204, 0.08), rgba(255, 0, 255, 0.04) 55%, transparent);
+    }
+
     .code-modal__close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 2;
       display: grid;
       place-items: center;
-      width: 44px;
-      height: 44px;
+      width: 36px;
+      height: 36px;
       border: 2px solid rgba(0, 255, 204, 0.55);
       background: rgba(0, 0, 0, 0.86);
       color: var(--cyan);
       font-family: var(--font-terminal);
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1;
       padding: 0;
+      flex: 0 0 auto;
       cursor: pointer;
     }
 
-    .code-modal__eyebrow {
-      padding: 16px 56px 4px 16px;
-      color: var(--magenta);
-      font-family: var(--font-pixel);
-      font-size: 10px;
-      text-shadow: 0 0 8px rgba(255, 0, 255, 0.45);
-    }
-
     .code-modal__title {
-      padding: 0 16px 6px;
       color: var(--cyan);
       font-family: var(--font-terminal);
-      font-size: 30px;
+      font-size: 28px;
+      line-height: 1;
       text-shadow: 0 0 10px rgba(0, 255, 204, 0.75);
     }
 
     .code-modal__hint {
       padding: 0 16px 12px;
-      color: var(--yellow);
+      color: rgba(255, 255, 255, 0.46);
       font-family: var(--font-terminal);
       font-size: 22px;
       line-height: 1;
+      font-style: italic;
+      letter-spacing: 0.02em;
     }
 
     .code-modal .code-live {
       min-height: 0;
       max-height: min(56vh, 560px);
       overflow: auto;
-      padding-top: 0;
       white-space: pre-wrap;
       word-break: break-word;
       font-size: 15px;
@@ -1833,6 +1955,10 @@
         inset 0 0 22px rgba(255, 215, 0, 0.08);
     }
 
+    .secret-modal.is-final .secret-modal__panel {
+      animation: final-modal-pop 760ms cubic-bezier(0.2, 0.85, 0.2, 1) 1;
+    }
+
     .secret-modal__close {
       position: absolute;
       top: 10px;
@@ -1894,6 +2020,27 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    }
+
+    @keyframes final-modal-pop {
+      0% {
+        transform: scale(0.94) translateY(10px);
+        filter: brightness(1);
+      }
+
+      38% {
+        transform: scale(1.02) translateY(0);
+        filter: brightness(1.18) saturate(1.1);
+      }
+
+      62% {
+        transform: scale(0.995);
+      }
+
+      100% {
+        transform: scale(1);
+        filter: brightness(1);
+      }
     }
 
     .command-panel {
@@ -2558,10 +2705,10 @@
     <div class="code-modal" id="codeModal" role="dialog" aria-modal="true" aria-labelledby="codeModalTitle"
       aria-hidden="true">
       <div class="code-modal__panel">
-        <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
-        <div class="code-modal__eyebrow">// CHH-CHH</div>
-        <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
-        <p class="code-modal__hint">тише-тише, сейчас напечатаем</p>
+        <div class="code-modal__head">
+          <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
+          <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
+        </div>
         <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
         </div>
       </div>
@@ -2598,6 +2745,7 @@
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const bodyModeTimers = new Map();
+    const birthdayCodeCommentPlain = '// тише-тише, сейчас напечатаем';
     const birthdayCodePreludePlain = 'Lorem ipsum dolor sit amet';
     const birthdayCodePreludeHoldMs = 700;
     const birthdayCodePreCodePauseMs = 180;
@@ -2611,6 +2759,7 @@
     let legendaryModeTimer = null;
     let legendarySpawnTimer = null;
     let completionTimer = null;
+    let finalEggsModalTimer = null;
     let commandActivationTimer = null;
 
     let typedBuffer = '';
@@ -2871,6 +3020,7 @@
 
       if (birthdayCodeLive) {
         birthdayCodeLive.innerHTML = '';
+        birthdayCodeLive.classList.remove('is-complete');
         birthdayCodeLive.classList.add('is-hidden');
       }
 
@@ -2899,7 +3049,9 @@
 
       if (finished) {
         birthdayCodeLive.innerHTML = birthdayCodeFinalHtml;
-        birthdayCodeLive.classList.remove('is-hidden');
+        birthdayCodeLive.classList.remove('is-hidden', 'is-complete');
+        void birthdayCodeLive.offsetWidth;
+        birthdayCodeLive.classList.add('is-complete');
         return;
       }
 
@@ -2907,7 +3059,7 @@
       cursor.className = 'code-cursor';
       cursor.textContent = '▌';
 
-      birthdayCodeLive.classList.remove('is-hidden');
+      birthdayCodeLive.classList.remove('is-hidden', 'is-complete');
       birthdayCodeLive.replaceChildren(document.createTextNode(text), cursor);
     }
 
@@ -2920,11 +3072,13 @@
       const line = document.createElement('span');
       line.className = phase === 'strike'
         ? 'code-prelude__line code-prelude__line--strike'
-        : 'code-prelude__line';
+        : phase === 'comment'
+          ? 'code-prelude__line code-prelude__line--comment'
+          : 'code-prelude__line';
       line.textContent = text;
       prelude.appendChild(line);
 
-      if (phase !== 'typing') {
+      if (phase === 'reaction' || phase === 'strike') {
         const aside = document.createElement('span');
         aside.className = phase === 'reaction'
           ? 'code-prelude__aside code-prelude__aside--blink'
@@ -2938,7 +3092,7 @@
         prelude.appendChild(cursor);
       }
 
-      birthdayCodeLive.classList.remove('is-hidden');
+      birthdayCodeLive.classList.remove('is-hidden', 'is-complete');
       birthdayCodeLive.replaceChildren(prelude);
     }
 
@@ -2956,7 +3110,29 @@
       }
 
       const runId = birthdayCodeRun;
+      let commentIndex = 0;
       let preludeIndex = 0;
+
+      const typeComment = () => {
+        if (runId !== birthdayCodeRun) return;
+
+        if (commentIndex <= birthdayCodeCommentPlain.length) {
+          renderBirthdayPreludeFrame(birthdayCodeCommentPlain.slice(0, commentIndex), 'comment');
+          commentIndex += 1;
+          birthdayCodeTimer = window.setTimeout(typeComment, commentIndex < 14 ? 35 : commentIndex < 28 ? 24 : 18);
+          return;
+        }
+
+        birthdayCodeTimer = window.setTimeout(() => {
+          if (runId !== birthdayCodeRun) return;
+          renderBirthdayPreludeFrame(birthdayCodeCommentPlain, 'comment');
+
+          birthdayCodeTimer = window.setTimeout(() => {
+            if (runId !== birthdayCodeRun) return;
+            typePrelude();
+          }, birthdayCodePreCodePauseMs);
+        }, birthdayCodePreludeHoldMs);
+      };
 
       const typePrelude = () => {
         if (runId !== birthdayCodeRun) return;
@@ -2978,23 +3154,23 @@
 
             birthdayCodeTimer = window.setTimeout(() => {
               if (runId !== birthdayCodeRun) return;
-            let codeIndex = 0;
+              let codeIndex = 0;
 
-            const typeCode = () => {
-              if (runId !== birthdayCodeRun) return;
-
-              if (codeIndex <= birthdayCodePlain.length) {
-                renderBirthdayCodeFrame(birthdayCodePlain.slice(0, codeIndex));
-                codeIndex += 1;
-                birthdayCodeTimer = window.setTimeout(typeCode, codeIndex < 14 ? 35 : codeIndex < 40 ? 22 : 14);
-                return;
-              }
-
-              birthdayCodeTimer = window.setTimeout(() => {
+              const typeCode = () => {
                 if (runId !== birthdayCodeRun) return;
-                renderBirthdayCodeFrame('', true);
-              }, 120);
-            };
+
+                if (codeIndex <= birthdayCodePlain.length) {
+                  renderBirthdayCodeFrame(birthdayCodePlain.slice(0, codeIndex));
+                  codeIndex += 1;
+                  birthdayCodeTimer = window.setTimeout(typeCode, codeIndex < 14 ? 35 : codeIndex < 40 ? 22 : 14);
+                  return;
+                }
+
+                birthdayCodeTimer = window.setTimeout(() => {
+                  if (runId !== birthdayCodeRun) return;
+                  renderBirthdayCodeFrame('', true);
+                }, 120);
+              };
 
               typeCode();
             }, birthdayCodePreCodePauseMs);
@@ -3002,7 +3178,7 @@
         }, birthdayCodePreludeHoldMs);
       };
 
-      typePrelude();
+      typeComment();
     }
 
     function closeCodeModal() {
@@ -3173,6 +3349,11 @@
         completionTimer = null;
       }
 
+      if (finalEggsModalTimer) {
+        window.clearTimeout(finalEggsModalTimer);
+        finalEggsModalTimer = null;
+      }
+
       if (found === total) {
         completionTimer = window.setTimeout(() => {
           if (secretModalProgress) {
@@ -3181,10 +3362,20 @@
 
           secretModalRestart?.classList.add('is-visible');
           eggCounter?.classList.add('is-complete');
+
+          finalEggsModalTimer = window.setTimeout(() => {
+            if (!secretModal) return;
+
+            secretModal.classList.add('is-final');
+            showModal('ВСЁ НАЙДЕНО', 'Все пасхалки найдены. Любопытство уровня senior, терпение уровня человек-который-это-терпел.', { updateCounter: false });
+            burstParticles(160);
+            burstFloatingText('100%', 26);
+          }, 900);
         }, 4000);
       } else {
         eggCounter?.classList.toggle('is-complete', false);
         secretModalRestart?.classList.toggle('is-visible', false);
+        secretModal?.classList.remove('is-final');
       }
 
       if (found !== total) {
@@ -3237,6 +3428,11 @@
         window.clearTimeout(completionTimer);
         completionTimer = null;
       }
+
+      if (finalEggsModalTimer) {
+        window.clearTimeout(finalEggsModalTimer);
+        finalEggsModalTimer = null;
+      }
       stopMatrixRain();
       clearLegendaryStage();
       resetBirthdayCode();
@@ -3261,6 +3457,7 @@
       );
       card.classList.remove('is-party', 'is-matrix', 'is-legendary');
       eggCounter?.classList.remove('is-complete');
+      secretModal?.classList.remove('is-final');
 
       closeModal();
       closeCommandPanel();
@@ -3282,14 +3479,6 @@
       const total = eggIds.length;
       const found = eggIds.filter((eggId) => foundEggs.has(eggId)).length;
       showToast(`Пасхалка найдена: ${eggCatalog[id]} (${found}/${total})`);
-
-      if (found === total) {
-        window.setTimeout(() => {
-          showModal('ВСЁ НАЙДЕНО', 'Все пасхалки найдены. Любопытство уровня senior, терпение уровня человек-который-это-терпел.');
-          burstParticles(160);
-          burstFloatingText('100%', 26);
-        }, 500);
-      }
     }
 
     function createParticle() {
@@ -3436,12 +3625,14 @@
       }
     }
 
-    function showModal(title, text) {
+    function showModal(title, text, options = {}) {
       if (!secretModal || !secretModalTitle || !secretModalText) return;
 
       secretModalTitle.textContent = title;
       secretModalText.textContent = text;
-      updateEggCounter();
+      if (options.updateCounter !== false) {
+        updateEggCounter();
+      }
       secretModal.classList.add('is-open');
       secretModal.setAttribute('aria-hidden', 'false');
       openOverlay(secretModalClose);
@@ -3451,7 +3642,13 @@
     function closeModal() {
       if (!secretModal) return;
 
+      if (finalEggsModalTimer) {
+        window.clearTimeout(finalEggsModalTimer);
+        finalEggsModalTimer = null;
+      }
+
       secretModal.classList.remove('is-open');
+      secretModal.classList.remove('is-final');
       secretModal.setAttribute('aria-hidden', 'true');
       closeOverlay();
     }
