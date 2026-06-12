@@ -3209,7 +3209,6 @@
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isCompactViewport = window.innerWidth < 640;
-    const prefersLightQuery = window.matchMedia('(prefers-color-scheme: light)');
     const bodyModeTimers = new Map();
     const birthdayCodeCommentPlain = '// тише-тише, сейчас напечатаем';
     const birthdayCodePreludePlain = 'Lorem ipsum dolor sit amet';
@@ -3232,6 +3231,7 @@
     let soundEnabled = false;
     let currentThemePreference = null;
     let ambientParticleTimer = null;
+    let temporaryThemeTimer = null;
 
     let typedBuffer = '';
     let konamiIndex = 0;
@@ -3370,28 +3370,52 @@
       if (persist) {
         currentThemePreference = theme;
         writeStorageItem(themeStorageKey, theme);
+      } else if (theme === 'dark' && currentThemePreference !== null) {
+        currentThemePreference = theme;
       }
     }
 
     function getResolvedTheme() {
       const storedTheme = readStorageItem(themeStorageKey);
 
-      if (storedTheme === 'light' || storedTheme === 'dark') {
+      if (storedTheme === 'dark') {
         currentThemePreference = storedTheme;
         return storedTheme;
       }
 
+      if (storedTheme === 'light') {
+        currentThemePreference = null;
+        writeStorageItem(themeStorageKey, 'dark');
+        return 'dark';
+      }
+
       currentThemePreference = null;
-      return prefersLightQuery.matches ? 'light' : 'dark';
+      return 'dark';
     }
 
     function toggleTheme() {
-      const nextTheme = body.dataset.theme === 'light' ? 'dark' : 'light';
-      applyTheme(nextTheme, { persist: true });
+      if (temporaryThemeTimer) {
+        window.clearTimeout(temporaryThemeTimer);
+        temporaryThemeTimer = null;
+      }
+
+      if (body.dataset.theme === 'light') {
+        applyTheme('dark', { persist: true });
+        playSoundCue('theme');
+        showToast('Dark mode back. Horses officially stopped pushing.');
+        return;
+      }
+
+      applyTheme('light', { persist: false });
       playSoundCue('theme');
-      showToast(nextTheme === 'light'
-        ? 'Light mode включён. Экран вымыт до приличия.'
-        : 'Dark mode включён. Неон вернулся в ночную смену.');
+      showToast("don't push the horses. Light mode is just visiting.");
+
+      temporaryThemeTimer = window.setTimeout(() => {
+        applyTheme('dark', { persist: true });
+        playSoundCue('theme');
+        showToast('Dark mode restored. The horses calmed down.');
+        temporaryThemeTimer = null;
+      }, 4000);
     }
 
     function updateSoundToggle() {
@@ -3925,6 +3949,109 @@
             step: 0.05,
             filterStart: 2000,
             filterEnd: 700
+          });
+          break;
+        case 'typewriter-key':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 1760,
+            type: 'square',
+            duration: 0.025,
+            gain: 0.04,
+            filterStart: 4200,
+            filterEnd: 1800
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.002,
+            duration: 0.018,
+            gain: 0.014,
+            filterFrequency: 3200
+          });
+          break;
+        case 'typewriter-space':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 1180,
+            type: 'triangle',
+            duration: 0.018,
+            gain: 0.018,
+            filterStart: 3000,
+            filterEnd: 1600
+          });
+          break;
+        case 'typewriter-return':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 880,
+            type: 'square',
+            duration: 0.04,
+            gain: 0.05,
+            filterStart: 2600,
+            filterEnd: 900
+          });
+          scheduleTone(ctx, {
+            start: now + 0.045,
+            frequency: 196,
+            type: 'triangle',
+            duration: 0.08,
+            gain: 0.035,
+            filterStart: 1200,
+            filterEnd: 320
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.03,
+            gain: 0.02,
+            filterFrequency: 1800
+          });
+          break;
+        case 'croak':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 186,
+            type: 'triangle',
+            duration: 0.09,
+            gain: 0.055,
+            filterStart: 1400,
+            filterEnd: 240
+          });
+          scheduleTone(ctx, {
+            start: now + 0.03,
+            frequency: 138,
+            type: 'square',
+            duration: 0.07,
+            gain: 0.04,
+            filterStart: 1100,
+            filterEnd: 180
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.04,
+            gain: 0.02,
+            filterFrequency: 1000
+          });
+          break;
+        case 'executed':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.06 },
+            { note: 7, offset: 1, duration: 0.08 },
+            { note: 12, offset: 2, duration: 0.12 }
+          ], {
+            root: 392,
+            type: 'triangle',
+            gain: 0.075,
+            step: 0.08,
+            filterStart: 3200,
+            filterEnd: 1200
+          });
+          scheduleTone(ctx, {
+            start: now + 0.01,
+            frequency: 1046,
+            type: 'square',
+            duration: 0.05,
+            gain: 0.04,
+            filterStart: 3600,
+            filterEnd: 1400
           });
           break;
         case 'theme':
@@ -4603,6 +4730,9 @@
           : 'code-prelude__aside';
         aside.textContent = 'бля';
         prelude.appendChild(aside);
+        if (phase === 'reaction') {
+          playSoundCue('croak');
+        }
       } else {
         const cursor = document.createElement('span');
         cursor.className = 'code-cursor';
@@ -4612,6 +4742,22 @@
 
       birthdayCodeLive.classList.remove('is-hidden', 'is-complete');
       birthdayCodeLive.replaceChildren(prelude);
+    }
+
+    function playBirthdayTypewriterCue(char) {
+      if (!char) return;
+
+      if (char === '\n') {
+        playSoundCue('typewriter-return');
+        return;
+      }
+
+      if (char === ' ') {
+        playSoundCue('typewriter-space');
+        return;
+      }
+
+      playSoundCue('typewriter-key');
     }
 
     function playBirthdayCode() {
@@ -4634,8 +4780,10 @@
       const typeComment = () => {
         if (runId !== birthdayCodeRun) return;
 
-        if (commentIndex <= birthdayCodeCommentPlain.length) {
-          renderBirthdayPreludeFrame(birthdayCodeCommentPlain.slice(0, commentIndex), 'comment');
+        if (commentIndex < birthdayCodeCommentPlain.length) {
+          const char = birthdayCodeCommentPlain[commentIndex];
+          renderBirthdayPreludeFrame(birthdayCodeCommentPlain.slice(0, commentIndex + 1), 'comment');
+          playBirthdayTypewriterCue(char);
           commentIndex += 1;
           birthdayCodeTimer = window.setTimeout(typeComment, commentIndex < 14 ? 35 : commentIndex < 28 ? 24 : 18);
           return;
@@ -4655,8 +4803,10 @@
       const typePrelude = () => {
         if (runId !== birthdayCodeRun) return;
 
-        if (preludeIndex <= birthdayCodePreludePlain.length) {
-          renderBirthdayPreludeFrame(birthdayCodePreludePlain.slice(0, preludeIndex));
+        if (preludeIndex < birthdayCodePreludePlain.length) {
+          const char = birthdayCodePreludePlain[preludeIndex];
+          renderBirthdayPreludeFrame(birthdayCodePreludePlain.slice(0, preludeIndex + 1));
+          playBirthdayTypewriterCue(char);
           preludeIndex += 1;
           birthdayCodeTimer = window.setTimeout(typePrelude, preludeIndex < 14 ? 35 : preludeIndex < 28 ? 24 : 18);
           return;
@@ -4677,8 +4827,10 @@
               const typeCode = () => {
                 if (runId !== birthdayCodeRun) return;
 
-                if (codeIndex <= birthdayCodePlain.length) {
-                  renderBirthdayCodeFrame(birthdayCodePlain.slice(0, codeIndex));
+                if (codeIndex < birthdayCodePlain.length) {
+                  const char = birthdayCodePlain[codeIndex];
+                  renderBirthdayCodeFrame(birthdayCodePlain.slice(0, codeIndex + 1));
+                  playBirthdayTypewriterCue(char);
                   codeIndex += 1;
                   birthdayCodeTimer = window.setTimeout(typeCode, codeIndex < 14 ? 35 : codeIndex < 40 ? 22 : 14);
                   return;
@@ -5297,6 +5449,7 @@
       if (commands[command]) {
         playSoundCue(getCommandSoundCue(command));
         commands[command]();
+        playSoundCue('executed');
         return;
       }
 
@@ -5851,13 +6004,6 @@
     applyTheme(getResolvedTheme(), { persist: false });
     soundEnabled = readStorageItem(soundStorageKey) === '1';
     updateSoundToggle();
-
-    if (!currentThemePreference && typeof prefersLightQuery.addEventListener === 'function') {
-      prefersLightQuery.addEventListener('change', () => {
-        if (currentThemePreference) return;
-        applyTheme(prefersLightQuery.matches ? 'light' : 'dark', { persist: false });
-      });
-    }
 
     themeToggle?.addEventListener('click', toggleTheme);
 
