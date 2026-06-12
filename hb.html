@@ -314,6 +314,25 @@
         inset 0 0 10px rgba(26, 138, 151, 0.05);
     }
 
+    body[data-theme="light"] .control-toggle__name {
+      color: rgba(21, 32, 51, 0.58);
+    }
+
+    body[data-theme="light"] .control-toggle__state {
+      color: #152033;
+    }
+
+    body[data-theme="light"] .control-toggle__switch {
+      border-color: rgba(21, 32, 51, 0.2);
+      background: rgba(68, 80, 104, 0.28);
+      box-shadow: inset 0 2px 5px rgba(21, 32, 51, 0.2);
+    }
+
+    body[data-theme="light"] .control-toggle.is-active .control-toggle__switch {
+      border-color: rgba(26, 138, 151, 0.56);
+      background: linear-gradient(90deg, #177986, #2aa8a5);
+    }
+
     body[data-theme="light"] .card-title,
     body[data-theme="light"] .birthday-title,
     body[data-theme="light"] .birthday-accent,
@@ -322,8 +341,7 @@
       text-shadow: none;
     }
 
-    body[data-theme="light"] .card-title,
-    body[data-theme="light"] .control-toggle--sound.is-muted .control-toggle__icon {
+    body[data-theme="light"] .card-title {
       animation: none;
     }
 
@@ -777,182 +795,127 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       align-items: center;
       gap: 8px;
-      width: min(286px, 100%);
+      width: min(300px, 100%);
     }
 
     .control-toggle {
-      display: inline-flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       width: 100%;
       min-width: 0;
-      min-height: 42px;
-      padding: 8px 12px;
-      border: 1px solid rgba(0, 255, 204, 0.6);
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.75);
+      min-height: 48px;
+      padding: 7px 8px 7px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(17, 20, 34, 0.94), rgba(5, 7, 16, 0.96));
       color: var(--white);
       font-family: var(--font-terminal);
       line-height: 1;
       cursor: pointer;
       position: relative;
-      isolation: isolate;
-      overflow: hidden;
       box-shadow:
-        0 0 16px rgba(0, 255, 204, 0.18),
-        inset 0 0 12px rgba(255, 0, 255, 0.08);
-      transition: transform 160ms ease, box-shadow 160ms ease, background 220ms ease, border-color 220ms ease;
-    }
-
-    .control-toggle::before {
-      content: "";
-      position: absolute;
-      inset: 4px;
-      border-radius: 999px;
-      background:
-        linear-gradient(180deg, rgba(17, 24, 39, 0.96), rgba(4, 8, 16, 0.95));
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-        inset 0 0 14px rgba(0, 255, 204, 0.06);
-      pointer-events: none;
-      transition: background 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
-      z-index: 0;
-    }
-
-    .control-toggle::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 6px;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(188, 197, 214, 0.94));
-      box-shadow:
-        0 0 12px rgba(0, 255, 204, 0.16),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.48),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.16);
-      transform: translateY(-50%);
-      pointer-events: none;
-      transition: left 220ms ease, transform 220ms ease, box-shadow 220ms ease, background 220ms ease, filter 220ms ease;
-      z-index: 0;
+        0 8px 18px rgba(0, 0, 0, 0.2),
+        inset 0 1px rgba(255, 255, 255, 0.04);
+      transition: transform 160ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
     }
 
     .control-toggle:hover {
       transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.25),
+        inset 0 1px rgba(255, 255, 255, 0.06);
     }
 
     .control-toggle:active {
       transform: translateY(0);
     }
 
-    .control-toggle__icon {
-      display: inline-grid;
-      place-items: center;
-      min-width: 24px;
-      font-size: 22px;
-      line-height: 1;
-      text-shadow: 0 0 10px currentColor;
-      position: relative;
-      z-index: 1;
+    .control-toggle:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
     }
 
-    .control-toggle__label {
-      min-width: 8ch;
-      text-align: center;
+    .control-toggle__copy {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .control-toggle__name {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .control-toggle__state {
+      overflow: hidden;
+      color: rgba(255, 255, 255, 0.94);
       font-size: 11px;
+      font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .control-toggle__switch {
       position: relative;
-      z-index: 1;
-    }
-
-    .control-toggle--sound {
-      border-color: rgba(255, 221, 87, 0.64);
-      background: linear-gradient(180deg, rgba(40, 10, 54, 0.95), rgba(6, 2, 18, 0.94));
+      width: 40px;
+      height: 24px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.68);
       box-shadow:
-        0 0 18px rgba(255, 221, 87, 0.22),
-        inset 0 0 14px rgba(255, 0, 255, 0.12);
+        inset 0 2px 6px rgba(0, 0, 0, 0.55),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
     }
 
-    .control-toggle--sound::before {
+    .control-toggle__knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #f8fafc, #aeb8ca);
       box-shadow:
-        inset 0 0 0 1px rgba(255, 221, 87, 0.08),
-        inset 0 0 14px rgba(255, 221, 87, 0.06);
-    }
-
-    .control-toggle--sound.is-muted .control-toggle__icon {
-      color: var(--yellow);
-      animation: sound-muted-pulse 1.2s ease-in-out infinite alternate;
-    }
-
-    .control-toggle--sound.is-muted::before {
-      background:
-        linear-gradient(180deg, rgba(18, 8, 28, 0.98), rgba(8, 4, 18, 0.96));
-    }
-
-    .control-toggle--sound.is-muted::after {
-      filter: saturate(0.95) brightness(0.98);
-    }
-
-    .control-toggle--sound:not(.is-muted) .control-toggle__icon {
-      color: var(--cyan);
-    }
-
-    .control-toggle--sound:not(.is-muted)::before {
-      background:
-        linear-gradient(180deg, rgba(17, 38, 44, 0.98), rgba(4, 10, 18, 0.96));
-      box-shadow:
-        inset 0 0 0 1px rgba(0, 255, 204, 0.1),
-        inset 0 0 16px rgba(0, 255, 204, 0.1);
-    }
-
-    .control-toggle--sound:not(.is-muted)::after {
-      left: calc(100% - 34px);
-      box-shadow:
-        0 0 14px rgba(0, 255, 204, 0.22),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.58),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.12);
-    }
-
-    .control-toggle--theme .control-toggle__icon {
-      color: var(--magenta);
-    }
-
-    .control-toggle--theme.is-active::before {
-      background:
-        linear-gradient(180deg, rgba(243, 247, 255, 0.98), rgba(217, 227, 243, 0.96));
-      box-shadow:
-        inset 0 0 0 1px rgba(26, 138, 151, 0.12),
-        inset 0 0 14px rgba(26, 138, 151, 0.08);
-    }
-
-    .control-toggle--theme.is-active::after {
-      left: calc(100% - 34px);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(212, 221, 238, 0.95));
-      box-shadow:
-        0 0 14px rgba(26, 138, 151, 0.16),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.72),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.12);
-    }
-
-    .control-toggle--theme:not(.is-active)::before {
-      background:
-        linear-gradient(180deg, rgba(18, 12, 28, 0.98), rgba(6, 8, 18, 0.96));
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-        inset 0 0 14px rgba(255, 0, 255, 0.08);
+        0 2px 5px rgba(0, 0, 0, 0.42),
+        inset 0 1px rgba(255, 255, 255, 0.72);
+      transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), background 200ms ease, box-shadow 200ms ease;
     }
 
     .control-toggle.is-active {
-      border-color: rgba(0, 255, 204, 0.82);
+      border-color: rgba(0, 255, 204, 0.42);
       box-shadow:
-        0 0 22px rgba(0, 255, 204, 0.28),
-        inset 0 0 14px rgba(0, 255, 204, 0.12);
+        0 8px 20px rgba(0, 255, 204, 0.1),
+        inset 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .control-toggle.is-active .control-toggle__switch {
+      border-color: rgba(0, 255, 204, 0.7);
+      background: linear-gradient(90deg, rgba(0, 164, 137, 0.96), rgba(0, 255, 204, 0.82));
+      box-shadow:
+        0 0 12px rgba(0, 255, 204, 0.2),
+        inset 0 1px 3px rgba(0, 0, 0, 0.18);
+    }
+
+    .control-toggle.is-active .control-toggle__knob {
+      transform: translateX(16px);
+      background: linear-gradient(180deg, #ffffff, #d8fff6);
+      box-shadow:
+        0 2px 6px rgba(0, 55, 45, 0.42),
+        0 0 8px rgba(255, 255, 255, 0.36);
+    }
+
+    .control-toggle--sound:not(.is-active) .control-toggle__switch {
+      border-color: rgba(255, 221, 87, 0.3);
     }
 
     .card-content {
@@ -3008,17 +2971,16 @@
       }
 
       .control-toggle {
-        min-height: 40px;
-        padding: 7px 10px;
+        min-height: 46px;
+        padding: 6px 7px 6px 9px;
       }
 
-      .control-toggle__icon {
-        font-size: 20px;
+      .control-toggle__name {
+        font-size: 7px;
       }
 
-      .control-toggle__label {
-        min-width: 0;
-        font-size: 10px;
+      .control-toggle__state {
+        font-size: 9px;
       }
 
       .mobile-intro,
@@ -3139,13 +3101,23 @@
       <h1 class="card-title">◉ [SYSTEM] BIRTHDAY EVENT TRIGGERED ◉</h1>
       <div class="header-controls" aria-label="Theme and sound controls">
         <button class="control-toggle control-toggle--theme" id="themeToggle" type="button" aria-pressed="false">
-          <span class="control-toggle__icon" id="themeToggleIcon" aria-hidden="true">☾</span>
-          <span class="control-toggle__label" id="themeToggleLabel">DARK</span>
+          <span class="control-toggle__copy" aria-hidden="true">
+            <span class="control-toggle__name">Theme</span>
+            <span class="control-toggle__state" id="themeToggleLabel">Dark</span>
+          </span>
+          <span class="control-toggle__switch" aria-hidden="true">
+            <span class="control-toggle__knob"></span>
+          </span>
         </button>
         <button class="control-toggle control-toggle--sound is-muted" id="soundToggle" type="button"
           aria-pressed="false">
-          <span class="control-toggle__icon" id="soundToggleIcon" aria-hidden="true">🔇</span>
-          <span class="control-toggle__label" id="soundToggleLabel">SOUND OFF</span>
+          <span class="control-toggle__copy" aria-hidden="true">
+            <span class="control-toggle__name">Sound</span>
+            <span class="control-toggle__state" id="soundToggleLabel">Off</span>
+          </span>
+          <span class="control-toggle__switch" aria-hidden="true">
+            <span class="control-toggle__knob"></span>
+          </span>
         </button>
       </div>
     </header>
@@ -3310,10 +3282,8 @@
     const particles = document.getElementById('particles');
     const toastStack = document.getElementById('toastStack');
     const themeToggle = document.getElementById('themeToggle');
-    const themeToggleIcon = document.getElementById('themeToggleIcon');
     const themeToggleLabel = document.getElementById('themeToggleLabel');
     const soundToggle = document.getElementById('soundToggle');
-    const soundToggleIcon = document.getElementById('soundToggleIcon');
     const soundToggleLabel = document.getElementById('soundToggleLabel');
     const mobileIntro = document.getElementById('mobileIntro');
     const mobileIntroClose = document.getElementById('mobileIntroClose');
@@ -3495,12 +3465,8 @@
       themeToggle?.setAttribute('aria-pressed', String(theme === 'light'));
       themeToggle?.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
 
-      if (themeToggleIcon) {
-        themeToggleIcon.textContent = theme === 'light' ? '☀' : '☾';
-      }
-
       if (themeToggleLabel) {
-        themeToggleLabel.textContent = theme === 'light' ? 'LIGHT' : 'DARK';
+        themeToggleLabel.textContent = theme === 'light' ? 'Light' : 'Dark';
       }
     }
 
@@ -3567,12 +3533,8 @@
       soundToggle?.setAttribute('aria-pressed', String(soundEnabled));
       soundToggle?.setAttribute('aria-label', soundEnabled ? 'Disable sound' : 'Enable sound');
 
-      if (soundToggleIcon) {
-        soundToggleIcon.textContent = soundEnabled ? '🔊' : '🔇';
-      }
-
       if (soundToggleLabel) {
-        soundToggleLabel.textContent = soundEnabled ? 'SOUND ON' : 'SOUND OFF';
+        soundToggleLabel.textContent = soundEnabled ? 'On' : 'Off';
       }
     }
 
