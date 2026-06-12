@@ -36,7 +36,7 @@
       --font-terminal: 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;
 
       --card-width: 968px;
-      --card-min-height: 560px;
+      --card-min-height: min(560px, calc(100dvh - 32px));
       --radius: 12px;
     }
 
@@ -229,14 +229,6 @@
       border-bottom-color: rgba(159, 53, 185, 0.34);
     }
 
-    body[data-theme="light"] .header-controls {
-      border-color: rgba(26, 138, 151, 0.18);
-      background: rgba(227, 233, 243, 0.72);
-      box-shadow:
-        inset 0 1px rgba(255, 255, 255, 0.82),
-        0 6px 16px rgba(18, 30, 70, 0.05);
-    }
-
     body[data-theme="light"] .card-left {
       background:
         radial-gradient(ellipse at 48% 50%,
@@ -303,14 +295,15 @@
     }
 
     body[data-theme="light"] .control-toggle {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.42);
       color: var(--white);
-      border-color: transparent;
-      box-shadow: inset 0 1px rgba(255, 255, 255, 0.32);
+      border-color: rgba(26, 138, 151, 0.2);
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.52);
     }
 
     body[data-theme="light"] .control-toggle--sound {
-      background: transparent;
+      border-color: rgba(155, 120, 15, 0.2);
+      background: rgba(255, 255, 255, 0.42);
     }
 
     body[data-theme="light"] .control-toggle:hover {
@@ -777,9 +770,9 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 24px;
-      min-height: 72px;
-      padding: 12px 16px 12px 20px;
+      gap: 16px;
+      min-height: 52px;
+      padding: 7px 12px 7px 16px;
       background:
         linear-gradient(90deg, rgba(0, 255, 204, 0.035), transparent 34%),
         rgba(0, 0, 0, 0.72);
@@ -791,7 +784,7 @@
       grid-column: 1;
       justify-self: start;
       min-width: 0;
-      font-size: clamp(11px, 1.45vw, 15px);
+      font-size: clamp(10px, 1.3vw, 14px);
       line-height: 1.4;
       letter-spacing: -0.01em;
       white-space: nowrap;
@@ -807,47 +800,42 @@
       grid-column: 2;
       justify-self: end;
       display: grid;
-      grid-template-columns: repeat(2, 126px);
+      grid-template-columns: repeat(2, 112px);
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       width: auto;
-      padding: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 11px;
-      background: rgba(255, 255, 255, 0.045);
-      box-shadow:
-        inset 0 1px rgba(255, 255, 255, 0.035),
-        0 8px 18px rgba(0, 0, 0, 0.16);
     }
 
     .control-toggle {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
       min-width: 0;
-      min-height: 40px;
-      padding: 5px 6px 5px 9px;
-      border: 1px solid transparent;
-      border-radius: 7px;
-      background: transparent;
+      min-height: 34px;
+      padding: 4px 5px 4px 7px;
+      border: 1px solid rgba(0, 255, 204, 0.24);
+      border-radius: 3px;
+      background: rgba(0, 0, 0, 0.28);
       color: var(--white);
       font-family: var(--font-terminal);
       line-height: 1;
       cursor: pointer;
       position: relative;
       box-shadow:
-        inset 0 1px rgba(255, 255, 255, 0.025);
+        0 0 8px rgba(0, 255, 204, 0.06),
+        inset 0 0 8px rgba(0, 255, 204, 0.025);
       transition: transform 160ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
     }
 
     .control-toggle:hover {
       transform: translateY(-1px);
-      border-color: rgba(255, 255, 255, 0.13);
-      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(0, 255, 204, 0.48);
+      background: rgba(0, 255, 204, 0.055);
       box-shadow:
-        inset 0 1px rgba(255, 255, 255, 0.04);
+        0 0 10px rgba(0, 255, 204, 0.12),
+        inset 0 0 8px rgba(0, 255, 204, 0.04);
     }
 
     .control-toggle:active {
@@ -860,23 +848,24 @@
     }
 
     .control-toggle__copy {
-      display: grid;
-      gap: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
       min-width: 0;
       text-align: left;
     }
 
     .control-toggle__name {
-      color: rgba(255, 255, 255, 0.58);
+      color: var(--cyan);
       font-size: 7px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
     .control-toggle__state {
       overflow: hidden;
       color: rgba(255, 255, 255, 0.94);
-      font-size: 10px;
+      font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -886,11 +875,11 @@
 
     .control-toggle__switch {
       position: relative;
-      width: 40px;
-      height: 24px;
+      width: 32px;
+      height: 18px;
       flex: 0 0 auto;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 999px;
+      border-radius: 2px;
       background: rgba(0, 0, 0, 0.68);
       box-shadow:
         inset 0 2px 6px rgba(0, 0, 0, 0.55),
@@ -900,11 +889,11 @@
 
     .control-toggle__knob {
       position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 1px;
       background: linear-gradient(180deg, #f8fafc, #aeb8ca);
       box-shadow:
         0 2px 5px rgba(0, 0, 0, 0.42),
@@ -913,8 +902,8 @@
     }
 
     .control-toggle.is-active {
-      border-color: rgba(0, 255, 204, 0.2);
-      background: rgba(0, 255, 204, 0.045);
+      border-color: rgba(0, 255, 204, 0.46);
+      background: rgba(0, 255, 204, 0.06);
       box-shadow:
         inset 0 1px rgba(255, 255, 255, 0.05);
     }
@@ -928,7 +917,7 @@
     }
 
     .control-toggle.is-active .control-toggle__knob {
-      transform: translateX(16px);
+      transform: translateX(14px);
       background: linear-gradient(180deg, #ffffff, #d8fff6);
       box-shadow:
         0 2px 6px rgba(0, 55, 45, 0.42),
@@ -939,11 +928,19 @@
       border-color: rgba(255, 221, 87, 0.3);
     }
 
+    .control-toggle--sound {
+      border-color: rgba(255, 221, 87, 0.22);
+    }
+
+    .control-toggle--sound .control-toggle__name {
+      color: var(--yellow);
+    }
+
     .card-content {
       position: relative;
       z-index: 3;
       display: flex;
-      min-height: calc(var(--card-min-height) - 84px);
+      min-height: calc(var(--card-min-height) - 64px);
       /* padding-bottom: 68px; */
     }
 
@@ -2944,12 +2941,12 @@
       }
     }
 
-    @media (max-width: 900px) {
+    @media (min-width: 769px) and (max-width: 900px) {
       .card-header {
         grid-template-columns: minmax(0, 1fr);
         justify-items: center;
-        gap: 10px;
-        padding: 14px 14px 12px;
+        gap: 7px;
+        padding: 10px 12px 9px;
       }
 
       .card-title {
@@ -2968,14 +2965,18 @@
         grid-column: 1;
         justify-self: center;
       }
+
+      .card-content {
+        min-height: calc(var(--card-min-height) - 96px);
+      }
     }
 
     @media (max-width: 768px) {
       .card-header {
         grid-template-columns: 1fr;
         justify-items: center;
-        gap: 8px;
-        padding: 14px 12px 12px;
+        gap: 7px;
+        padding: 10px 8px 9px;
       }
 
       .card-title {
@@ -2987,7 +2988,7 @@
         justify-self: center;
         width: min(100%, 304px);
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 4px;
+        gap: 6px;
       }
 
       .egg-counter {
@@ -3018,7 +3019,7 @@
       }
 
       .control-toggle {
-        min-height: 42px;
+        min-height: 38px;
         padding: 5px 6px 5px 8px;
       }
 
