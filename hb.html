@@ -3279,6 +3279,7 @@
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
     const themeStorageKey = 'frontendBirthdayThemePreference';
     const soundStorageKey = 'frontendBirthdaySoundEnabled';
+    const soundWarningChoiceKey = 'frontendBirthdaySoundWarningChoice';
     const idleHintDelay = 30000;
     const eggCatalog = {
       portrait: 'Портрет потроган. Самооценка выдержала',
@@ -3370,6 +3371,15 @@
       }
     }
 
+    function getSoundWarningChoice() {
+      const choice = readStorageItem(soundWarningChoiceKey);
+      return choice === 'accepted' || choice === 'declined' ? choice : null;
+    }
+
+    function setSoundWarningChoice(choice) {
+      writeStorageItem(soundWarningChoiceKey, choice);
+    }
+
     function updateThemeColor(theme) {
       const themeColorMeta = document.querySelector('meta[name="theme-color"]');
       const colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
@@ -3440,7 +3450,7 @@
 
       applyTheme('light', { persist: false });
       playSoundCue('theme');
-      showToast("don't push the horses. Light mode is just visiting. Don't get comfortable.");
+      showToast("don't push the horses. Light mode is just visiting.");
 
       temporaryThemeTimer = window.setTimeout(() => {
         applyTheme('dark', { persist: true });
@@ -4526,6 +4536,21 @@
       audioModal.classList.remove('is-open');
       audioModal.setAttribute('aria-hidden', 'true');
       closeOverlay();
+    }
+
+    function enableSoundWithWarning() {
+      const choice = getSoundWarningChoice();
+
+      if (choice) {
+        void setSoundEnabled(true);
+        closeAudioModal();
+        showToast(choice === 'accepted'
+          ? 'Sound включён. Предупреждение уже было.'
+          : 'Sound включён. Ты уже видел предупреждение.');
+        return;
+      }
+
+      openAudioModal();
     }
 
     const commands = {
@@ -6048,10 +6073,11 @@
         return;
       }
 
-      openAudioModal();
+      enableSoundWithWarning();
     });
 
     audioModalConfirm?.addEventListener('click', async () => {
+      setSoundWarningChoice('accepted');
       await setSoundEnabled(true);
       closeAudioModal();
       playSoundCue('confirm');
@@ -6059,6 +6085,7 @@
     });
 
     audioModalCancel?.addEventListener('click', () => {
+      setSoundWarningChoice('declined');
       closeAudioModal();
       showToast('Тишина победила. Безумие подождёт.');
     });
