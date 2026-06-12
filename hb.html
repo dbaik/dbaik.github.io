@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Pixel-art frontend birthday card with hidden interactions and a secret counter.">
+  <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#050510">
   <title>Frontend Birthday Protocol</title>
 
@@ -12,6 +13,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
     :root {
+      color-scheme: light dark;
       --bg-dark: #050510;
       --bg-card: #0f0f1e;
       --page-a: #0a0a1f;
@@ -64,6 +66,28 @@
       font-family: var(--font-pixel);
       color: var(--cyan);
       transition: background 900ms ease, filter 400ms ease;
+    }
+
+    body[data-theme="light"] {
+      color-scheme: light;
+      --bg-dark: #f7f9fd;
+      --bg-card: #ffffff;
+      --page-a: #fafcff;
+      --page-b: #f1f4fa;
+      --page-c: #e6ebf4;
+      --page-sheen:
+        radial-gradient(circle at 18% 20%, rgba(0, 140, 150, 0.08), transparent 26%),
+        radial-gradient(circle at 82% 18%, rgba(179, 42, 203, 0.05), transparent 24%),
+        radial-gradient(circle at 50% 84%, rgba(171, 132, 0, 0.05), transparent 28%);
+      --page-grid:
+        linear-gradient(rgba(14, 27, 60, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 27, 60, 0.045) 1px, transparent 1px);
+      --cyan: #1a8a97;
+      --green: #1b8b62;
+      --magenta: #9f35b9;
+      --yellow: #9b780f;
+      --white: #152033;
+      --black: #2f3d59;
     }
 
     body.modal-open {
@@ -179,6 +203,153 @@
         0 0 18px rgba(0, 255, 136, 0.55);
       animation-name: matrix-rain;
       animation-timing-function: linear;
+    }
+
+    body[data-theme="light"] .card {
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(26, 138, 151, 0.5);
+      box-shadow:
+        0 14px 34px rgba(18, 30, 70, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.82) inset,
+        inset 0 0 20px rgba(26, 138, 151, 0.03);
+    }
+
+    body[data-theme="light"] .card::before {
+      opacity: 0.08;
+      animation: none;
+    }
+
+    body[data-theme="light"]::before {
+      opacity: 0.08;
+      mix-blend-mode: multiply;
+    }
+
+    body[data-theme="light"] .card-header {
+      background: rgba(255, 255, 255, 0.88);
+      border-bottom-color: rgba(159, 53, 185, 0.34);
+    }
+
+    body[data-theme="light"] .card-left {
+      background:
+        radial-gradient(ellipse at 48% 50%,
+          rgba(242, 245, 250, 0.95) 0%,
+          rgba(246, 248, 252, 0.9) 52%,
+          rgba(255, 255, 255, 0.3) 86%);
+    }
+
+    body[data-theme="light"] .profile-top,
+    body[data-theme="light"] .profile-bottom,
+    body[data-theme="light"] .command-panel__window,
+    body[data-theme="light"] .secret-modal__panel,
+    body[data-theme="light"] .code-modal__panel,
+    body[data-theme="light"] .mobile-intro__panel,
+    body[data-theme="light"] .toast,
+    body[data-theme="light"] .egg-counter {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    body[data-theme="light"] .profile-top,
+    body[data-theme="light"] .profile-bottom,
+    body[data-theme="light"] .command-panel__window {
+      border-color: rgba(26, 138, 151, 0.28);
+      box-shadow:
+        0 0 12px rgba(26, 138, 151, 0.08),
+        inset 0 0 14px rgba(159, 53, 185, 0.03);
+    }
+
+    body[data-theme="light"] .command-panel__header,
+    body[data-theme="light"] .command-panel__body {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--white);
+    }
+
+    body[data-theme="light"] .secret-modal__panel,
+    body[data-theme="light"] .code-modal__panel,
+    body[data-theme="light"] .mobile-intro__panel,
+    body[data-theme="light"] .audio-modal__panel {
+      border-color: rgba(26, 138, 151, 0.28);
+      box-shadow:
+        0 14px 28px rgba(18, 30, 70, 0.08),
+        0 0 0 1px rgba(255, 255, 255, 0.78) inset;
+    }
+
+    body[data-theme="light"] .audio-modal__panel {
+      background:
+        radial-gradient(circle at 20% 14%, rgba(26, 138, 151, 0.08), transparent 26%),
+        radial-gradient(circle at 82% 22%, rgba(159, 53, 185, 0.05), transparent 22%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(244, 246, 251, 0.98));
+    }
+
+    body[data-theme="light"] .toast {
+      border-color: rgba(26, 138, 151, 0.3);
+      color: var(--white);
+      box-shadow:
+        0 0 10px rgba(26, 138, 151, 0.08),
+        inset 0 0 10px rgba(159, 53, 185, 0.03);
+    }
+
+    body[data-theme="light"] .code-title,
+    body[data-theme="light"] .footer-icon,
+    body[data-theme="light"] .footer-txt {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    body[data-theme="light"] .control-toggle {
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--white);
+      border-color: rgba(26, 138, 151, 0.22);
+      box-shadow:
+        0 8px 18px rgba(18, 30, 70, 0.05),
+        inset 0 0 10px rgba(26, 138, 151, 0.03);
+    }
+
+    body[data-theme="light"] .control-toggle--sound {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(236, 241, 249, 0.94));
+    }
+
+    body[data-theme="light"] .control-toggle.is-active {
+      border-color: rgba(26, 138, 151, 0.34);
+      box-shadow:
+        0 10px 18px rgba(18, 30, 70, 0.07),
+        inset 0 0 10px rgba(26, 138, 151, 0.05);
+    }
+
+    body[data-theme="light"] .card-title,
+    body[data-theme="light"] .birthday-title,
+    body[data-theme="light"] .birthday-accent,
+    body[data-theme="light"] .profile-top,
+    body[data-theme="light"] .terminal-icon {
+      text-shadow: none;
+    }
+
+    body[data-theme="light"] .card-title,
+    body[data-theme="light"] .control-toggle--sound.is-muted .control-toggle__icon {
+      animation: none;
+    }
+
+    body[data-theme="light"] .birthday-title {
+      color: #172033;
+    }
+
+    body[data-theme="light"] .birthday-accent {
+      color: #8d3c9f;
+    }
+
+    body[data-theme="light"] .profile-card {
+      border-color: rgba(141, 60, 159, 0.34);
+      background: #ffffff;
+      box-shadow: 0 12px 24px rgba(31, 43, 70, 0.08);
+    }
+
+    body[data-theme="light"] .code-title,
+    body[data-theme="light"] .card-footer,
+    body[data-theme="light"] .egg-counter {
+      border-color: rgba(26, 138, 151, 0.24);
+      box-shadow: none;
+    }
+
+    body[data-theme="light"] .scanlines {
+      opacity: 0.06;
     }
 
     body.is-coffee {
@@ -575,14 +746,19 @@
     .card-header {
       position: relative;
       z-index: 3;
-      padding: 20px 16px;
-      text-align: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      padding: 18px 16px;
       background: rgba(0, 0, 0, 0.7);
       border-bottom: 4px solid var(--magenta);
       overflow: hidden;
     }
 
     .card-title {
+      grid-column: 2;
+      justify-self: center;
       font-size: clamp(13px, 2.4vw, 21px);
       line-height: 1.45;
       white-space: nowrap;
@@ -592,6 +768,85 @@
         0 0 10px var(--cyan),
         0 0 20px var(--magenta);
       animation: glitch-title 1.5s infinite alternate;
+    }
+
+    .header-controls {
+      grid-column: 3;
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 98px;
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 255, 204, 0.6);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.75);
+      color: var(--white);
+      font-family: var(--font-terminal);
+      line-height: 1;
+      cursor: pointer;
+      box-shadow:
+        0 0 16px rgba(0, 255, 204, 0.18),
+        inset 0 0 12px rgba(255, 0, 255, 0.08);
+      transition: transform 160ms ease, box-shadow 160ms ease, background 220ms ease, border-color 220ms ease;
+    }
+
+    .control-toggle:hover {
+      transform: translateY(-1px);
+    }
+
+    .control-toggle:active {
+      transform: translateY(0);
+    }
+
+    .control-toggle__icon {
+      display: inline-grid;
+      place-items: center;
+      min-width: 24px;
+      font-size: 22px;
+      line-height: 1;
+      text-shadow: 0 0 10px currentColor;
+    }
+
+    .control-toggle__label {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .control-toggle--sound {
+      min-width: 138px;
+      border-color: rgba(255, 221, 87, 0.64);
+      background: linear-gradient(180deg, rgba(40, 10, 54, 0.95), rgba(6, 2, 18, 0.94));
+      box-shadow:
+        0 0 18px rgba(255, 221, 87, 0.22),
+        inset 0 0 14px rgba(255, 0, 255, 0.12);
+    }
+
+    .control-toggle--sound.is-muted .control-toggle__icon {
+      color: var(--yellow);
+      animation: sound-muted-pulse 1.2s ease-in-out infinite alternate;
+    }
+
+    .control-toggle--sound:not(.is-muted) .control-toggle__icon {
+      color: var(--cyan);
+    }
+
+    .control-toggle--theme .control-toggle__icon {
+      color: var(--magenta);
+    }
+
+    .control-toggle.is-active {
+      border-color: rgba(0, 255, 204, 0.82);
+      box-shadow:
+        0 0 22px rgba(0, 255, 204, 0.28),
+        inset 0 0 14px rgba(0, 255, 204, 0.12);
     }
 
     .card-content {
@@ -1920,6 +2175,98 @@
       box-shadow: 0 0 14px rgba(0, 255, 204, 0.24);
     }
 
+    .audio-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 48;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    .audio-modal.is-open {
+      display: flex;
+    }
+
+    .audio-modal__panel {
+      position: relative;
+      width: min(560px, 100%);
+      padding: 28px 22px 22px;
+      border: 2px solid rgba(255, 221, 87, 0.82);
+      background:
+        radial-gradient(circle at 20% 14%, rgba(255, 221, 87, 0.2), transparent 26%),
+        radial-gradient(circle at 82% 22%, rgba(255, 0, 255, 0.14), transparent 22%),
+        linear-gradient(180deg, rgba(35, 6, 28, 0.98), rgba(8, 2, 18, 0.98));
+      box-shadow:
+        0 0 34px rgba(255, 221, 87, 0.24),
+        0 0 48px rgba(255, 0, 255, 0.16),
+        inset 0 0 22px rgba(0, 255, 204, 0.08);
+      text-align: center;
+    }
+
+    .audio-modal__eyebrow {
+      margin-bottom: 12px;
+      color: var(--yellow);
+      font-family: var(--font-terminal);
+      font-size: 18px;
+      line-height: 1.15;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 221, 87, 0.55);
+    }
+
+    .audio-modal__title {
+      margin-bottom: 14px;
+      color: var(--white);
+      font-size: clamp(20px, 5vw, 34px);
+      line-height: 1.15;
+      text-shadow:
+        0 0 12px var(--cyan),
+        0 0 20px var(--magenta);
+    }
+
+    .audio-modal__text {
+      color: var(--white);
+      font-family: var(--font-terminal);
+      font-size: 22px;
+      line-height: 1.22;
+    }
+
+    .audio-modal__actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .audio-modal__confirm,
+    .audio-modal__cancel {
+      min-width: 168px;
+      padding: 11px 16px;
+      border: 2px solid transparent;
+      font-family: var(--font-pixel);
+      font-size: 12px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+
+    .audio-modal__confirm {
+      border-color: rgba(255, 221, 87, 0.95);
+      background: rgba(255, 221, 87, 0.18);
+      color: var(--white);
+      box-shadow: 0 0 14px rgba(255, 221, 87, 0.32);
+    }
+
+    .audio-modal__cancel {
+      border-color: rgba(0, 255, 204, 0.82);
+      background: rgba(0, 255, 204, 0.1);
+      color: var(--white);
+      box-shadow: 0 0 14px rgba(0, 255, 204, 0.18);
+    }
+
     .secret-modal {
       position: absolute;
       inset: 0;
@@ -2020,6 +2367,18 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    }
+
+    @keyframes sound-muted-pulse {
+      from {
+        transform: scale(1);
+        filter: brightness(1);
+      }
+
+      to {
+        transform: scale(1.16);
+        filter: brightness(1.24);
+      }
     }
 
     @keyframes final-modal-pop {
@@ -2481,6 +2840,24 @@
     }
 
     @media (max-width: 768px) {
+      .card-header {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 10px;
+        padding: 14px 12px;
+      }
+
+      .card-title {
+        grid-column: 1;
+      }
+
+      .header-controls {
+        grid-column: 1;
+        justify-self: center;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
       .egg-counter {
         width: min(152px, calc(100% - 24px));
         padding: 8px 10px;
@@ -2508,8 +2885,34 @@
         font-size: 18px;
       }
 
+      .control-toggle {
+        min-width: 88px;
+        padding: 7px 10px;
+      }
+
+      .control-toggle--sound {
+        min-width: 122px;
+      }
+
+      .control-toggle__icon {
+        font-size: 20px;
+      }
+
+      .control-toggle__label {
+        font-size: 10px;
+      }
+
+      .mobile-intro {
+        align-items: flex-start;
+        padding-top: calc(18px + env(safe-area-inset-top));
+        padding-bottom: calc(18px + env(safe-area-inset-bottom));
+      }
+
       .mobile-intro__panel {
         padding: 22px 18px 18px;
+        max-height: calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        overflow: auto;
+        transform: translateY(8px);
       }
 
       .mobile-intro__eyebrow {
@@ -2526,6 +2929,28 @@
 
       .secret-modal {
         padding: 12px;
+      }
+
+      .audio-modal {
+        padding: 12px;
+      }
+
+      .audio-modal__panel {
+        padding: 22px 18px 18px;
+      }
+
+      .audio-modal__eyebrow {
+        font-size: 16px;
+      }
+
+      .audio-modal__text {
+        font-size: 18px;
+      }
+
+      .audio-modal__confirm,
+      .audio-modal__cancel {
+        min-width: 0;
+        width: 100%;
       }
 
       .command-panel__header {
@@ -2580,6 +3005,17 @@
   <main class="card">
     <header class="card-header">
       <h1 class="card-title">◉ [SYSTEM] BIRTHDAY EVENT TRIGGERED ◉</h1>
+      <div class="header-controls" aria-label="Theme and sound controls">
+        <button class="control-toggle control-toggle--theme" id="themeToggle" type="button" aria-pressed="false">
+          <span class="control-toggle__icon" id="themeToggleIcon" aria-hidden="true">☾</span>
+          <span class="control-toggle__label" id="themeToggleLabel">DARK</span>
+        </button>
+        <button class="control-toggle control-toggle--sound is-muted" id="soundToggle" type="button"
+          aria-pressed="false">
+          <span class="control-toggle__icon" id="soundToggleIcon" aria-hidden="true">🔇</span>
+          <span class="control-toggle__label" id="soundToggleLabel">SOUND OFF</span>
+        </button>
+      </div>
     </header>
 
     <section class="card-content">
@@ -2714,6 +3150,24 @@
       </div>
     </div>
 
+    <div class="audio-modal" id="audioModal" role="dialog" aria-modal="true" aria-labelledby="audioModalTitle"
+      aria-describedby="audioModalText" aria-hidden="true">
+      <div class="audio-modal__panel">
+        <button class="secret-modal__close audio-modal__close" type="button" id="audioModalClose"
+          aria-label="Закрыть окно">×</button>
+        <div class="audio-modal__eyebrow">SOUND SYSTEM / WARNING</div>
+        <h2 class="audio-modal__title" id="audioModalTitle">Включить звуковое безумие?</h2>
+        <p class="audio-modal__text" id="audioModalText">
+          Страница начнёт пищать, свистеть и щёлкать синтезаторами так, будто она сбежала из аркадного зала.
+          Точно хотите услышать это безумие?
+        </p>
+        <div class="audio-modal__actions">
+          <button class="audio-modal__confirm" type="button" id="audioModalConfirm">Да, запускай сирены</button>
+          <button class="audio-modal__cancel" type="button" id="audioModalCancel">Не сегодня, я ещё люблю тишину</button>
+        </div>
+      </div>
+    </div>
+
     <div class="scanlines"></div>
     <div class="particles" id="particles"></div>
   </main>
@@ -2722,6 +3176,12 @@
     const card = document.querySelector('.card');
     const particles = document.getElementById('particles');
     const toastStack = document.getElementById('toastStack');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
+    const themeToggleLabel = document.getElementById('themeToggleLabel');
+    const soundToggle = document.getElementById('soundToggle');
+    const soundToggleIcon = document.getElementById('soundToggleIcon');
+    const soundToggleLabel = document.getElementById('soundToggleLabel');
     const mobileIntro = document.getElementById('mobileIntro');
     const mobileIntroClose = document.getElementById('mobileIntroClose');
     const eggCounter = document.getElementById('eggCounter');
@@ -2734,6 +3194,10 @@
     const secretModalRestart = document.getElementById('secretModalRestart');
     const codeModal = document.getElementById('codeModal');
     const codeModalClose = document.querySelector('[data-close-code]');
+    const audioModal = document.getElementById('audioModal');
+    const audioModalClose = document.getElementById('audioModalClose');
+    const audioModalConfirm = document.getElementById('audioModalConfirm');
+    const audioModalCancel = document.getElementById('audioModalCancel');
     const commandPanel = document.getElementById('commandPanel');
     const commandPanelBody = document.getElementById('commandPanelBody');
     const commandInput = document.getElementById('commandInput');
@@ -2744,6 +3208,7 @@
     const body = document.body;
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersLightQuery = window.matchMedia('(prefers-color-scheme: light)');
     const bodyModeTimers = new Map();
     const birthdayCodeCommentPlain = '// тише-тише, сейчас напечатаем';
     const birthdayCodePreludePlain = 'Lorem ipsum dolor sit amet';
@@ -2761,6 +3226,10 @@
     let completionTimer = null;
     let finalEggsModalTimer = null;
     let commandActivationTimer = null;
+    let audioContext = null;
+    let masterGain = null;
+    let soundEnabled = false;
+    let currentThemePreference = null;
 
     let typedBuffer = '';
     let konamiIndex = 0;
@@ -2774,6 +3243,8 @@
 
     const eggStorageKey = 'frontendBirthdayFoundEggs';
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
+    const themeStorageKey = 'frontendBirthdayThemePreference';
+    const soundStorageKey = 'frontendBirthdaySoundEnabled';
     const idleHintDelay = 30000;
     const eggCatalog = {
       portrait: 'Портрет потроган. Самооценка выдержала',
@@ -2849,6 +3320,1053 @@
         .replaceAll("'", '&#39;');
     }
 
+    function readStorageItem(key) {
+      try {
+        return window.localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }
+
+    function writeStorageItem(key, value) {
+      try {
+        window.localStorage.setItem(key, value);
+      } catch {
+        // Ignore storage failures in private mode or restricted browsers.
+      }
+    }
+
+    function updateThemeColor(theme) {
+      const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+      const colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+
+      themeColorMeta?.setAttribute('content', theme === 'light' ? '#f5f7ff' : '#050510');
+      colorSchemeMeta?.setAttribute('content', theme);
+      document.documentElement.style.colorScheme = theme;
+    }
+
+    function updateThemeToggle(theme) {
+      themeToggle?.classList.toggle('is-active', theme === 'light');
+      themeToggle?.setAttribute('aria-pressed', String(theme === 'light'));
+      themeToggle?.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+
+      if (themeToggleIcon) {
+        themeToggleIcon.textContent = theme === 'light' ? '☀' : '☾';
+      }
+
+      if (themeToggleLabel) {
+        themeToggleLabel.textContent = theme === 'light' ? 'LIGHT' : 'DARK';
+      }
+    }
+
+    function applyTheme(theme, options = {}) {
+      const { persist = false } = options;
+      body.dataset.theme = theme;
+      updateThemeColor(theme);
+      updateThemeToggle(theme);
+
+      if (persist) {
+        currentThemePreference = theme;
+        writeStorageItem(themeStorageKey, theme);
+      }
+    }
+
+    function getResolvedTheme() {
+      const storedTheme = readStorageItem(themeStorageKey);
+
+      if (storedTheme === 'light' || storedTheme === 'dark') {
+        currentThemePreference = storedTheme;
+        return storedTheme;
+      }
+
+      currentThemePreference = null;
+      return prefersLightQuery.matches ? 'light' : 'dark';
+    }
+
+    function toggleTheme() {
+      const nextTheme = body.dataset.theme === 'light' ? 'dark' : 'light';
+      applyTheme(nextTheme, { persist: true });
+      playSoundCue('theme');
+      showToast(nextTheme === 'light'
+        ? 'Light mode включён. Экран вымыт до приличия.'
+        : 'Dark mode включён. Неон вернулся в ночную смену.');
+    }
+
+    function updateSoundToggle() {
+      soundToggle?.classList.toggle('is-muted', !soundEnabled);
+      soundToggle?.classList.toggle('is-active', soundEnabled);
+      soundToggle?.setAttribute('aria-pressed', String(soundEnabled));
+      soundToggle?.setAttribute('aria-label', soundEnabled ? 'Disable sound' : 'Enable sound');
+
+      if (soundToggleIcon) {
+        soundToggleIcon.textContent = soundEnabled ? '🔊' : '🔇';
+      }
+
+      if (soundToggleLabel) {
+        soundToggleLabel.textContent = soundEnabled ? 'SOUND ON' : 'SOUND OFF';
+      }
+    }
+
+    function getAudioContext() {
+      const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextCtor) return null;
+
+      if (!audioContext) {
+        audioContext = new AudioContextCtor();
+        masterGain = audioContext.createGain();
+        masterGain.gain.value = 0.24;
+        masterGain.connect(audioContext.destination);
+      }
+
+      return audioContext;
+    }
+
+    function midiToFrequency(midi) {
+      return 440 * (2 ** ((midi - 69) / 12));
+    }
+
+    function scheduleTone(ctx, {
+      start,
+      frequency,
+      type = 'square',
+      duration = 0.12,
+      gain = 0.12,
+      attack = 0.004,
+      release = 0.05,
+      detune = 0,
+      filterStart = 2400,
+      filterEnd = 900
+    }) {
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const amp = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, start);
+      osc.detune.setValueAtTime(detune, start);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(filterStart, start);
+      filter.frequency.exponentialRampToValueAtTime(filterEnd, start + duration);
+
+      amp.gain.setValueAtTime(0.0001, start);
+      amp.gain.exponentialRampToValueAtTime(gain, start + attack);
+      amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      osc.connect(filter);
+      filter.connect(amp);
+      amp.connect(masterGain);
+
+      osc.start(start);
+      osc.stop(start + duration + 0.05);
+    }
+
+    function scheduleNoise(ctx, {
+      start,
+      duration = 0.06,
+      gain = 0.08,
+      filterFrequency = 1700
+    }) {
+      const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
+      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      for (let index = 0; index < length; index += 1) {
+        data[index] = Math.random() * 2 - 1;
+      }
+
+      const source = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const amp = ctx.createGain();
+
+      source.buffer = buffer;
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(filterFrequency, start);
+      filter.Q.value = 8;
+      amp.gain.setValueAtTime(0.0001, start);
+      amp.gain.exponentialRampToValueAtTime(gain, start + 0.01);
+      amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+      source.connect(filter);
+      filter.connect(amp);
+      amp.connect(masterGain);
+
+      source.start(start);
+      source.stop(start + duration + 0.02);
+    }
+
+    function playArpeggio(pattern, {
+      root = 440,
+      type = 'square',
+      gain = 0.08,
+      noteDuration = 0.09,
+      delay = 0,
+      step = 0.085,
+      detune = 0,
+      filterStart = 2400,
+      filterEnd = 1100
+    } = {}) {
+      if (!soundEnabled) return;
+
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        void ctx.resume();
+      }
+
+      const start = ctx.currentTime + delay;
+
+      pattern.forEach((offset, index) => {
+        scheduleTone(ctx, {
+          start: start + index * step,
+          frequency: midiToFrequency(69 + offset) / 440 * root,
+          type,
+          duration: noteDuration,
+          gain,
+          detune,
+          filterStart,
+          filterEnd
+        });
+      });
+    }
+
+    function playPhrase(steps, {
+      root = 440,
+      type = 'square',
+      gain = 0.08,
+      noteDuration = 0.12,
+      step = 0.12,
+      leadIn = 0,
+      filterStart = 2600,
+      filterEnd = 900
+    } = {}) {
+      if (!soundEnabled) return;
+
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        void ctx.resume();
+      }
+
+      const start = ctx.currentTime + 0.02 + leadIn;
+
+      steps.forEach((item, index) => {
+        if (typeof item === 'number') {
+          scheduleTone(ctx, {
+            start: start + index * step,
+            frequency: midiToFrequency(69 + item) / 440 * root,
+            type,
+            duration: noteDuration,
+            gain,
+            filterStart,
+            filterEnd
+          });
+          return;
+        }
+
+        scheduleTone(ctx, {
+          start: start + (item.offset ?? index) * step,
+          frequency: midiToFrequency(69 + (item.note ?? 0)) / 440 * root,
+          type: item.type ?? type,
+          duration: item.duration ?? noteDuration,
+          gain: item.gain ?? gain,
+          filterStart: item.filterStart ?? filterStart,
+          filterEnd: item.filterEnd ?? filterEnd
+        });
+      });
+    }
+
+    function playSoundCue(cue) {
+      if (!soundEnabled) return;
+
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        void ctx.resume();
+      }
+
+      const now = ctx.currentTime + 0.02;
+
+      switch (cue) {
+        case 'ui':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 932,
+            type: 'square',
+            duration: 0.05,
+            gain: 0.06,
+            filterStart: 2800,
+            filterEnd: 1200
+          });
+          scheduleNoise(ctx, {
+            start: now,
+            duration: 0.03,
+            gain: 0.025,
+            filterFrequency: 2600
+          });
+          break;
+        case 'ui-long':
+          playPhrase([0, 4, 7, 12, 7, 4], {
+            root: 262,
+            type: 'triangle',
+            gain: 0.08,
+            noteDuration: 0.12,
+            step: 0.11,
+            filterStart: 2500,
+            filterEnd: 900
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.02,
+            duration: 0.06,
+            gain: 0.028,
+            filterFrequency: 1800
+          });
+          break;
+        case 'terminal':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.14 },
+            { note: 4, offset: 1, duration: 0.14 },
+            { note: 7, offset: 2, duration: 0.14 },
+            { note: 12, offset: 3, duration: 0.18 },
+            { note: 16, offset: 4, duration: 0.15 },
+            { note: 12, offset: 5, duration: 0.14 },
+            { note: 7, offset: 6, duration: 0.14 },
+            { note: 11, offset: 7, duration: 0.15 },
+            { note: 16, offset: 8, duration: 0.18 },
+            { note: 19, offset: 9, duration: 0.22 }
+          ], {
+            root: 294,
+            type: 'square',
+            gain: 0.07,
+            step: 0.13,
+            filterStart: 2800,
+            filterEnd: 1000
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.03,
+            duration: 0.09,
+            gain: 0.03,
+            filterFrequency: 2400
+          });
+          break;
+        case 'terminal-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.14 },
+            { note: 7, offset: 1, duration: 0.14 },
+            { note: 4, offset: 2, duration: 0.14 },
+            { note: 12, offset: 3, duration: 0.18 },
+            { note: 7, offset: 5, duration: 0.14 },
+            { note: 16, offset: 6, duration: 0.2 },
+            { note: 12, offset: 8, duration: 0.16 },
+            { note: 19, offset: 9, duration: 0.22 },
+            { note: 16, offset: 11, duration: 0.16 },
+            { note: 23, offset: 12, duration: 0.22 },
+            { note: 19, offset: 14, duration: 0.18 },
+            { note: 24, offset: 15, duration: 0.42 }
+          ], {
+            root: 262,
+            type: 'triangle',
+            gain: 0.045,
+            step: 0.14,
+            filterStart: 2300,
+            filterEnd: 850
+          });
+          break;
+        case 'help-pop':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 1046,
+            type: 'square',
+            duration: 0.045,
+            gain: 0.06,
+            filterStart: 3200,
+            filterEnd: 1400
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.025,
+            gain: 0.02,
+            filterFrequency: 2900
+          });
+          break;
+        case 'clear-wipe':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 392,
+            type: 'triangle',
+            duration: 0.09,
+            gain: 0.055,
+            filterStart: 2000,
+            filterEnd: 500
+          });
+          scheduleTone(ctx, {
+            start: now + 0.05,
+            frequency: 196,
+            type: 'triangle',
+            duration: 0.12,
+            gain: 0.05,
+            filterStart: 1400,
+            filterEnd: 280
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.015,
+            duration: 0.08,
+            gain: 0.028,
+            filterFrequency: 1200
+          });
+          break;
+        case 'party-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.07 },
+            { note: 7, offset: 1, duration: 0.07 },
+            { note: 12, offset: 2, duration: 0.08 },
+            { note: 19, offset: 3, duration: 0.1 },
+            { note: 24, offset: 4, duration: 0.12 }
+          ], {
+            root: 330,
+            type: 'square',
+            gain: 0.075,
+            step: 0.055,
+            filterStart: 3200,
+            filterEnd: 1300
+          });
+          scheduleTone(ctx, {
+            start: now + 0.01,
+            frequency: 620,
+            type: 'triangle',
+            duration: 0.14,
+            gain: 0.045,
+            filterStart: 1700,
+            filterEnd: 650
+          });
+          break;
+        case 'matrix-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.05 },
+            { note: -2, offset: 1, duration: 0.05 },
+            { note: 0, offset: 2, duration: 0.05 },
+            { note: -5, offset: 3, duration: 0.05 },
+            { note: 0, offset: 4, duration: 0.05 },
+            { note: 2, offset: 5, duration: 0.05 }
+          ], {
+            root: 176,
+            type: 'square',
+            gain: 0.05,
+            step: 0.04,
+            filterStart: 1200,
+            filterEnd: 320
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.005,
+            duration: 0.12,
+            gain: 0.03,
+            filterFrequency: 900
+          });
+          break;
+        case 'beer-command':
+        case 'brew-command':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 659,
+            type: 'triangle',
+            duration: 0.11,
+            gain: 0.06,
+            filterStart: 2400,
+            filterEnd: 900
+          });
+          scheduleTone(ctx, {
+            start: now + 0.08,
+            frequency: 784,
+            type: 'triangle',
+            duration: 0.11,
+            gain: 0.055,
+            filterStart: 2200,
+            filterEnd: 800
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.03,
+            duration: 0.05,
+            gain: 0.02,
+            filterFrequency: 2800
+          });
+          break;
+        case 'bugfix-command':
+          playPhrase([
+            { note: 7, offset: 0, duration: 0.06 },
+            { note: 4, offset: 1, duration: 0.06 },
+            { note: 2, offset: 2, duration: 0.06 },
+            { note: 0, offset: 3, duration: 0.08 },
+            { note: -2, offset: 4, duration: 0.08 }
+          ], {
+            root: 294,
+            type: 'sawtooth',
+            gain: 0.055,
+            step: 0.055,
+            filterStart: 2200,
+            filterEnd: 520
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.09,
+            gain: 0.034,
+            filterFrequency: 1500
+          });
+          break;
+        case 'deploy-command':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 132,
+            type: 'triangle',
+            duration: 0.12,
+            gain: 0.07,
+            filterStart: 900,
+            filterEnd: 180
+          });
+          scheduleTone(ctx, {
+            start: now + 0.07,
+            frequency: 98,
+            type: 'square',
+            duration: 0.16,
+            gain: 0.055,
+            filterStart: 1100,
+            filterEnd: 260
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.11,
+            gain: 0.03,
+            filterFrequency: 700
+          });
+          break;
+        case 'legendary-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.08 },
+            { note: 7, offset: 1, duration: 0.08 },
+            { note: 12, offset: 2, duration: 0.1 },
+            { note: 16, offset: 3, duration: 0.12 },
+            { note: 19, offset: 4, duration: 0.14 }
+          ], {
+            root: 262,
+            type: 'square',
+            gain: 0.07,
+            step: 0.065,
+            filterStart: 2800,
+            filterEnd: 900
+          });
+          break;
+        case 'frontend-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.06 },
+            { note: 4, offset: 1, duration: 0.06 },
+            { note: 7, offset: 2, duration: 0.07 },
+            { note: 12, offset: 3, duration: 0.09 }
+          ], {
+            root: 330,
+            type: 'square',
+            gain: 0.06,
+            step: 0.05,
+            filterStart: 2800,
+            filterEnd: 1000
+          });
+          scheduleNoise(ctx, {
+            start: now + 0.01,
+            duration: 0.035,
+            gain: 0.022,
+            filterFrequency: 2100
+          });
+          break;
+        case 'birthday-command':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.08 },
+            { note: 4, offset: 1, duration: 0.08 },
+            { note: 7, offset: 2, duration: 0.09 },
+            { note: 12, offset: 3, duration: 0.1 },
+            { note: 16, offset: 4, duration: 0.12 }
+          ], {
+            root: 349,
+            type: 'triangle',
+            gain: 0.07,
+            step: 0.065,
+            filterStart: 2600,
+            filterEnd: 900
+          });
+          break;
+        case 'coffee-command':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 523,
+            type: 'triangle',
+            duration: 0.11,
+            gain: 0.055,
+            filterStart: 1800,
+            filterEnd: 600
+          });
+          scheduleTone(ctx, {
+            start: now + 0.08,
+            frequency: 659,
+            type: 'square',
+            duration: 0.08,
+            gain: 0.04,
+            filterStart: 2200,
+            filterEnd: 720
+          });
+          break;
+        case 'zaebal-command':
+          playArpeggio([0, 4, 7, 4, 0], {
+            root: 294,
+            type: 'triangle',
+            gain: 0.06,
+            noteDuration: 0.06,
+            step: 0.05,
+            filterStart: 2000,
+            filterEnd: 700
+          });
+          break;
+        case 'theme':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 392,
+            type: 'sawtooth',
+            duration: 0.16,
+            gain: 0.08,
+            filterStart: 1800,
+            filterEnd: 500
+          });
+          scheduleTone(ctx, {
+            start: now + 0.07,
+            frequency: 523,
+            type: 'square',
+            duration: 0.14,
+            gain: 0.07,
+            filterStart: 2200,
+            filterEnd: 800
+          });
+          break;
+        case 'toggle-on':
+          playArpeggio([0, 4, 7, 12], {
+            root: 262,
+            type: 'square',
+            gain: 0.075,
+            noteDuration: 0.08,
+            step: 0.075,
+            filterStart: 2600,
+            filterEnd: 900
+          });
+          break;
+        case 'keyboard-frontend':
+          playPhrase([
+            { note: 0, offset: 0 },
+            { note: 7, offset: 1 },
+            { note: 12, offset: 2 },
+            { note: 16, offset: 3 },
+            { note: 12, offset: 4 },
+            { note: 7, offset: 5 },
+            { note: 4, offset: 6 }
+          ], {
+            root: 330,
+            type: 'square',
+            gain: 0.08,
+            noteDuration: 0.11,
+            step: 0.09,
+            filterStart: 2600,
+            filterEnd: 1000
+          });
+          break;
+        case 'keyboard-birthday':
+          playPhrase([
+            { note: 0, offset: 0 },
+            { note: 4, offset: 1 },
+            { note: 7, offset: 2 },
+            { note: 12, offset: 3 },
+            { note: 19, offset: 4 },
+            { note: 12, offset: 5 },
+            { note: 7, offset: 6 },
+            { note: 4, offset: 7 }
+          ], {
+            root: 349,
+            type: 'triangle',
+            gain: 0.08,
+            noteDuration: 0.11,
+            step: 0.09,
+            filterStart: 2500,
+            filterEnd: 900
+          });
+          break;
+        case 'toggle-off':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 220,
+            type: 'triangle',
+            duration: 0.12,
+            gain: 0.06,
+            filterStart: 1300,
+            filterEnd: 300
+          });
+          break;
+        case 'confirm':
+          playArpeggio([0, 5, 9, 12], {
+            root: 329,
+            type: 'square',
+            gain: 0.08,
+            noteDuration: 0.09,
+            step: 0.08,
+            filterStart: 2600,
+            filterEnd: 1000
+          });
+          break;
+        case 'success':
+          playArpeggio([0, 4, 7, 11, 12], {
+            root: 392,
+            type: 'triangle',
+            gain: 0.08,
+            noteDuration: 0.1,
+            step: 0.09,
+            filterStart: 2200,
+            filterEnd: 900
+          });
+          break;
+        case 'warning':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 160,
+            type: 'square',
+            duration: 0.14,
+            gain: 0.08,
+            filterStart: 1200,
+            filterEnd: 400
+          });
+          scheduleTone(ctx, {
+            start: now + 0.12,
+            frequency: 120,
+            type: 'square',
+            duration: 0.12,
+            gain: 0.07,
+            filterStart: 1000,
+            filterEnd: 240
+          });
+          break;
+        case 'error':
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 246,
+            type: 'square',
+            duration: 0.08,
+            gain: 0.08,
+            filterStart: 1800,
+            filterEnd: 500
+          });
+          scheduleTone(ctx, {
+            start: now + 0.08,
+            frequency: 196,
+            type: 'square',
+            duration: 0.14,
+            gain: 0.08,
+            filterStart: 1300,
+            filterEnd: 360
+          });
+          break;
+        case 'party':
+          playArpeggio([0, 4, 7, 12, 16], {
+            root: 294,
+            type: 'square',
+            gain: 0.08,
+            noteDuration: 0.08,
+            step: 0.065,
+            filterStart: 2800,
+            filterEnd: 1200
+          });
+          break;
+        case 'party-long':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.14 },
+            { note: 4, offset: 1, duration: 0.12 },
+            { note: 7, offset: 2, duration: 0.12 },
+            { note: 12, offset: 3, duration: 0.14 },
+            { note: 16, offset: 4, duration: 0.12 },
+            { note: 19, offset: 5, duration: 0.12 }
+          ], {
+            root: 294,
+            type: 'sawtooth',
+            gain: 0.075,
+            step: 0.1,
+            filterStart: 2800,
+            filterEnd: 1000
+          });
+          break;
+        case 'matrix':
+          playArpeggio([0, -5, 0, 7], {
+            root: 196,
+            type: 'square',
+            gain: 0.07,
+            noteDuration: 0.09,
+            step: 0.07,
+            filterStart: 1400,
+            filterEnd: 420
+          });
+          break;
+        case 'coffee':
+          playArpeggio([0, 4, 7, 14], {
+            root: 330,
+            type: 'sawtooth',
+            gain: 0.075,
+            noteDuration: 0.09,
+            step: 0.07,
+            filterStart: 2600,
+            filterEnd: 900
+          });
+          break;
+        case 'beer':
+          playArpeggio([0, 5, 9, 12], {
+            root: 262,
+            type: 'triangle',
+            gain: 0.07,
+            noteDuration: 0.09,
+            step: 0.08,
+            filterStart: 2000,
+            filterEnd: 700
+          });
+          break;
+        case 'bugfix':
+          playArpeggio([0, 2, 4, 7, 11], {
+            root: 330,
+            type: 'square',
+            gain: 0.07,
+            noteDuration: 0.08,
+            step: 0.07,
+            filterStart: 2400,
+            filterEnd: 1000
+          });
+          break;
+        case 'hearts':
+          playArpeggio([0, 4, 7, 12, 16], {
+            root: 294,
+            type: 'triangle',
+            gain: 0.07,
+            noteDuration: 0.09,
+            step: 0.075,
+            filterStart: 2300,
+            filterEnd: 800
+          });
+          break;
+        case 'trophy':
+          playArpeggio([0, 7, 12, 19, 24], {
+            root: 262,
+            type: 'square',
+            gain: 0.085,
+            noteDuration: 0.09,
+            step: 0.08,
+            filterStart: 2500,
+            filterEnd: 1100
+          });
+          break;
+        case 'legendary':
+          playArpeggio([0, 4, 7, 12, 16, 19], {
+            root: 330,
+            type: 'square',
+            gain: 0.085,
+            noteDuration: 0.09,
+            step: 0.07,
+            filterStart: 2600,
+            filterEnd: 1200
+          });
+          break;
+        case 'legendary-fanfare':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.22 },
+            { note: 7, offset: 0, duration: 0.22, gain: 0.05 },
+            { note: 12, offset: 2, duration: 0.24 },
+            { note: 16, offset: 2, duration: 0.24, gain: 0.05 },
+            { note: 19, offset: 4, duration: 0.26 },
+            { note: 24, offset: 6, duration: 0.3 },
+            { note: 19, offset: 9, duration: 0.2 },
+            { note: 24, offset: 10, duration: 0.22 },
+            { note: 28, offset: 12, duration: 0.24 },
+            { note: 31, offset: 14, duration: 0.3 },
+            { note: 16, offset: 17, duration: 0.55, gain: 0.045 },
+            { note: 21, offset: 17, duration: 0.55, gain: 0.05 },
+            { note: 28, offset: 17, duration: 0.55 }
+          ], {
+            root: 262,
+            type: 'square',
+            gain: 0.07,
+            step: 0.13,
+            filterStart: 2900,
+            filterEnd: 1200
+          });
+          playPhrase([
+            { note: -12, offset: 0, duration: 0.34 },
+            { note: -5, offset: 4, duration: 0.34 },
+            { note: 0, offset: 8, duration: 0.38 },
+            { note: 7, offset: 12, duration: 0.4 },
+            { note: 0, offset: 17, duration: 0.58 },
+            { note: 7, offset: 17, duration: 0.58, gain: 0.035 }
+          ], {
+            root: 262,
+            type: 'triangle',
+            gain: 0.04,
+            step: 0.13,
+            filterStart: 1800,
+            filterEnd: 700
+          });
+          break;
+        case 'deploy':
+          playPhrase([
+            { note: 0, offset: 0, duration: 0.18 },
+            { note: 7, offset: 1, duration: 0.18 },
+            { note: 12, offset: 2, duration: 0.2 },
+            { note: 16, offset: 4, duration: 0.2 },
+            { note: 19, offset: 5, duration: 0.22 },
+            { note: 24, offset: 7, duration: 0.28 },
+            { note: 19, offset: 10, duration: 0.18 },
+            { note: 24, offset: 11, duration: 0.2 },
+            { note: 28, offset: 13, duration: 0.22 },
+            { note: 31, offset: 15, duration: 0.28 },
+            { note: 19, offset: 18, duration: 0.56, gain: 0.045 },
+            { note: 24, offset: 18, duration: 0.56, gain: 0.05 },
+            { note: 31, offset: 18, duration: 0.56 }
+          ], {
+            root: 294,
+            type: 'sawtooth',
+            gain: 0.06,
+            step: 0.13,
+            filterStart: 2800,
+            filterEnd: 1100
+          });
+          playPhrase([
+            { note: -12, offset: 0, duration: 0.38 },
+            { note: -5, offset: 5, duration: 0.38 },
+            { note: 0, offset: 10, duration: 0.42 },
+            { note: 7, offset: 15, duration: 0.4 },
+            { note: 0, offset: 18, duration: 0.6 },
+            { note: 7, offset: 18, duration: 0.6, gain: 0.032 }
+          ], {
+            root: 294,
+            type: 'triangle',
+            gain: 0.038,
+            step: 0.13,
+            filterStart: 1700,
+            filterEnd: 680
+          });
+          break;
+        default:
+          scheduleTone(ctx, {
+            start: now,
+            frequency: 440,
+            type: 'square',
+            duration: 0.08,
+            gain: 0.06,
+            filterStart: 1800,
+            filterEnd: 700
+          });
+      }
+    }
+
+    function getModeSoundCue(mode) {
+      switch (mode) {
+        case 'is-party':
+          return 'party-long';
+        case 'is-matrix':
+          return 'matrix';
+        case 'is-coffee':
+          return 'coffee';
+        case 'is-beer':
+          return 'beer';
+        case 'is-bugfix':
+          return 'bugfix';
+        case 'is-hearts':
+          return 'hearts';
+        case 'is-trophy':
+          return 'trophy';
+        case 'is-legendary':
+          return 'legendary-fanfare';
+        case 'is-deploy':
+          return 'deploy';
+        case 'is-keyboard-frontend':
+          return 'keyboard-frontend';
+        case 'is-keyboard-birthday':
+          return 'keyboard-birthday';
+        default:
+          return 'success';
+      }
+    }
+
+    function getCommandSoundCue(command) {
+      switch (command) {
+        case 'help':
+          return 'help-pop';
+        case 'clear':
+          return 'clear-wipe';
+        case 'party':
+          return 'party-command';
+        case 'matrix':
+          return 'matrix-command';
+        case 'beer':
+        case 'brew':
+          return 'beer-command';
+        case 'bugfix':
+          return 'bugfix-command';
+        case 'deploy':
+          return 'deploy-command';
+        case 'legendary':
+          return 'legendary-command';
+        case 'frontend':
+          return 'frontend-command';
+        case 'birthday':
+          return 'birthday-command';
+        case 'coffee':
+          return 'coffee-command';
+        case 'zaebal':
+          return 'zaebal-command';
+        default:
+          return 'terminal-command';
+      }
+    }
+
+    async function setSoundEnabled(enabled, options = {}) {
+      const { persist = true } = options;
+      soundEnabled = enabled;
+      updateSoundToggle();
+
+      if (persist) {
+        writeStorageItem(soundStorageKey, enabled ? '1' : '0');
+      }
+
+      if (!enabled) {
+        return;
+      }
+
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        try {
+          await ctx.resume();
+        } catch {
+          // Ignore browsers that refuse to resume without a stronger gesture.
+        }
+      }
+    }
+
+    function openAudioModal() {
+      if (!audioModal) return;
+
+      audioModal.classList.add('is-open');
+      audioModal.setAttribute('aria-hidden', 'false');
+      playSoundCue('warning');
+      openOverlay(audioModalConfirm);
+    }
+
+    function closeAudioModal() {
+      if (!audioModal) return;
+
+      audioModal.classList.remove('is-open');
+      audioModal.setAttribute('aria-hidden', 'true');
+      closeOverlay();
+    }
+
     const commands = {
       help() {
         addCommandLog(`Команды терминала, которые ещё не стыдно нажать: ${renderCommandHints(commandHintList)}`);
@@ -2896,8 +4414,7 @@
           'FRONTEND РЕЖИМ',
           'Ты набрал frontend. Скобки полезли на экран: интерфейс решил доказать, что у него есть архитектура.',
           '{ }',
-          42,
-          false
+          42
         );
         addCommandLog('&gt; Frontend режим поднят. Верстка сделала вид, что так и было');
       },
@@ -2909,8 +4426,7 @@
           'BIRTHDAY РЕЖИМ',
           'Ты набрал birthday. Торт пошёл в атаку, потому что обычное поздравление было бы слишком скучным.',
           '🎂',
-          36,
-          false
+          36
         );
         addCommandLog('&gt; Birthday режим активирован. Торт пошёл в атаку');
       },
@@ -3657,6 +5173,7 @@
       if (!commandInput) return;
 
       unlockEgg('terminal');
+      playSoundCue('terminal');
       setCommandPanelExpanded(true);
       activateCommandPanel();
       window.setTimeout(() => commandInput.focus(), 40);
@@ -3681,6 +5198,7 @@
       try {
         if (navigator.share && (!navigator.canShare || navigator.canShare(shareData))) {
           await navigator.share(shareData);
+          playSoundCue('success');
           showToast('Share улетел. Интернет предупреждён.');
           burstFloatingText('↗', 12);
           return;
@@ -3688,18 +5206,21 @@
 
         if (navigator.clipboard?.writeText) {
           await navigator.clipboard.writeText(`${shareData.text} ${shareUrl}`);
+          playSoundCue('success');
           showToast('Share API спит, ссылка скопирована.');
           burstFloatingText('COPY', 8);
           return;
         }
 
         showModal('SHARE FAILED SUCCESSFULLY', `Скопируй руками: ${shareUrl}`);
+        playSoundCue('warning');
       } catch (error) {
         if (error?.name === 'AbortError') {
           showToast('Share отменён. Драма без релиза.');
           return;
         }
 
+        playSoundCue('error');
         showToast('Share споткнулся. Ссылка осталась жива.');
       }
     }
@@ -3767,11 +5288,13 @@
       addCommandLog(`$ <span>${safeCommand}</span>`);
 
       if (commands[command]) {
+        playSoundCue(getCommandSoundCue(command));
         commands[command]();
         return;
       }
 
       addCommandLog(`Команда <span>${safeCommand}</span> не прошла фейс-контроль. Попробуй <span>help</span>.`);
+      playSoundCue('error');
       showToast(`Команда "${command}" послана в /dev/null.`);
       flashScreen();
       burstFloatingText('404', 6);
@@ -3817,6 +5340,7 @@
     }) {
       clearBackgroundIcons();
       setTimedBodyMode(mode, duration);
+      playSoundCue(getModeSoundCue(mode));
 
       icons.forEach((iconConfig) => {
         spawnBackgroundIcons(iconConfig.symbol, iconConfig.count, {
@@ -3838,6 +5362,7 @@
       clearBackgroundIcons();
       card.classList.add('is-party');
       setTimedBodyMode('is-party', 5000);
+      playSoundCue('party');
       spawnBackgroundIcons('🍸', responsiveCount(24, 36), {
         duration: 6000,
         sizeMin: 20,
@@ -3880,12 +5405,14 @@
         body.classList.remove('is-matrix');
         card.classList.remove('is-matrix');
         stopMatrixRain();
+        playSoundCue('toggle-off');
         showToast('Matrix layer выключен. Реальность снова делает вид, что стабильна.');
         return;
       }
 
       card.classList.add('is-matrix');
       setTimedBodyMode('is-matrix', 5000);
+      playSoundCue('matrix');
       stopMatrixRain();
       spawnMatrixRain();
       matrixRainTimer = window.setInterval(spawnMatrixRain, 420);
@@ -4000,6 +5527,7 @@
       clearLegendaryStage();
       card.classList.add('is-legendary');
       setTimedBodyMode('is-legendary', 10000);
+      playSoundCue('legendary-fanfare');
       burstParticles(90);
       spawnLegendaryIcons(window.innerWidth < 640 ? 12 : 18);
       legendarySpawnTimer = window.setInterval(() => spawnLegendaryIcons(window.innerWidth < 640 ? 4 : 6), 820);
@@ -4018,6 +5546,7 @@
       }
 
       setTimedBodyMode('is-deploy', 5000);
+      playSoundCue('deploy');
       showToast('Deploying birthday.js... кэш держится на честном слове.');
       flashScreen();
 
@@ -4037,7 +5566,7 @@
       }, 2500);
     }
 
-    function keyboardMode(mode, duration, title, text, symbol, count, showPopup = true) {
+    function keyboardMode(mode, duration, title, text, symbol, count) {
       runIconMode({
         mode,
         duration,
@@ -4049,11 +5578,6 @@
         }],
         particles: Math.max(12, Math.floor(count / 2))
       });
-
-      if (showPopup) {
-        showModal(title, text);
-        return;
-      }
 
       showToast(text);
     }
@@ -4081,6 +5605,7 @@
 
     function cakeMode() {
       unlockEgg('cake');
+      playSoundCue('success');
       burstParticles(18);
       burstFloatingText('♥', 12);
       window.setTimeout(() => burstFloatingText('🎂', 10), 120);
@@ -4170,6 +5695,7 @@
           break;
         case 'portrait':
           unlockEgg('portrait');
+          playSoundCue('ui');
           addCommandLog('&gt; Не тыкай в меня, я и так красавчик');
           showToast('Портрет потроган. Самооценка выдержала.');
           burstFloatingText('OK', 10);
@@ -4221,6 +5747,7 @@
     });
 
     eggCounter?.addEventListener('click', () => {
+      playSoundCue('ui');
       showModal(
         'SECRET HUNTER',
         'Пасхалки спрятаны по странице. Кликайте подозрительное, жмите / для терминала, а frontend, birthday и coffee можно набрать руками или в терминале.'
@@ -4237,6 +5764,11 @@
       }
 
       if (event.key === 'Escape') {
+        if (audioModal?.classList.contains('is-open')) {
+          closeAudioModal();
+          return;
+        }
+
         if (codeModal?.classList.contains('is-open')) {
           resetBirthdayCode();
           return;
@@ -4281,6 +5813,49 @@
 
     codeModal?.addEventListener('click', (event) => {
       if (event.target === codeModal) resetBirthdayCode();
+    });
+
+    applyTheme(getResolvedTheme(), { persist: false });
+    soundEnabled = readStorageItem(soundStorageKey) === '1';
+    updateSoundToggle();
+
+    if (!currentThemePreference && typeof prefersLightQuery.addEventListener === 'function') {
+      prefersLightQuery.addEventListener('change', () => {
+        if (currentThemePreference) return;
+        applyTheme(prefersLightQuery.matches ? 'light' : 'dark', { persist: false });
+      });
+    }
+
+    themeToggle?.addEventListener('click', toggleTheme);
+
+    soundToggle?.addEventListener('click', () => {
+      if (soundEnabled) {
+        playSoundCue('toggle-off');
+        void setSoundEnabled(false);
+        closeAudioModal();
+        showToast('Sound выключен. Тишина снова на вахте.');
+        return;
+      }
+
+      openAudioModal();
+    });
+
+    audioModalConfirm?.addEventListener('click', async () => {
+      await setSoundEnabled(true);
+      closeAudioModal();
+      playSoundCue('confirm');
+      showToast('Звук включён. Теперь страница щёлкает, свистит и довольно собой.');
+    });
+
+    audioModalCancel?.addEventListener('click', () => {
+      closeAudioModal();
+      showToast('Тишина победила. Безумие подождёт.');
+    });
+
+    audioModalClose?.addEventListener('click', closeAudioModal);
+
+    audioModal?.addEventListener('click', (event) => {
+      if (event.target === audioModal) closeAudioModal();
     });
 
     ['pointerdown', 'keydown', 'touchstart', 'wheel'].forEach((eventName) => {
