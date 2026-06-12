@@ -1353,6 +1353,8 @@
       padding: 16px;
       background: rgba(0, 0, 0, 0.72);
       backdrop-filter: blur(4px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .code-modal.is-open {
@@ -1363,7 +1365,7 @@
       position: relative;
       width: min(500px, 100%);
       max-height: min(78vh, 760px);
-      overflow: hidden;
+      overflow: auto;
       border: 2px solid rgba(0, 255, 204, 0.72);
       background:
         linear-gradient(180deg, rgba(3, 12, 18, 0.98), rgba(0, 4, 10, 0.98)),
@@ -2104,6 +2106,8 @@
       padding: 16px;
       background: rgba(0, 0, 0, 0.76);
       backdrop-filter: blur(6px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .mobile-intro.is-open {
@@ -2113,6 +2117,8 @@
     .mobile-intro__panel {
       position: relative;
       width: min(460px, 100%);
+      max-height: min(78vh, 760px);
+      overflow: auto;
       padding: 24px 20px 20px;
       border: 2px solid rgba(0, 255, 204, 0.72);
       background:
@@ -2185,6 +2191,8 @@
       padding: 16px;
       background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(8px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .audio-modal.is-open {
@@ -2194,6 +2202,8 @@
     .audio-modal__panel {
       position: relative;
       width: min(560px, 100%);
+      max-height: min(78vh, 760px);
+      overflow: auto;
       padding: 28px 22px 22px;
       border: 2px solid rgba(255, 221, 87, 0.82);
       background:
@@ -2268,18 +2278,21 @@
     }
 
     .secret-modal {
-      position: absolute;
+      position: fixed;
       inset: 0;
       z-index: 12;
       display: none;
-      place-items: center;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
       background: rgba(0, 0, 0, 0.72);
       backdrop-filter: blur(4px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .secret-modal.is-open {
-      display: grid;
+      display: flex;
     }
 
     .secret-modal__panel {
@@ -2291,6 +2304,8 @@
 
     .secret-modal__panel {
       position: relative;
+      max-height: min(78vh, 760px);
+      overflow: auto;
       padding: 28px 24px;
       text-align: center;
       border-color: rgba(255, 215, 0, 0.82);
@@ -2902,7 +2917,10 @@
         font-size: 10px;
       }
 
-      .mobile-intro {
+      .mobile-intro,
+      .secret-modal,
+      .code-modal,
+      .audio-modal {
         align-items: flex-start;
         padding-top: calc(18px + env(safe-area-inset-top));
         padding-bottom: calc(18px + env(safe-area-inset-bottom));
@@ -2913,6 +2931,12 @@
         max-height: calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
         overflow: auto;
         transform: translateY(8px);
+      }
+
+      .secret-modal__panel,
+      .code-modal__panel,
+      .audio-modal__panel {
+        max-height: calc(100dvh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
       }
 
       .mobile-intro__eyebrow {
@@ -2945,6 +2969,10 @@
 
       .audio-modal__text {
         font-size: 18px;
+      }
+
+      .code-modal .code-live {
+        max-height: min(52dvh, 480px);
       }
 
       .audio-modal__confirm,
