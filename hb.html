@@ -3359,7 +3359,7 @@
     const body = document.body;
     const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isCompactViewport = window.innerWidth < 640;
+    const compactViewportQuery = window.matchMedia('(max-width: 639px)');
     const bodyModeTimers = new Map();
     const birthdayCodeCommentPlain = '// тише-тише, сейчас напечатаем';
     const birthdayCodePreludePlain = 'Lorem ipsum dolor sit amet';
@@ -3382,6 +3382,7 @@
     let soundEnabled = false;
     let currentThemePreference = null;
     let ambientParticleTimer = null;
+    let isCompactViewport = compactViewportQuery.matches;
     let temporaryThemeTimer = null;
 
     let typedBuffer = '';
@@ -3398,7 +3399,7 @@
     const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
     const themeStorageKey = 'frontendBirthdayThemePreference';
     const soundStorageKey = 'frontendBirthdaySoundEnabled';
-    const soundWarningChoiceKey = 'frontendBirthdaySoundWarningChoice';
+    const soundWarningSeenKey = 'frontendBirthdaySoundWarningSeen';
     const idleHintDelay = 30000;
     const eggCatalog = {
       portrait: 'Портрет потроган. Самооценка выдержала',
@@ -3490,13 +3491,12 @@
       }
     }
 
-    function getSoundWarningChoice() {
-      const choice = readStorageItem(soundWarningChoiceKey);
-      return choice === 'accepted' || choice === 'declined' ? choice : null;
+    function hasSeenSoundWarning() {
+      return readStorageItem(soundWarningSeenKey) === '1';
     }
 
-    function setSoundWarningChoice(choice) {
-      writeStorageItem(soundWarningChoiceKey, choice);
+    function setSoundWarningSeen(seen) {
+      writeStorageItem(soundWarningSeenKey, seen ? '1' : '0');
     }
 
     function updateThemeColor(theme) {
@@ -4650,14 +4650,10 @@
     }
 
     function enableSoundWithWarning() {
-      const choice = getSoundWarningChoice();
-
-      if (choice) {
+      if (hasSeenSoundWarning()) {
         void setSoundEnabled(true);
         closeAudioModal();
-        showToast(choice === 'accepted'
-          ? 'Sound включён. Предупреждение уже было.'
-          : 'Sound включён. Ты уже видел предупреждение.');
+        showToast('Sound включён. Предупреждение уже было.');
         return;
       }
 
@@ -5995,7 +5991,30 @@
       ambientParticleTimer = null;
     }
 
+    function updateCompactViewportState(matches) {
+      if (matches === isCompactViewport) return;
+
+      isCompactViewport = matches;
+
+      if (isCompactViewport) {
+        stopAmbientParticles();
+        return;
+      }
+
+      startAmbientParticles();
+    }
+
     startAmbientParticles();
+
+    if (typeof compactViewportQuery.addEventListener === 'function') {
+      compactViewportQuery.addEventListener('change', (event) => {
+        updateCompactViewportState(event.matches);
+      });
+    } else if (typeof compactViewportQuery.addListener === 'function') {
+      compactViewportQuery.addListener((event) => {
+        updateCompactViewportState(event.matches);
+      });
+    }
 
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
@@ -6188,7 +6207,7 @@
     });
 
     audioModalConfirm?.addEventListener('click', async () => {
-      setSoundWarningChoice('accepted');
+      setSoundWarningSeen(true);
       await setSoundEnabled(true);
       closeAudioModal();
       playSoundCue('confirm');
@@ -6196,7 +6215,7 @@
     });
 
     audioModalCancel?.addEventListener('click', () => {
-      setSoundWarningChoice('declined');
+      setSoundWarningSeen(true);
       closeAudioModal();
       showToast('Тишина победила. Безумие подождёт.');
     });
