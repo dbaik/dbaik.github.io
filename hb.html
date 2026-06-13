@@ -205,6 +205,33 @@
       animation-timing-function: linear;
     }
 
+    .page-shell {
+      position: relative;
+      z-index: 1;
+      width: min(var(--card-width), 100%);
+      display: block;
+    }
+
+    .top-controls {
+      position: absolute;
+      top: 40px;
+      right: -60px;
+      z-index: 5;
+      display: inline-grid;
+      grid-auto-flow: row;
+      grid-auto-columns: minmax(0, 1fr);
+      gap: 0;
+      padding: 4px;
+      border: 1px solid var(--cyan);
+      border-radius: 0 10px 10px 0;
+      background:
+        linear-gradient(180deg, rgba(5, 18, 26, 0.94), rgba(2, 8, 14, 0.98));
+      box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.18),
+        inset 0 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+    }
+
     body[data-theme="light"] .card {
       background: rgba(255, 255, 255, 0.92);
       border-color: rgba(26, 138, 151, 0.5);
@@ -227,6 +254,15 @@
     body[data-theme="light"] .card-header {
       background: rgba(255, 255, 255, 0.88);
       border-bottom-color: rgba(159, 53, 185, 0.34);
+    }
+
+    body[data-theme="light"] .top-controls {
+      border-color: rgba(26, 138, 151, 0.22);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 246, 251, 0.98));
+      box-shadow:
+        0 10px 20px rgba(18, 30, 70, 0.08),
+        inset 0 1px rgba(255, 255, 255, 0.74);
     }
 
     body[data-theme="light"] .card-left {
@@ -295,45 +331,33 @@
     }
 
     body[data-theme="light"] .control-toggle {
-      background: rgba(255, 255, 255, 0.42);
       color: var(--white);
-      border-color: rgba(26, 138, 151, 0.2);
-      box-shadow: inset 0 1px rgba(255, 255, 255, 0.52);
+      border-color: rgba(26, 138, 151, 0.16);
+      background: transparent;
+      box-shadow: none;
     }
 
     body[data-theme="light"] .control-toggle--sound {
-      border-color: rgba(155, 120, 15, 0.2);
-      background: rgba(255, 255, 255, 0.42);
+      border-color: rgba(155, 120, 15, 0.18);
     }
 
     body[data-theme="light"] .control-toggle:hover {
-      border-color: rgba(26, 138, 151, 0.16);
-      background: rgba(255, 255, 255, 0.54);
+      border-color: rgba(26, 138, 151, 0.24);
+      background: rgba(255, 255, 255, 0.68);
     }
 
     body[data-theme="light"] .control-toggle.is-active {
-      border-color: rgba(26, 138, 151, 0.2);
-      background: rgba(255, 255, 255, 0.48);
-      box-shadow: inset 0 1px rgba(255, 255, 255, 0.64);
+      border-color: rgba(26, 138, 151, 0.28);
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: inset 0 -2px 0 rgba(26, 138, 151, 0.5);
     }
 
-    body[data-theme="light"] .control-toggle__name {
-      color: rgba(21, 32, 51, 0.58);
+    body[data-theme="light"] .control-toggle__icon {
+      color: rgba(21, 32, 51, 0.68);
     }
 
-    body[data-theme="light"] .control-toggle__state {
+    body[data-theme="light"] .control-toggle.is-active .control-toggle__icon {
       color: #152033;
-    }
-
-    body[data-theme="light"] .control-toggle__switch {
-      border-color: rgba(21, 32, 51, 0.2);
-      background: rgba(68, 80, 104, 0.28);
-      box-shadow: inset 0 2px 5px rgba(21, 32, 51, 0.2);
-    }
-
-    body[data-theme="light"] .control-toggle.is-active .control-toggle__switch {
-      border-color: rgba(26, 138, 151, 0.56);
-      background: linear-gradient(90deg, #177986, #2aa8a5);
     }
 
     body[data-theme="light"] .card-title,
@@ -767,26 +791,23 @@
     .card-header {
       position: relative;
       z-index: 3;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 16px;
+      display: block;
       min-height: 52px;
-      padding: 7px 12px 7px 16px;
+      padding: 12px 20px 11px 16px;
       background:
         linear-gradient(90deg, rgba(0, 255, 204, 0.035), transparent 34%),
         rgba(0, 0, 0, 0.72);
       border-bottom: 4px solid var(--magenta);
       overflow: hidden;
+      text-align: center;
     }
 
     .card-title {
-      grid-column: 1;
-      justify-self: start;
       min-width: 0;
-      font-size: clamp(10px, 1.3vw, 14px);
-      line-height: 1.4;
-      letter-spacing: -0.01em;
+      display: block;
+      font-size: clamp(16px, 1.8vw, 22px);
+      line-height: 1.18;
+      letter-spacing: 0.015em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -796,46 +817,34 @@
       animation: glitch-title 4.8s steps(1, end) infinite;
     }
 
-    .header-controls {
-      grid-column: 2;
-      justify-self: end;
-      display: grid;
-      grid-template-columns: repeat(2, 112px);
-      align-items: center;
-      gap: 6px;
-      width: auto;
-    }
-
     .control-toggle {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 6px;
-      width: 100%;
-      min-width: 0;
-      min-height: 34px;
-      padding: 4px 5px 4px 7px;
-      border: 1px solid rgba(0, 255, 204, 0.24);
-      border-radius: 3px;
-      background: rgba(0, 0, 0, 0.28);
+      display: inline-grid;
+      place-items: center;
+      width: 52px;
+      min-width: 52px;
+      height: 42px;
+      padding: 0;
+      border: 1px solid rgba(0, 255, 204, 0.18);
+      border-radius: 6px;
+      background: transparent;
       color: var(--white);
       font-family: var(--font-terminal);
       line-height: 1;
       cursor: pointer;
       position: relative;
       box-shadow:
-        0 0 8px rgba(0, 255, 204, 0.06),
-        inset 0 0 8px rgba(0, 255, 204, 0.025);
-      transition: transform 160ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
+        inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      transition: transform 160ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
     }
 
     .control-toggle:hover {
       transform: translateY(-1px);
       border-color: rgba(0, 255, 204, 0.48);
-      background: rgba(0, 255, 204, 0.055);
+      background: rgba(0, 255, 204, 0.06);
       box-shadow:
-        0 0 10px rgba(0, 255, 204, 0.12),
-        inset 0 0 8px rgba(0, 255, 204, 0.04);
+        inset 0 -2px 0 rgba(0, 255, 204, 0.32),
+        0 0 12px rgba(0, 255, 204, 0.08);
     }
 
     .control-toggle:active {
@@ -847,93 +856,57 @@
       outline-offset: 3px;
     }
 
-    .control-toggle__copy {
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      min-width: 0;
-      text-align: left;
+    .control-toggle__icon {
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 18px;
+      line-height: 1;
+      text-shadow: 0 0 12px currentColor;
+      transition: transform 180ms ease, color 180ms ease, text-shadow 180ms ease;
     }
 
-    .control-toggle__name {
-      color: var(--cyan);
-      font-size: 7px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .control-toggle__state {
-      overflow: hidden;
-      color: rgba(255, 255, 255, 0.94);
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .control-toggle__switch {
-      position: relative;
-      width: 32px;
-      height: 18px;
-      flex: 0 0 auto;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 2px;
-      background: rgba(0, 0, 0, 0.68);
-      box-shadow:
-        inset 0 2px 6px rgba(0, 0, 0, 0.55),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
-    }
-
-    .control-toggle__knob {
+    .control-toggle__sr {
       position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 12px;
-      height: 12px;
-      border-radius: 1px;
-      background: linear-gradient(180deg, #f8fafc, #aeb8ca);
-      box-shadow:
-        0 2px 5px rgba(0, 0, 0, 0.42),
-        inset 0 1px rgba(255, 255, 255, 0.72);
-      transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), background 200ms ease, box-shadow 200ms ease;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .control-toggle.is-active {
       border-color: rgba(0, 255, 204, 0.46);
-      background: rgba(0, 255, 204, 0.06);
+      background: rgba(0, 255, 204, 0.08);
       box-shadow:
-        inset 0 1px rgba(255, 255, 255, 0.05);
+        inset 0 -2px 0 rgba(0, 255, 204, 0.7),
+        0 0 16px rgba(0, 255, 204, 0.08);
     }
 
-    .control-toggle.is-active .control-toggle__switch {
-      border-color: rgba(0, 255, 204, 0.7);
-      background: linear-gradient(90deg, rgba(0, 164, 137, 0.96), rgba(0, 255, 204, 0.82));
-      box-shadow:
-        0 0 12px rgba(0, 255, 204, 0.2),
-        inset 0 1px 3px rgba(0, 0, 0, 0.18);
-    }
-
-    .control-toggle.is-active .control-toggle__knob {
-      transform: translateX(14px);
-      background: linear-gradient(180deg, #ffffff, #d8fff6);
-      box-shadow:
-        0 2px 6px rgba(0, 55, 45, 0.42),
-        0 0 8px rgba(255, 255, 255, 0.36);
-    }
-
-    .control-toggle--sound:not(.is-active) .control-toggle__switch {
-      border-color: rgba(255, 221, 87, 0.3);
+    .control-toggle.is-active .control-toggle__icon {
+      color: #ffffff;
+      transform: translateY(-1px);
+      text-shadow:
+        0 0 12px currentColor,
+        0 0 20px rgba(0, 255, 204, 0.4);
     }
 
     .control-toggle--sound {
       border-color: rgba(255, 221, 87, 0.22);
     }
 
-    .control-toggle--sound .control-toggle__name {
+    .control-toggle--sound:hover,
+    .control-toggle--sound.is-active {
+      border-color: rgba(255, 221, 87, 0.38);
+    }
+
+    .control-toggle--sound.is-active .control-toggle__icon,
+    .control-toggle--sound:hover .control-toggle__icon {
       color: var(--yellow);
+      text-shadow:
+        0 0 12px rgba(255, 221, 87, 0.8),
+        0 0 20px rgba(255, 221, 87, 0.24);
     }
 
     .card-content {
@@ -2942,53 +2915,57 @@
     }
 
     @media (min-width: 769px) and (max-width: 900px) {
+      .top-controls {
+        top: 20px;
+        right: -62px;
+      }
+
       .card-header {
-        grid-template-columns: minmax(0, 1fr);
-        justify-items: center;
-        gap: 7px;
-        padding: 10px 12px 9px;
+        padding: 11px 18px 10px 14px;
       }
 
       .card-title {
-        grid-column: 1;
-        justify-self: center;
         max-width: 100%;
-        font-size: clamp(11px, 2vw, 14px);
-        text-align: center;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-        text-wrap: balance;
+        font-size: clamp(13px, 1.9vw, 17px);
+      }
+    }
+
+    @media (max-width: 1099px) {
+      .top-controls {
+        grid-auto-flow: column;
       }
 
-      .header-controls {
-        grid-column: 1;
-        justify-self: center;
-      }
-
-      .card-content {
-        min-height: calc(var(--card-min-height) - 96px);
+      .page-shell {
+        display: grid;
+        /* gap: 6px; */
       }
     }
 
     @media (max-width: 768px) {
+
+      .top-controls {
+        position: static;
+        justify-self: center;
+        padding: 3px;
+        border-width: 1px;
+        border-radius: 10px 10px 0 0;
+        box-shadow:
+          0 8px 18px rgba(0, 0, 0, 0.18),
+          inset 0 1px rgba(255, 255, 255, 0.04);
+      }
+
       .card-header {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 7px;
-        padding: 10px 8px 9px;
+        padding: 12px 12px 10px;
       }
 
       .card-title {
-        grid-column: 1;
-      }
-
-      .header-controls {
-        grid-column: 1;
-        justify-self: center;
-        width: min(100%, 304px);
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 6px;
+        text-align: center;
+        font-size: clamp(12px, 4.6vw, 17px);
+        line-height: 1.12;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        text-wrap: balance;
       }
 
       .egg-counter {
@@ -3019,16 +2996,14 @@
       }
 
       .control-toggle {
-        min-height: 38px;
-        padding: 5px 6px 5px 8px;
+        width: 46px;
+        min-width: 46px;
+        height: 34px;
+        border-radius: 5px;
       }
 
-      .control-toggle__name {
-        font-size: 7px;
-      }
-
-      .control-toggle__state {
-        font-size: 9px;
+      .control-toggle__icon {
+        font-size: 16px;
       }
 
       .mobile-intro,
@@ -3144,194 +3119,187 @@
 <body>
   <div class="bg-icons" id="bgIcons" aria-hidden="true"></div>
   <div class="legendary-stage" id="legendaryStage" aria-hidden="true"></div>
-  <main class="card">
-    <header class="card-header">
-      <h1 class="card-title">◉ [SYSTEM] BIRTHDAY EVENT TRIGGERED ◉</h1>
-      <div class="header-controls" role="group" aria-label="Theme and sound controls">
-        <button class="control-toggle control-toggle--theme" id="themeToggle" type="button" aria-pressed="false">
-          <span class="control-toggle__copy" aria-hidden="true">
-            <span class="control-toggle__name">Theme</span>
-            <span class="control-toggle__state" id="themeToggleLabel">Dark</span>
-          </span>
-          <span class="control-toggle__switch" aria-hidden="true">
-            <span class="control-toggle__knob"></span>
-          </span>
-        </button>
-        <button class="control-toggle control-toggle--sound is-muted" id="soundToggle" type="button"
-          aria-pressed="false">
-          <span class="control-toggle__copy" aria-hidden="true">
-            <span class="control-toggle__name">Sound</span>
-            <span class="control-toggle__state" id="soundToggleLabel">Off</span>
-          </span>
-          <span class="control-toggle__switch" aria-hidden="true">
-            <span class="control-toggle__knob"></span>
-          </span>
-        </button>
-      </div>
-    </header>
+  <div class="page-shell">
+    <div class="top-controls" role="group" aria-label="Theme and sound controls">
+      <button class="control-toggle control-toggle--theme" id="themeToggle" type="button" aria-pressed="false">
+        <span class="control-toggle__icon" id="themeToggleIcon" aria-hidden="true">☾</span>
+        <span class="control-toggle__sr" id="themeToggleLabel">Dark</span>
+      </button>
+      <button class="control-toggle control-toggle--sound is-muted" id="soundToggle" type="button" aria-pressed="false">
+        <span class="control-toggle__icon" id="soundToggleIcon" aria-hidden="true">🔇</span>
+        <span class="control-toggle__sr" id="soundToggleLabel">Off</span>
+      </button>
+    </div>
+    <main class="card">
+      <header class="card-header">
+        <h1 class="card-title">◉ [SYSTEM] BIRTHDAY EVENT TRIGGERED ◉</h1>
+      </header>
 
-    <section class="card-content">
-      <div class="card-left">
-        <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
-          <span class="egg-counter__label">SECRET HUNTER</span>
-          <span class="egg-counter__value" id="eggCounterValue">0/17</span>
-          <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
-        </button>
-
-        <article class="profile-card">
-          <div class="profile-top">
-            <span class="terminal-icon">&gt;_</span>
-            <span>DEV PROFILE</span>
-          </div>
-
-          <div class="profile-crown" aria-hidden="true">👑</div>
-
-          <button class="profile-image-frame profile-image-button" type="button" data-easter="portrait"
-            aria-label="Poke the birthday portrait">
-            <img src="assets/profile.png" alt="Dev profile" class="profile-image">
+      <section class="card-content">
+        <div class="card-left">
+          <button class="egg-counter" id="eggCounter" type="button" aria-label="Show hidden interactions hint">
+            <span class="egg-counter__label">SECRET HUNTER</span>
+            <span class="egg-counter__value" id="eggCounterValue">0/17</span>
+            <!-- <span class="egg-counter__hint">на клаве: frontend / birthday / coffee</span> -->
           </button>
 
-          <div class="profile-bottom">
-            <div class="profile-meta">
-              <div><span>ROLE:</span> LEGENDARY DEV</div>
-              <div><span>STACK:</span> WP • HTML • CSS • JS</div>
-              <div><span>CODING SINCE:</span> BEFORE IT WAS COOL</div>
+          <article class="profile-card">
+            <div class="profile-top">
+              <span class="terminal-icon">&gt;_</span>
+              <span>DEV PROFILE</span>
             </div>
 
-            <button class="profile-trophy profile-action" type="button" data-easter="achievement"
-              aria-label="Unlock achievement">🏆</button>
-          </div>
-        </article>
+            <div class="profile-crown" aria-hidden="true">👑</div>
 
-        <button class="code-title code-title-action" type="button" data-easter="deploy"
-          aria-label="Deploy birthday script">
-          <span class="code-badge">JS</span>
-          <span>birthday.js</span>
-        </button>
-      </div>
+            <button class="profile-image-frame profile-image-button" type="button" data-easter="portrait"
+              aria-label="Poke the birthday portrait">
+              <img src="assets/profile.png" alt="Dev profile" class="profile-image">
+            </button>
 
-      <div class="card-right">
-        <div class="birthday-title">
-          HAPPY FUСKING<br>
-          BIRTHDAY<br>
-          <span class="birthday-accent">заебал!</span>
-        </div>
-
-        <p class="birthday-subtext">
-          Поздравляю, ты стареешь.<br>
-          Пусть Баги боятся тебя, а не наоборот.
-        </p>
-
-        <div class="command-panel" id="commandPanel" aria-labelledby="commandPanelTitle" aria-expanded="false">
-          <div class="command-panel__window">
-            <div class="command-panel__header">
-              <span id="commandPanelTitle">&gt;_ secret-terminal</span>
-            </div>
-            <div class="command-panel__body" id="commandPanelBody" aria-hidden="true" inert>
-              <div class="command-panel__log" id="commandLog" aria-live="polite">
-                <div>&gt;_ заебал вошёл в чат. Готовьтесь, суки.</div>
-                <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если
-                  нужен список разрешённых безобразий.</div>
+            <div class="profile-bottom">
+              <div class="profile-meta">
+                <div><span>ROLE:</span> LEGENDARY DEV</div>
+                <div><span>STACK:</span> WP • HTML • CSS • JS</div>
+                <div><span>CODING SINCE:</span> BEFORE IT WAS COOL</div>
               </div>
-              <label class="command-panel__line">
-                <span>$</span>
-                <input id="commandInput" type="text" autocomplete="off" spellcheck="false" tabindex="-1"
-                  aria-label="Secret command input">
-              </label>
+
+              <button class="profile-trophy profile-action" type="button" data-easter="achievement"
+                aria-label="Unlock achievement">🏆</button>
+            </div>
+          </article>
+
+          <button class="code-title code-title-action" type="button" data-easter="deploy"
+            aria-label="Deploy birthday script">
+            <span class="code-badge">JS</span>
+            <span>birthday.js</span>
+          </button>
+        </div>
+
+        <div class="card-right">
+          <div class="birthday-title">
+            HAPPY FUСKING<br>
+            BIRTHDAY<br>
+            <span class="birthday-accent">заебал!</span>
+          </div>
+
+          <p class="birthday-subtext">
+            Поздравляю, ты стареешь.<br>
+            Пусть Баги боятся тебя, а не наоборот.
+          </p>
+
+          <div class="command-panel" id="commandPanel" aria-labelledby="commandPanelTitle" aria-expanded="false">
+            <div class="command-panel__window">
+              <div class="command-panel__header">
+                <span id="commandPanelTitle">&gt;_ secret-terminal</span>
+              </div>
+              <div class="command-panel__body" id="commandPanelBody" aria-hidden="true" inert>
+                <div class="command-panel__log" id="commandLog" aria-live="polite">
+                  <div>&gt;_ заебал вошёл в чат. Готовьтесь, суки.</div>
+                  <div>Нажмите <button type="button" class="command-hint-chip" data-command="help">help</button>, если
+                    нужен список разрешённых безобразий.</div>
+                </div>
+                <label class="command-panel__line">
+                  <span>$</span>
+                  <input id="commandInput" type="text" autocomplete="off" spellcheck="false" tabindex="-1"
+                    aria-label="Secret command input">
+                </label>
+              </div>
             </div>
           </div>
+
         </div>
+      </section>
 
-      </div>
-    </section>
+      <footer class="card-footer">
+        <button class="footer-icon footer-action" type="button" data-easter="cake" aria-label="Cake celebration">
+          <big>🎂</big>
+        </button>
+        <span class="footer-line"></span>
+        <span class="footer-txt">MADE WITH <button class="footer-icon footer-icon-heart footer-action" type="button"
+            data-easter="hearts" aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
+        <span class="footer-line"></span>
+        <button class="footer-icon footer-action" type="button" data-easter="terminal"
+          aria-label="Focus secret terminal">&lt;/&gt;</button>
+        <button class="footer-icon footer-action" type="button" data-easter="share"
+          aria-label="Share birthday protocol"><big>↗</big></button>
+      </footer>
 
-    <footer class="card-footer">
-      <button class="footer-icon footer-action" type="button" data-easter="cake" aria-label="Cake celebration">
-        <big>🎂</big>
-      </button>
-      <span class="footer-line"></span>
-      <span class="footer-txt">MADE WITH <button class="footer-icon footer-icon-heart footer-action" type="button"
-          data-easter="hearts" aria-label="Launch hearts"><big>♥</big></button> AND TOO MUCH CSS • 2026</span>
-      <span class="footer-line"></span>
-      <button class="footer-icon footer-action" type="button" data-easter="terminal"
-        aria-label="Focus secret terminal">&lt;/&gt;</button>
-      <button class="footer-icon footer-action" type="button" data-easter="share"
-        aria-label="Share birthday protocol"><big>↗</big></button>
-    </footer>
-
-    <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-
-    <div class="mobile-intro" id="mobileIntro" role="dialog" aria-modal="true" aria-labelledby="mobileIntroTitle"
-      aria-describedby="mobileIntroText" aria-hidden="true">
-      <div class="mobile-intro__panel">
-        <div class="mobile-intro__eyebrow">FIRST RUN / MOBILE MODE</div>
-        <h2 class="mobile-intro__title" id="mobileIntroTitle">Мобилка пофикшена</h2>
-        <p class="mobile-intro__text" id="mobileIntroText">
-          Да, на телефоне теперь не разваливается. Но <strong>весь челлендж лучше проходить на десктопе</strong>:
-          тут есть клавиатурные трюки, а мобильная клавиатура всё равно делает вид, что она помогает.
-        </p>
-        <div class="mobile-intro__actions">
-          <button class="mobile-intro__close" type="button" id="mobileIntroClose">Понятно</button>
+      <div class="mobile-intro" id="mobileIntro" role="dialog" aria-modal="true" aria-labelledby="mobileIntroTitle"
+        aria-describedby="mobileIntroText" aria-hidden="true">
+        <div class="mobile-intro__panel">
+          <div class="mobile-intro__eyebrow">FIRST RUN / MOBILE MODE</div>
+          <h2 class="mobile-intro__title" id="mobileIntroTitle">Мобилка пофикшена</h2>
+          <p class="mobile-intro__text" id="mobileIntroText">
+            Да, на телефоне теперь не разваливается. Но <strong>весь челлендж лучше проходить на десктопе</strong>:
+            тут есть клавиатурные трюки, а мобильная клавиатура всё равно делает вид, что она помогает.
+          </p>
+          <div class="mobile-intro__actions">
+            <button class="mobile-intro__close" type="button" id="mobileIntroClose">Понятно</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="secret-modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretModalTitle"
-      aria-hidden="true">
-      <div class="secret-modal__panel">
-        <button class="secret-modal__close" type="button" data-close-secret aria-label="Закрыть окно">×</button>
-        <div class="secret-modal__eyebrow">ACHIEVEMENT UNLOCKED</div>
-        <h2 class="secret-modal__title" id="secretModalTitle">РЕЖИМ ЛЕГЕНДЫ</h2>
-        <p class="secret-modal__text" id="secretModalText">
-          Ты нашёл скрытый слой. Теперь сайт ведёт себя так, будто ему дали root и не забрали.
-        </p>
-        <div class="secret-modal__progress" id="secretModalProgress"></div>
-        <button class="secret-modal__restart" id="secretModalRestart" type="button">Пройти сначала</button>
-      </div>
-    </div>
-
-    <div class="code-modal" id="codeModal" role="dialog" aria-modal="true" aria-labelledby="codeModalTitle"
-      aria-hidden="true">
-      <div class="code-modal__panel">
-        <div class="code-modal__head">
-          <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
-          <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
-        </div>
-        <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
+      <div class="secret-modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretModalTitle"
+        aria-hidden="true">
+        <div class="secret-modal__panel">
+          <button class="secret-modal__close" type="button" data-close-secret aria-label="Закрыть окно">×</button>
+          <div class="secret-modal__eyebrow">ACHIEVEMENT UNLOCKED</div>
+          <h2 class="secret-modal__title" id="secretModalTitle">РЕЖИМ ЛЕГЕНДЫ</h2>
+          <p class="secret-modal__text" id="secretModalText">
+            Ты нашёл скрытый слой. Теперь сайт ведёт себя так, будто ему дали root и не забрали.
+          </p>
+          <div class="secret-modal__progress" id="secretModalProgress"></div>
+          <button class="secret-modal__restart" id="secretModalRestart" type="button">Пройти сначала</button>
         </div>
       </div>
-    </div>
 
-    <div class="audio-modal" id="audioModal" role="dialog" aria-modal="true" aria-labelledby="audioModalTitle"
-      aria-describedby="audioModalText" aria-hidden="true">
-      <div class="audio-modal__panel">
-        <button class="secret-modal__close audio-modal__close" type="button" id="audioModalClose"
-          aria-label="Закрыть окно">×</button>
-        <div class="audio-modal__eyebrow">SOUND SYSTEM / WARNING</div>
-        <h2 class="audio-modal__title" id="audioModalTitle">Включить звуковое безумие?</h2>
-        <p class="audio-modal__text" id="audioModalText">
-          Страница начнёт пищать, свистеть и щёлкать синтезаторами так, будто она сбежала из аркадного зала.
-          Точно хотите услышать это безумие?
-        </p>
-        <div class="audio-modal__actions">
-          <button class="audio-modal__confirm" type="button" id="audioModalConfirm">Да, запускай сирены</button>
-          <button class="audio-modal__cancel" type="button" id="audioModalCancel">Не сегодня, я ещё люблю
-            тишину</button>
+      <div class="code-modal" id="codeModal" role="dialog" aria-modal="true" aria-labelledby="codeModalTitle"
+        aria-hidden="true">
+        <div class="code-modal__panel">
+          <div class="code-modal__head">
+            <h2 class="code-modal__title" id="codeModalTitle">birthday.js</h2>
+            <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
+          </div>
+          <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="scanlines"></div>
-    <div class="particles" id="particles"></div>
-  </main>
+      <div class="audio-modal" id="audioModal" role="dialog" aria-modal="true" aria-labelledby="audioModalTitle"
+        aria-describedby="audioModalText" aria-hidden="true">
+        <div class="audio-modal__panel">
+          <button class="secret-modal__close audio-modal__close" type="button" id="audioModalClose"
+            aria-label="Закрыть окно">×</button>
+          <div class="audio-modal__eyebrow">SOUND SYSTEM / WARNING</div>
+          <h2 class="audio-modal__title" id="audioModalTitle">Включить звуковое безумие?</h2>
+          <p class="audio-modal__text" id="audioModalText">
+            Страница начнёт пищать, свистеть и щёлкать синтезаторами так, будто она сбежала из аркадного зала.
+            Точно хотите услышать это безумие?
+          </p>
+          <div class="audio-modal__actions">
+            <button class="audio-modal__confirm" type="button" id="audioModalConfirm">Да, запускай сирены</button>
+            <button class="audio-modal__cancel" type="button" id="audioModalCancel">Не сегодня, я ещё люблю
+              тишину</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scanlines"></div>
+      <div class="particles" id="particles"></div>
+    </main>
+  </div>
+
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
   <script>
     const card = document.querySelector('.card');
     const particles = document.getElementById('particles');
     const toastStack = document.getElementById('toastStack');
     const themeToggle = document.getElementById('themeToggle');
+    const themeToggleIcon = document.getElementById('themeToggleIcon');
     const themeToggleLabel = document.getElementById('themeToggleLabel');
     const soundToggle = document.getElementById('soundToggle');
+    const soundToggleIcon = document.getElementById('soundToggleIcon');
     const soundToggleLabel = document.getElementById('soundToggleLabel');
     const mobileIntro = document.getElementById('mobileIntro');
     const mobileIntroClose = document.getElementById('mobileIntroClose');
@@ -3513,6 +3481,10 @@
       themeToggle?.setAttribute('aria-pressed', String(theme === 'light'));
       themeToggle?.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
 
+      if (themeToggleIcon) {
+        themeToggleIcon.textContent = theme === 'light' ? '☀' : '☾';
+      }
+
       if (themeToggleLabel) {
         themeToggleLabel.textContent = theme === 'light' ? 'Light' : 'Dark';
       }
@@ -3580,6 +3552,10 @@
       soundToggle?.classList.toggle('is-active', soundEnabled);
       soundToggle?.setAttribute('aria-pressed', String(soundEnabled));
       soundToggle?.setAttribute('aria-label', soundEnabled ? 'Disable sound' : 'Enable sound');
+
+      if (soundToggleIcon) {
+        soundToggleIcon.textContent = soundEnabled ? '🔊' : '🔇';
+      }
 
       if (soundToggleLabel) {
         soundToggleLabel.textContent = soundEnabled ? 'On' : 'Off';
