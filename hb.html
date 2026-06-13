@@ -6222,9 +6222,7 @@
     }
 
     window.addEventListener('beforeunload', () => {
-      if (particleInterval) {
-        window.clearInterval(particleInterval);
-      }
+      stopAmbientParticles();
 
       if (idleHintTimer) {
         window.clearTimeout(idleHintTimer);
