@@ -215,14 +215,14 @@
     .top-controls {
       position: absolute;
       top: 40px;
-      right: -60px;
+      right: -66px;
       z-index: 5;
       display: inline-grid;
       grid-auto-flow: row;
       grid-auto-columns: minmax(0, 1fr);
       gap: 0;
       padding: 4px;
-      border: 1px solid var(--cyan);
+      border: 6px solid var(--cyan);
       border-radius: 0 10px 10px 0;
       background:
         linear-gradient(180deg, rgba(5, 18, 26, 0.94), rgba(2, 8, 14, 0.98));
@@ -2915,10 +2915,6 @@
     }
 
     @media (min-width: 769px) and (max-width: 900px) {
-      .top-controls {
-        top: 20px;
-        right: -62px;
-      }
 
       .card-header {
         padding: 11px 18px 10px 14px;
@@ -2932,7 +2928,19 @@
 
     @media (max-width: 1099px) {
       .top-controls {
+        bottom: -4px;
+        border-width: 4px;
         grid-auto-flow: column;
+        position: static;
+        justify-self: center;
+        padding: 3px;
+        border-radius: 10px 10px 0 0;
+        position: relative;
+        right: auto;
+        top: auto;
+        box-shadow:
+          0 8px 18px rgba(0, 0, 0, 0.18),
+          inset 0 1px rgba(255, 255, 255, 0.04);
       }
 
       .page-shell {
@@ -2942,17 +2950,6 @@
     }
 
     @media (max-width: 768px) {
-
-      .top-controls {
-        position: static;
-        justify-self: center;
-        padding: 3px;
-        border-width: 1px;
-        border-radius: 10px 10px 0 0;
-        box-shadow:
-          0 8px 18px rgba(0, 0, 0, 0.18),
-          inset 0 1px rgba(255, 255, 255, 0.04);
-      }
 
       .card-header {
         padding: 12px 12px 10px;
