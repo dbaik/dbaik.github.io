@@ -1,87 +1,104 @@
-const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
+const APP_COPY = window.APP_COPY ?? {};
+const LANGUAGE_STORAGE_KEY = 'frontendBirthdayLanguage';
 
-    const card = document.querySelector('.card');
-    const particles = document.getElementById('particles');
-    const toastStack = document.getElementById('toastStack');
-    const themeToggle = document.getElementById('themeToggle');
-    const themeToggleIcon = document.getElementById('themeToggleIcon');
-    const themeToggleLabel = document.getElementById('themeToggleLabel');
-    const soundToggle = document.getElementById('soundToggle');
-    const soundToggleIcon = document.getElementById('soundToggleIcon');
-    const soundToggleLabel = document.getElementById('soundToggleLabel');
-    const mobileIntro = document.getElementById('mobileIntro');
-    const mobileIntroTitle = document.getElementById('mobileIntroTitle');
-    const mobileIntroText = document.getElementById('mobileIntroText');
-    const mobileIntroClose = document.getElementById('mobileIntroClose');
-    const eggCounter = document.getElementById('eggCounter');
-    const eggCounterValue = document.getElementById('eggCounterValue');
-    const secretModal = document.getElementById('secretModal');
-    const secretModalClose = document.querySelector('[data-close-secret]');
-    const secretModalEyebrow = document.getElementById('secretModalEyebrow');
-    const secretModalTitle = document.getElementById('secretModalTitle');
-    const secretModalText = document.getElementById('secretModalText');
-    const secretModalProgress = document.getElementById('secretModalProgress');
-    const secretModalRestart = document.getElementById('secretModalRestart');
-    const codeModal = document.getElementById('codeModal');
-    const codeModalTitle = document.getElementById('codeModalTitle');
-    const codeModalClose = document.querySelector('[data-close-code]');
-    const audioModal = document.getElementById('audioModal');
-    const audioModalClose = document.getElementById('audioModalClose');
-    const audioModalEyebrow = document.getElementById('audioModalEyebrow');
-    const audioModalConfirm = document.getElementById('audioModalConfirm');
-    const audioModalCancel = document.getElementById('audioModalCancel');
-    const commandPanel = document.getElementById('commandPanel');
-    const commandPanelBody = document.getElementById('commandPanelBody');
-    const commandPanelTitle = document.getElementById('commandPanelTitle');
-    const commandInput = document.getElementById('commandInput');
-    const commandLog = document.getElementById('commandLog');
-    const bgIcons = document.getElementById('bgIcons');
-    const legendaryStage = document.getElementById('legendaryStage');
-    const birthdayCodeLive = document.getElementById('birthdayCodeLive');
-    const footerCopy = document.getElementById('footerCopy');
-    const body = document.body;
-    const pageTitle = document.getElementById('cardTitle');
-    const eggCounterLabel = document.getElementById('eggCounterLabel');
-    const profileTopTitle = document.getElementById('profileTopTitle');
-    const profileRoleLabel = document.getElementById('profileRoleLabel');
-    const profileRoleValue = document.getElementById('profileRoleValue');
-    const profileStackLabel = document.getElementById('profileStackLabel');
-    const profileStackValue = document.getElementById('profileStackValue');
-    const profileCodingSinceLabel = document.getElementById('profileCodingSinceLabel');
-    const profileCodingSinceValue = document.getElementById('profileCodingSinceValue');
-    const codeBadgeLabel = document.getElementById('codeBadgeLabel');
-    const codeTitleLabel = document.getElementById('codeTitleLabel');
-    const birthdayTitleText = document.getElementById('birthdayTitleText');
-    const birthdayTitleAccent = document.getElementById('birthdayTitleAccent');
-    const birthdaySubtext = document.getElementById('birthdaySubtext');
-    const mobileIntroEyebrow = document.getElementById('mobileIntroEyebrow');
-    const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const compactViewportQuery = window.matchMedia('(max-width: 639px)');
-    const bodyModeTimers = new Map();
-    const birthdayCodeCommentPlain = BIRTHDAY_CODE.commentPlain;
-    const birthdayCodePreludePlain = BIRTHDAY_CODE.preludePlain;
-    const birthdayCodePreludeHoldMs = 700;
-    const birthdayCodePreCodePauseMs = 180;
-    const birthdayCodeAsideBlinkMs = 1000;
-    const birthdayCodePlain = BIRTHDAY_CODE.plain;
-    const birthdayCodeFinalHtml = BIRTHDAY_CODE.finalHtml;
-    let birthdayCodeTimer = null;
-    let birthdayCodeRun = 0;
-    let matrixRainTimer = null;
-    let matrixModeTimer = null;
-    let legendaryModeTimer = null;
-    let legendarySpawnTimer = null;
-    let completionTimer = null;
-    let finalEggsModalTimer = null;
-    let commandActivationTimer = null;
-    let audioContext = null;
-    let masterGain = null;
-    let soundEnabled = false;
-    let currentThemePreference = null;
-    let ambientParticleTimer = null;
-    let isCompactViewport = compactViewportQuery.matches;
-    let temporaryThemeTimer = null;
+let currentLanguage = 'en';
+
+const card = document.querySelector('.card');
+const particles = document.getElementById('particles');
+const cursorFx = document.getElementById('cursorFx');
+const cursorComet = document.getElementById('cursorComet');
+const toastStack = document.getElementById('toastStack');
+const topControls = document.getElementById('topControls');
+const themeToggle = document.getElementById('themeToggle');
+const themeToggleIcon = document.getElementById('themeToggleIcon');
+const themeToggleLabel = document.getElementById('themeToggleLabel');
+const languageToggle = document.getElementById('languageToggle');
+const languageToggleIcon = document.getElementById('languageToggleIcon');
+const languageToggleLabel = document.getElementById('languageToggleLabel');
+const soundToggle = document.getElementById('soundToggle');
+const soundToggleIcon = document.getElementById('soundToggleIcon');
+const soundToggleLabel = document.getElementById('soundToggleLabel');
+const mobileIntro = document.getElementById('mobileIntro');
+const mobileIntroTitle = document.getElementById('mobileIntroTitle');
+const mobileIntroText = document.getElementById('mobileIntroText');
+const mobileIntroClose = document.getElementById('mobileIntroClose');
+const eggCounter = document.getElementById('eggCounter');
+const eggCounterValue = document.getElementById('eggCounterValue');
+const secretModal = document.getElementById('secretModal');
+const secretModalClose = document.querySelector('[data-close-secret]');
+const secretModalEyebrow = document.getElementById('secretModalEyebrow');
+const secretModalTitle = document.getElementById('secretModalTitle');
+const secretModalText = document.getElementById('secretModalText');
+const secretModalProgress = document.getElementById('secretModalProgress');
+const secretModalRestart = document.getElementById('secretModalRestart');
+const codeModal = document.getElementById('codeModal');
+const codeModalTitle = document.getElementById('codeModalTitle');
+const codeModalClose = document.querySelector('[data-close-code]');
+const audioModal = document.getElementById('audioModal');
+const audioModalClose = document.getElementById('audioModalClose');
+const audioModalEyebrow = document.getElementById('audioModalEyebrow');
+const audioModalTitle = document.getElementById('audioModalTitle');
+const audioModalText = document.getElementById('audioModalText');
+const audioModalConfirm = document.getElementById('audioModalConfirm');
+const audioModalCancel = document.getElementById('audioModalCancel');
+const commandPanel = document.getElementById('commandPanel');
+const commandPanelBody = document.getElementById('commandPanelBody');
+const commandPanelTitle = document.getElementById('commandPanelTitle');
+const commandInput = document.getElementById('commandInput');
+const commandLog = document.getElementById('commandLog');
+const bgIcons = document.getElementById('bgIcons');
+const legendaryStage = document.getElementById('legendaryStage');
+const birthdayCodeLive = document.getElementById('birthdayCodeLive');
+const footerCopy = document.getElementById('footerCopy');
+const body = document.body;
+const pageTitle = document.getElementById('cardTitle');
+const eggCounterLabel = document.getElementById('eggCounterLabel');
+const profileTopTitle = document.getElementById('profileTopTitle');
+const profileRoleLabel = document.getElementById('profileRoleLabel');
+const profileRoleValue = document.getElementById('profileRoleValue');
+const profileStackLabel = document.getElementById('profileStackLabel');
+const profileStackValue = document.getElementById('profileStackValue');
+const profileCodingSinceLabel = document.getElementById('profileCodingSinceLabel');
+const profileCodingSinceValue = document.getElementById('profileCodingSinceValue');
+const codeBadgeLabel = document.getElementById('codeBadgeLabel');
+const codeTitleLabel = document.getElementById('codeTitleLabel');
+const birthdayTitleText = document.getElementById('birthdayTitleText');
+const birthdayTitleAccent = document.getElementById('birthdayTitleAccent');
+const birthdaySubtext = document.getElementById('birthdaySubtext');
+const mobileIntroEyebrow = document.getElementById('mobileIntroEyebrow');
+const colors = ['#00ffcc', '#ff00ff', '#ffff00', '#00ff88'];
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const compactViewportQuery = window.matchMedia('(max-width: 639px)');
+const bodyModeTimers = new Map();
+let birthdayCodePreludeHoldMs = 700;
+let birthdayCodePreCodePauseMs = 180;
+let birthdayCodeAsideBlinkMs = 1000;
+let birthdayCodeCommentPlain = '';
+let birthdayCodePreludePlain = '';
+let birthdayCodePlain = '';
+let birthdayCodeFinalHtml = '';
+let BIRTHDAY_CODE = null;
+let EGG_CATALOG = null;
+let EGG_HINTS = null;
+let PAGE_COPY = null;
+let UI_COPY = null;
+let birthdayCodeTimer = null;
+let birthdayCodeRun = 0;
+let matrixRainTimer = null;
+let matrixModeTimer = null;
+let legendaryModeTimer = null;
+let legendarySpawnTimer = null;
+let completionTimer = null;
+let finalEggsModalTimer = null;
+let commandActivationTimer = null;
+let audioContext = null;
+let masterGain = null;
+let soundEnabled = false;
+let soundSettingsReady = false;
+let currentThemePreference = null;
+let ambientParticleTimer = null;
+let isCompactViewport = compactViewportQuery.matches;
+let temporaryThemeTimer = null;
 
     let typedBuffer = '';
     let konamiIndex = 0;
@@ -95,18 +112,18 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
     let unknownCommandCopyCursor = 0;
     let modalRestoreFocus = null;
 
-    const eggStorageKey = 'frontendBirthdayFoundEggs';
-    const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
-    const themeStorageKey = 'frontendBirthdayThemePreference';
-    const soundStorageKey = 'frontendBirthdaySoundEnabled';
-    const soundWarningSeenKey = 'frontendBirthdaySoundWarningSeen';
-    const idleHintDelay = 30000;
-    const eggCatalog = EGG_CATALOG;
-    const eggHints = EGG_HINTS;
-    const eggIds = Object.keys(eggCatalog);
-    const eggIdSet = new Set(eggIds);
+const eggStorageKey = 'frontendBirthdayFoundEggs';
+const mobileIntroSeenKey = 'frontendBirthdayMobileIntroSeen';
+const themeStorageKey = 'frontendBirthdayThemePreference';
+const soundStorageKey = 'frontendBirthdaySoundEnabled';
+const soundWarningSeenKey = 'frontendBirthdaySoundWarningSeen';
+const idleHintDelay = 30000;
+let eggCatalog = null;
+let eggHints = null;
+const eggIds = [];
+const eggIdSet = new Set();
 
-    const konamiCode = [
+const konamiCode = [
       'ArrowUp',
       'ArrowUp',
       'ArrowDown',
@@ -119,67 +136,195 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       'a'
     ];
 
-    const foundEggs = new Set(loadFoundEggs());
-    const commandHintList = ['deploy', 'bugfix', 'brew', 'party', 'matrix', 'legendary', 'zaebal', 'clear'];
+let foundEggs = new Set();
+const commandHintList = ['deploy', 'bugfix', 'brew', 'party', 'matrix', 'legendary', 'zaebal', 'clear'];
 
-    function renderCommandHints(commandsList) {
-      return [
-        '<div class="command-hint-row">',
-        ...commandsList.map((command) => `<button type="button" class="command-hint-chip" data-command="${command}">${command}</button>`),
-        '</div>'
-      ].join('');
+function renderCommandHints(commandsList) {
+  return [
+    '<div class="command-hint-row">',
+    ...commandsList.map((command) => `<button type="button" class="command-hint-chip" data-command="${command}">${command}</button>`),
+    '</div>'
+  ].join('');
+}
+
+function getRotatingCopy(items, cursor) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return { value: '', nextCursor: cursor };
+  }
+
+  return {
+    value: items[cursor % items.length],
+    nextCursor: cursor + 1
+  };
+}
+
+function getPreferredLanguage() {
+  const storedLanguage = readStorageItem(LANGUAGE_STORAGE_KEY);
+
+  if (storedLanguage === 'ru' || storedLanguage === 'en') {
+    return storedLanguage;
+  }
+
+  const timeZone = (() => {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    } catch {
+      return '';
     }
+  })();
 
-    function getRotatingCopy(items, cursor) {
-      if (!Array.isArray(items) || items.length === 0) {
-        return { value: '', nextCursor: cursor };
-      }
+  const russianTimeZones = new Set([
+    'Europe/Warsaw',
+    'Europe/Kyiv',
+    'Europe/Kiev'
+  ]);
 
-      return {
-        value: items[cursor % items.length],
-        nextCursor: cursor + 1
-      };
-    }
+  if (timeZone.startsWith('America/') || timeZone.startsWith('US/')) {
+    return 'en';
+  }
 
-    function applyPageCopy() {
-      document.title = PAGE_COPY.pageTitle;
+  if (russianTimeZones.has(timeZone)) {
+    return 'ru';
+  }
 
-      document.querySelector('meta[name="description"]')?.setAttribute('content', PAGE_COPY.metaDescription);
+  return 'en';
+}
 
-      if (pageTitle) pageTitle.textContent = PAGE_COPY.cardTitle;
-      if (eggCounterLabel) eggCounterLabel.textContent = PAGE_COPY.eggCounterLabel;
-      if (profileTopTitle) profileTopTitle.textContent = PAGE_COPY.profileTopTitle;
-      if (profileRoleLabel) profileRoleLabel.textContent = PAGE_COPY.profileRoleLabel;
-      if (profileRoleValue) profileRoleValue.textContent = PAGE_COPY.profileRoleValue;
-      if (profileStackLabel) profileStackLabel.textContent = PAGE_COPY.profileStackLabel;
-      if (profileStackValue) profileStackValue.textContent = PAGE_COPY.profileStackValue;
-      if (profileCodingSinceLabel) profileCodingSinceLabel.textContent = PAGE_COPY.profileCodingSinceLabel;
-      if (profileCodingSinceValue) profileCodingSinceValue.textContent = PAGE_COPY.profileCodingSinceValue;
-      if (codeBadgeLabel) codeBadgeLabel.textContent = PAGE_COPY.codeBadgeLabel;
-      if (codeTitleLabel) codeTitleLabel.textContent = PAGE_COPY.codeTitleLabel;
-      if (birthdayTitleText) birthdayTitleText.innerHTML = PAGE_COPY.birthdayTitleHtml;
-      if (birthdayTitleAccent) birthdayTitleAccent.textContent = PAGE_COPY.birthdayTitleAccent;
-      if (birthdaySubtext) birthdaySubtext.innerHTML = PAGE_COPY.birthdaySubtextHtml;
-      if (commandPanelTitle) commandPanelTitle.textContent = PAGE_COPY.commandPanelTitle;
-      if (commandLog) commandLog.innerHTML = PAGE_COPY.commandLogIntroHtml;
-      if (footerCopy) footerCopy.innerHTML = PAGE_COPY.footerCopyHtml;
-      if (mobileIntroEyebrow) mobileIntroEyebrow.textContent = PAGE_COPY.mobileIntroEyebrow;
-      if (mobileIntroTitle) mobileIntroTitle.textContent = PAGE_COPY.mobileIntroTitle;
-      if (mobileIntroText) mobileIntroText.innerHTML = PAGE_COPY.mobileIntroTextHtml;
-      if (mobileIntroClose) mobileIntroClose.textContent = PAGE_COPY.mobileIntroClose;
-      if (secretModalEyebrow) secretModalEyebrow.textContent = PAGE_COPY.secretModalEyebrow;
-      if (secretModalTitle) secretModalTitle.textContent = PAGE_COPY.secretModalTitle;
-      if (secretModalText) secretModalText.textContent = PAGE_COPY.secretModalText;
-      if (secretModalRestart) secretModalRestart.textContent = PAGE_COPY.secretModalRestart;
-      if (codeModalTitle) codeModalTitle.textContent = PAGE_COPY.codeModalTitle;
-      if (audioModalEyebrow) audioModalEyebrow.textContent = PAGE_COPY.audioModalEyebrow;
-      if (audioModalTitle) audioModalTitle.textContent = PAGE_COPY.audioModalTitle;
-      if (audioModalText) audioModalText.textContent = PAGE_COPY.audioModalText;
-      if (audioModalConfirm) audioModalConfirm.textContent = PAGE_COPY.audioModalConfirm;
-      if (audioModalCancel) audioModalCancel.textContent = PAGE_COPY.audioModalCancel;
-    }
+function updateLanguageToggle() {
+  if (!UI_COPY) return;
 
-    applyPageCopy();
+  languageToggle?.classList.toggle('is-active', currentLanguage === 'ru');
+  languageToggle?.setAttribute('aria-pressed', String(currentLanguage === 'ru'));
+  languageToggle?.setAttribute('aria-label', currentLanguage === 'ru'
+    ? UI_COPY.languageToggleToEnglish
+    : UI_COPY.languageToggleToRussian);
+
+  if (languageToggleIcon) {
+    languageToggleIcon.textContent = currentLanguage === 'ru'
+      ? UI_COPY.languageToggleLabelRussian
+      : UI_COPY.languageToggleLabelEnglish;
+  }
+
+  if (languageToggleLabel) {
+    languageToggleLabel.textContent = currentLanguage === 'ru'
+      ? UI_COPY.languageToggleLabelRussian
+      : UI_COPY.languageToggleLabelEnglish;
+  }
+
+  topControls?.setAttribute('aria-label', currentLanguage === 'ru'
+    ? 'Кнопки темы, языка и звука'
+    : 'Theme, language, and sound controls');
+}
+
+function syncLanguageCopy() {
+  const pack = APP_COPY[currentLanguage] ?? APP_COPY.en ?? {
+    PAGE_COPY: {},
+    BIRTHDAY_CODE: {},
+    EGG_CATALOG: {},
+    EGG_HINTS: {},
+    UI_COPY: {}
+  };
+  PAGE_COPY = pack.PAGE_COPY;
+  BIRTHDAY_CODE = pack.BIRTHDAY_CODE;
+  EGG_CATALOG = pack.EGG_CATALOG;
+  EGG_HINTS = pack.EGG_HINTS;
+  UI_COPY = pack.UI_COPY;
+  eggCatalog = EGG_CATALOG;
+  eggHints = EGG_HINTS;
+
+  eggIds.splice(0, eggIds.length, ...Object.keys(eggCatalog));
+  eggIdSet.clear();
+  eggIds.forEach((eggId) => eggIdSet.add(eggId));
+
+  birthdayCodeCommentPlain = BIRTHDAY_CODE.commentPlain;
+  birthdayCodePreludePlain = BIRTHDAY_CODE.preludePlain;
+  birthdayCodePlain = BIRTHDAY_CODE.plain;
+  birthdayCodeFinalHtml = BIRTHDAY_CODE.finalHtml;
+}
+
+function applyPageCopy() {
+  document.documentElement.lang = currentLanguage;
+  document.title = PAGE_COPY.pageTitle;
+
+  document.querySelector('meta[name="description"]')?.setAttribute('content', PAGE_COPY.metaDescription);
+
+  if (pageTitle) pageTitle.textContent = PAGE_COPY.cardTitle;
+  if (eggCounterLabel) eggCounterLabel.textContent = PAGE_COPY.eggCounterLabel;
+  if (profileTopTitle) profileTopTitle.textContent = PAGE_COPY.profileTopTitle;
+  if (profileRoleLabel) profileRoleLabel.textContent = PAGE_COPY.profileRoleLabel;
+  if (profileRoleValue) profileRoleValue.textContent = PAGE_COPY.profileRoleValue;
+  if (profileStackLabel) profileStackLabel.textContent = PAGE_COPY.profileStackLabel;
+  if (profileStackValue) profileStackValue.textContent = PAGE_COPY.profileStackValue;
+  if (profileCodingSinceLabel) profileCodingSinceLabel.textContent = PAGE_COPY.profileCodingSinceLabel;
+  if (profileCodingSinceValue) profileCodingSinceValue.textContent = PAGE_COPY.profileCodingSinceValue;
+  if (codeBadgeLabel) codeBadgeLabel.textContent = PAGE_COPY.codeBadgeLabel;
+  if (codeTitleLabel) codeTitleLabel.textContent = PAGE_COPY.codeTitleLabel;
+  if (birthdayTitleText) birthdayTitleText.innerHTML = PAGE_COPY.birthdayTitleHtml;
+  if (birthdayTitleAccent) birthdayTitleAccent.textContent = PAGE_COPY.birthdayTitleAccent;
+  if (birthdaySubtext) birthdaySubtext.innerHTML = PAGE_COPY.birthdaySubtextHtml;
+  if (commandPanelTitle) commandPanelTitle.textContent = PAGE_COPY.commandPanelTitle;
+  if (commandLog) commandLog.innerHTML = PAGE_COPY.commandLogIntroHtml;
+  if (footerCopy) footerCopy.innerHTML = PAGE_COPY.footerCopyHtml;
+  if (mobileIntroEyebrow) mobileIntroEyebrow.textContent = PAGE_COPY.mobileIntroEyebrow;
+  if (mobileIntroTitle) mobileIntroTitle.textContent = PAGE_COPY.mobileIntroTitle;
+  if (mobileIntroText) mobileIntroText.innerHTML = PAGE_COPY.mobileIntroTextHtml;
+  if (mobileIntroClose) mobileIntroClose.textContent = PAGE_COPY.mobileIntroClose;
+  if (secretModalEyebrow) secretModalEyebrow.textContent = PAGE_COPY.secretModalEyebrow;
+  if (secretModalTitle) secretModalTitle.textContent = PAGE_COPY.secretModalTitle;
+  if (secretModalText) secretModalText.textContent = PAGE_COPY.secretModalText;
+  if (secretModalRestart) secretModalRestart.textContent = PAGE_COPY.secretModalRestart;
+  if (codeModalTitle) codeModalTitle.textContent = PAGE_COPY.codeModalTitle;
+  if (audioModalEyebrow) audioModalEyebrow.textContent = PAGE_COPY.audioModalEyebrow;
+  if (audioModalTitle) audioModalTitle.textContent = PAGE_COPY.audioModalTitle;
+  if (audioModalText) audioModalText.textContent = PAGE_COPY.audioModalText;
+  if (audioModalConfirm) audioModalConfirm.textContent = PAGE_COPY.audioModalConfirm;
+  if (audioModalCancel) audioModalCancel.textContent = PAGE_COPY.audioModalCancel;
+
+  eggCounter?.setAttribute(
+    'aria-label',
+    currentLanguage === 'ru'
+      ? 'Показать подсказку по скрытым взаимодействиям'
+      : 'Show hidden interactions hint'
+  );
+  themeToggle?.setAttribute(
+    'aria-label',
+    body.dataset.theme === 'light' ? UI_COPY.themeToggleToDark : UI_COPY.themeToggleToLight
+  );
+  soundToggle?.setAttribute(
+    'aria-label',
+    soundEnabled ? UI_COPY.soundToggleDisable : UI_COPY.soundToggleEnable
+  );
+  secretModalClose?.setAttribute('aria-label', currentLanguage === 'ru' ? 'Закрыть окно' : 'Close dialog');
+  codeModalClose?.setAttribute('aria-label', currentLanguage === 'ru' ? 'Закрыть код' : 'Close code view');
+  audioModalClose?.setAttribute('aria-label', currentLanguage === 'ru' ? 'Закрыть окно' : 'Close dialog');
+  commandInput?.setAttribute('aria-label', currentLanguage === 'ru' ? 'Секретная команда' : 'Secret command input');
+}
+
+function setLanguage(language, options = {}) {
+  const { persist = false } = options;
+  currentLanguage = APP_COPY[language] ? language : 'en';
+  syncLanguageCopy();
+  updateLanguageToggle();
+  applyPageCopy();
+  updateThemeToggle(body.dataset.theme || 'dark');
+  if (soundSettingsReady) {
+    updateSoundToggle();
+  }
+
+  if (persist) {
+    writeStorageItem(LANGUAGE_STORAGE_KEY, currentLanguage);
+  }
+}
+
+syncLanguageCopy();
+currentLanguage = getPreferredLanguage();
+setLanguage(currentLanguage);
+foundEggs = new Set(loadFoundEggs());
+
+function toggleLanguage() {
+  setLanguage(currentLanguage === 'en' ? 'ru' : 'en', { persist: true });
+  playSoundCue('ui');
+}
 
     function escapeHtml(value) {
       return value
@@ -233,7 +378,9 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       }
 
       if (themeToggleLabel) {
-        themeToggleLabel.textContent = theme === 'light' ? 'Light' : 'Dark';
+        themeToggleLabel.textContent = theme === 'light'
+          ? UI_COPY.themeToggleLabelLight
+          : UI_COPY.themeToggleLabelDark;
       }
     }
 
@@ -305,7 +452,9 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       }
 
       if (soundToggleLabel) {
-        soundToggleLabel.textContent = soundEnabled ? 'On' : 'Off';
+        soundToggleLabel.textContent = soundEnabled
+          ? UI_COPY.soundToggleLabelOn
+          : UI_COPY.soundToggleLabelOff;
       }
     }
 
@@ -1492,9 +1641,10 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       unlockEgg('coffee');
       coffeeMode(
         5000,
-        true,
+        false,
         UI_COPY.coffeeModeTitle,
-        UI_COPY.coffeeModeTextAlt
+        UI_COPY.coffeeModeText,
+        UI_COPY.coffeeModeEggToast
       );
     }
 
@@ -2111,6 +2261,130 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       }
     }
 
+    function spawnCursorSparks(x, y, count = 10) {
+      if (reduceMotion || !cursorFx || cursorFx.childElementCount > 72) return;
+
+      for (let index = 0; index < count; index += 1) {
+        const spark = document.createElement('span');
+        const color = colors[(index + Math.floor(Math.random() * colors.length)) % colors.length];
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 46 + Math.random() * 118;
+        const size = 1.5 + Math.random() * 3;
+
+        spark.className = 'cursor-spark';
+        spark.style.setProperty('--spark-x', `${x}px`);
+        spark.style.setProperty('--spark-y', `${y}px`);
+        spark.style.setProperty('--spark-end-x', `${Math.cos(angle) * distance}px`);
+        spark.style.setProperty('--spark-end-y', `${Math.sin(angle) * distance}px`);
+        spark.style.setProperty('--spark-size', `${size}px`);
+        spark.style.setProperty('--spark-color', color);
+        spark.style.setProperty('--spark-rotate', `${180 + Math.random() * 540}deg`);
+        spark.style.setProperty('--spark-delay', `${index * 12}ms`);
+
+        cursorFx.appendChild(spark);
+
+        window.setTimeout(() => {
+          spark.remove();
+        }, 760);
+      }
+    }
+
+    function initCursorEffects() {
+      if (reduceMotion || !cursorFx || !cursorComet) return;
+
+      let frame = null;
+      let isActive = false;
+      let targetX = window.innerWidth / 2;
+      let targetY = window.innerHeight / 2;
+      let currentX = targetX;
+      let currentY = targetY;
+      let lastSpawnX = targetX;
+      let lastSpawnY = targetY;
+
+      const renderCursorComet = () => {
+        currentX += (targetX - currentX) * 0.18;
+        currentY += (targetY - currentY) * 0.18;
+
+        cursorFx.style.setProperty('--cursor-x', `${currentX.toFixed(2)}px`);
+        cursorFx.style.setProperty('--cursor-y', `${currentY.toFixed(2)}px`);
+
+        const dx = currentX - lastSpawnX;
+        const dy = currentY - lastSpawnY;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance >= 10) {
+          const steps = Math.min(6, Math.max(1, Math.floor(distance / 12)));
+          const angle = Math.atan2(dy, dx);
+
+          for (let index = 0; index < steps; index += 1) {
+            const pixel = document.createElement('span');
+            const travel = 10 + index * 7 + Math.random() * 5;
+            const size = 4 + Math.random() * 4;
+            const color = colors[index % colors.length];
+
+            pixel.className = 'cursor-comet__pixel';
+            pixel.style.setProperty('--pixel-x', `${currentX - Math.cos(angle) * travel}px`);
+            pixel.style.setProperty('--pixel-y', `${currentY - Math.sin(angle) * travel}px`);
+            pixel.style.setProperty('--pixel-size', `${size}px`);
+            pixel.style.setProperty('--pixel-color', color);
+            pixel.style.setProperty('--pixel-end-x', `${Math.cos(angle) * (18 + index * 10)}px`);
+            pixel.style.setProperty('--pixel-end-y', `${Math.sin(angle) * (18 + index * 10)}px`);
+            pixel.style.setProperty('--pixel-delay', `${index * 30}ms`);
+            pixel.style.setProperty('--pixel-rotate', `${Math.random() > 0.5 ? 90 : 0}deg`);
+
+            cursorFx.appendChild(pixel);
+
+            window.setTimeout(() => {
+              pixel.remove();
+            }, 760 + index * 30);
+          }
+
+          lastSpawnX = currentX;
+          lastSpawnY = currentY;
+        }
+
+        if (isActive || distance >= 0.5) {
+          frame = window.requestAnimationFrame(renderCursorComet);
+          return;
+        }
+
+        frame = null;
+      };
+
+      const requestCursorFrame = () => {
+        if (frame === null) {
+          frame = window.requestAnimationFrame(renderCursorComet);
+        }
+      };
+
+      document.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'touch') return;
+
+        targetX = event.clientX;
+        targetY = event.clientY;
+        isActive = true;
+        cursorFx.classList.add('is-visible');
+        requestCursorFrame();
+      }, { passive: true });
+
+      document.addEventListener('pointerdown', (event) => {
+        if (!event.isPrimary) return;
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+        spawnCursorSparks(event.clientX, event.clientY, event.pointerType === 'touch' ? 14 : 24);
+      }, { passive: true });
+
+      document.addEventListener('pointerleave', () => {
+        isActive = false;
+        cursorFx.classList.remove('is-visible');
+      }, { passive: true });
+
+      window.addEventListener('blur', () => {
+        isActive = false;
+        cursorFx.classList.remove('is-visible');
+      });
+    }
+
     function showToast(message) {
       if (!toastStack) return;
 
@@ -2123,11 +2397,11 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
         toast.style.opacity = '0';
         toast.style.transform = 'translateY(-8px)';
         toast.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-      }, 2600);
+      }, 3200);
 
       window.setTimeout(() => {
         toast.remove();
-      }, 3000);
+      }, 3600);
     }
 
     function queueToasts(messages, gap = 720) {
@@ -2477,7 +2751,13 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       showToast(UI_COPY.matrixOnToast);
     }
 
-    function coffeeMode(duration = 5000, showModalCopy = false, modeTitle = UI_COPY.coffeeModeTitle, modeText = UI_COPY.coffeeModeText) {
+    function coffeeMode(
+      duration = 5000,
+      showModalCopy = false,
+      modeTitle = UI_COPY.coffeeModeTitle,
+      modeText = UI_COPY.coffeeModeText,
+      toastMessage = null
+    ) {
       runIconMode({
         mode: 'is-coffee',
         duration,
@@ -2491,12 +2771,12 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
         floatingSymbol: '☕',
         floatingCount: 24
       });
-      showToast(modeTitle === 'BREW MODE'
+      showToast(toastMessage ?? (modeTitle === 'BREW MODE'
         ? UI_COPY.brewSpillToast
-        : UI_COPY.coffeeSpillToast);
+        : UI_COPY.coffeeSpillToast));
 
       if (showModalCopy) {
-        showModal(modeTitle, modeText);
+        showToast(modeText);
       }
     }
 
@@ -2729,6 +3009,7 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
       startAmbientParticles();
     }
 
+    initCursorEffects();
     startAmbientParticles();
 
     if (typeof compactViewportQuery.addEventListener === 'function') {
@@ -2913,8 +3194,10 @@ const { BIRTHDAY_CODE, EGG_CATALOG, EGG_HINTS, PAGE_COPY, UI_COPY } = window;
     applyTheme(getResolvedTheme(), { persist: false });
     soundEnabled = readStorageItem(soundStorageKey) === '1';
     updateSoundToggle();
+    soundSettingsReady = true;
 
     themeToggle?.addEventListener('click', toggleTheme);
+    languageToggle?.addEventListener('click', toggleLanguage);
 
     soundToggle?.addEventListener('click', () => {
       if (soundEnabled) {

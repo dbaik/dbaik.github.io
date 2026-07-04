@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -16,10 +16,14 @@
   <div class="bg-icons" id="bgIcons" aria-hidden="true"></div>
   <div class="legendary-stage" id="legendaryStage" aria-hidden="true"></div>
   <div class="page-shell">
-    <div class="top-controls" role="group" aria-label="Theme and sound controls">
+    <div class="top-controls" id="topControls" role="group" aria-label="Theme, language, and sound controls">
       <button class="control-toggle control-toggle--theme" id="themeToggle" type="button" aria-pressed="false">
         <span class="control-toggle__icon" id="themeToggleIcon" aria-hidden="true">☾</span>
         <span class="control-toggle__sr" id="themeToggleLabel">Dark</span>
+      </button>
+      <button class="control-toggle control-toggle--lang" id="languageToggle" type="button" aria-pressed="false">
+        <span class="control-toggle__icon" id="languageToggleIcon" aria-hidden="true">EN</span>
+        <span class="control-toggle__sr" id="languageToggleLabel">RU</span>
       </button>
       <button class="control-toggle control-toggle--sound is-muted" id="soundToggle" type="button" aria-pressed="false">
         <span class="control-toggle__icon" id="soundToggleIcon" aria-hidden="true">🔇</span>
@@ -116,6 +120,10 @@
     </main>
   </div>
 
+  <div class="cursor-fx" id="cursorFx" aria-hidden="true">
+    <div class="cursor-comet" id="cursorComet"></div>
+  </div>
+
   <div class="mobile-intro" id="mobileIntro" role="dialog" aria-modal="true" aria-labelledby="mobileIntroTitle"
     aria-describedby="mobileIntroText" aria-hidden="true">
     <div class="mobile-intro__panel">
@@ -131,7 +139,7 @@
   <div class="secret-modal" id="secretModal" role="dialog" aria-modal="true" aria-labelledby="secretModalTitle"
     aria-hidden="true">
     <div class="secret-modal__panel">
-      <button class="secret-modal__close" type="button" data-close-secret aria-label="Закрыть окно">×</button>
+      <button class="secret-modal__close" type="button" data-close-secret aria-label="Close dialog">×</button>
       <div class="secret-modal__eyebrow" id="secretModalEyebrow"></div>
       <h2 class="secret-modal__title" id="secretModalTitle"></h2>
       <p class="secret-modal__text" id="secretModalText"></p>
@@ -145,7 +153,7 @@
     <div class="code-modal__panel">
       <div class="code-modal__head">
         <h2 class="code-modal__title" id="codeModalTitle"></h2>
-        <button class="code-modal__close" type="button" data-close-code aria-label="Закрыть код">×</button>
+        <button class="code-modal__close" type="button" data-close-code aria-label="Close code view">×</button>
       </div>
       <div class="code-live is-hidden" id="birthdayCodeLive" aria-live="polite" aria-label="Birthday code output">
       </div>
@@ -156,7 +164,7 @@
     aria-describedby="audioModalText" aria-hidden="true">
     <div class="audio-modal__panel">
       <button class="secret-modal__close audio-modal__close" type="button" id="audioModalClose"
-        aria-label="Закрыть окно">×</button>
+        aria-label="Close dialog">×</button>
       <div class="audio-modal__eyebrow" id="audioModalEyebrow"></div>
       <h2 class="audio-modal__title" id="audioModalTitle"></h2>
       <p class="audio-modal__text" id="audioModalText"></p>

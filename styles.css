@@ -27,6 +27,7 @@
   --card-width: 968px;
   --card-min-height: min(560px, calc(100dvh - 32px));
   --radius: 12px;
+  --card-border-color: var(--cyan);
 }
 
 * {
@@ -77,6 +78,35 @@ body[data-theme='light'] {
   --yellow: #9b780f;
   --white: #152033;
   --black: #2f3d59;
+  --card-border-color: rgba(26, 138, 151, 0.22);
+}
+
+body.is-matrix {
+  --card-border-color: rgba(0, 255, 136, 0.88);
+}
+
+body.is-coffee {
+  --card-border-color: rgba(197, 138, 76, 0.9);
+}
+
+body.is-beer {
+  --card-border-color: rgba(255, 210, 87, 0.9);
+}
+
+body.is-bugfix {
+  --card-border-color: rgba(0, 255, 204, 0.88);
+}
+
+body.is-hearts {
+  --card-border-color: rgba(255, 90, 185, 0.9);
+}
+
+body.is-trophy {
+  --card-border-color: rgba(255, 221, 87, 0.9);
+}
+
+body.is-legendary {
+  --card-border-color: rgba(255, 221, 87, 0.96);
 }
 
 body.modal-open {
@@ -161,7 +191,7 @@ body.is-matrix::before {
   width: min(var(--card-width), 100%);
   min-height: var(--card-min-height);
   overflow: hidden;
-  border: 6px solid var(--cyan);
+  border: 6px solid var(--card-border-color);
   border-radius: var(--radius);
   background: var(--bg-card);
   box-shadow:
@@ -251,7 +281,7 @@ body.is-matrix .bg-icon {
   grid-auto-columns: minmax(0, 1fr);
   gap: 0;
   padding: 4px;
-  border: 6px solid var(--cyan);
+  border: 6px solid var(--card-border-color);
   border-radius: 0 10px 10px 0;
   background: linear-gradient(180deg, rgba(5, 18, 26, 0.94), rgba(2, 8, 14, 0.98));
   box-shadow:
@@ -262,7 +292,6 @@ body.is-matrix .bg-icon {
 
 body[data-theme='light'] .card {
   background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(26, 138, 151, 0.5);
   box-shadow:
     0 14px 34px rgba(18, 30, 70, 0.08),
     0 0 0 1px rgba(255, 255, 255, 0.82) inset,
@@ -285,7 +314,6 @@ body[data-theme='light'] .card-header {
 }
 
 body[data-theme='light'] .top-controls {
-  border-color: rgba(26, 138, 151, 0.22);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(243, 246, 251, 0.98));
   box-shadow:
     0 10px 20px rgba(18, 30, 70, 0.08),
@@ -426,6 +454,7 @@ body[data-theme='light'] .scanlines {
 }
 
 body.is-coffee {
+  --card-border-color: rgba(197, 138, 76, 0.85);
   background:
     radial-gradient(circle at 50% 20%, rgba(128, 82, 35, 0.24), transparent 26%),
     linear-gradient(180deg, #2a1408, #140a04 48%, #040201 100%);
@@ -460,7 +489,6 @@ body.is-coffee .bg-icon {
 }
 
 body.is-coffee .card {
-  border-color: rgba(197, 138, 76, 0.85);
   box-shadow:
     0 0 72px rgba(197, 138, 76, 0.36),
     0 0 26px rgba(76, 40, 12, 0.26),
@@ -468,6 +496,7 @@ body.is-coffee .card {
 }
 
 body.is-keyboard-frontend {
+  --card-border-color: rgba(0, 255, 204, 0.9);
   background:
     radial-gradient(circle at 50% 16%, rgba(0, 255, 204, 0.18), transparent 24%),
     radial-gradient(circle at 16% 74%, rgba(255, 0, 255, 0.1), transparent 22%),
@@ -500,7 +529,6 @@ body.is-keyboard-frontend .bg-icon {
 }
 
 body.is-keyboard-frontend .card {
-  border-color: rgba(0, 255, 204, 0.9);
   box-shadow:
     0 0 82px rgba(0, 255, 204, 0.34),
     0 0 32px rgba(255, 0, 255, 0.22),
@@ -508,6 +536,7 @@ body.is-keyboard-frontend .card {
 }
 
 body.is-keyboard-birthday {
+  --card-border-color: rgba(255, 221, 87, 0.9);
   background:
     radial-gradient(circle at 50% 16%, rgba(255, 221, 87, 0.18), transparent 24%),
     radial-gradient(circle at 20% 76%, rgba(255, 0, 255, 0.14), transparent 22%),
@@ -542,7 +571,6 @@ body.is-keyboard-birthday .bg-icon {
 }
 
 body.is-keyboard-birthday .card {
-  border-color: rgba(255, 221, 87, 0.9);
   box-shadow:
     0 0 82px rgba(255, 221, 87, 0.34),
     0 0 34px rgba(255, 0, 255, 0.24),
@@ -550,6 +578,7 @@ body.is-keyboard-birthday .card {
 }
 
 body.is-deploy {
+  --card-border-color: rgba(255, 255, 255, 0.82);
   background:
     radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.12), transparent 22%),
     radial-gradient(circle at 18% 78%, rgba(0, 255, 204, 0.14), transparent 24%),
@@ -572,7 +601,6 @@ body.is-deploy::before {
 }
 
 body.is-deploy .card {
-  border-color: rgba(255, 255, 255, 0.82);
   box-shadow:
     0 0 86px rgba(0, 255, 204, 0.3),
     0 0 38px rgba(255, 0, 255, 0.22),
@@ -580,6 +608,7 @@ body.is-deploy .card {
 }
 
 body.is-hearts {
+  --card-border-color: rgba(255, 90, 185, 0.84);
   background:
     radial-gradient(circle at 50% 18%, rgba(255, 79, 164, 0.18), transparent 24%),
     linear-gradient(180deg, #2a0717, #13040a 48%, #040102 100%);
@@ -614,7 +643,6 @@ body.is-hearts .bg-icon {
 }
 
 body.is-hearts .card {
-  border-color: rgba(255, 90, 185, 0.84);
   box-shadow:
     0 0 72px rgba(255, 90, 185, 0.32),
     0 0 24px rgba(255, 79, 164, 0.18),
@@ -664,6 +692,7 @@ body.is-party .card {
 }
 
 body.is-beer {
+  --card-border-color: rgba(255, 210, 87, 0.86);
   background:
     radial-gradient(circle at 50% 16%, rgba(255, 210, 87, 0.16), transparent 24%),
     linear-gradient(180deg, #2d1a02, #140c02 48%, #050301 100%);
@@ -698,7 +727,6 @@ body.is-beer .bg-icon {
 }
 
 body.is-beer .card {
-  border-color: rgba(255, 210, 87, 0.86);
   box-shadow:
     0 0 76px rgba(255, 210, 87, 0.34),
     0 0 28px rgba(255, 138, 0, 0.18),
@@ -706,6 +734,7 @@ body.is-beer .card {
 }
 
 body.is-bugfix {
+  --card-border-color: rgba(0, 255, 204, 0.82);
   background:
     radial-gradient(circle at 50% 18%, rgba(0, 255, 204, 0.12), transparent 26%),
     linear-gradient(180deg, #051313, #030809 46%, #000000 100%);
@@ -740,7 +769,6 @@ body.is-bugfix .bg-icon {
 }
 
 body.is-bugfix .card {
-  border-color: rgba(0, 255, 204, 0.82);
   box-shadow:
     0 0 72px rgba(0, 255, 204, 0.34),
     0 0 24px rgba(255, 221, 87, 0.18),
@@ -748,6 +776,7 @@ body.is-bugfix .card {
 }
 
 body.is-trophy {
+  --card-border-color: rgba(255, 221, 87, 0.82);
   background:
     radial-gradient(circle at 50% 20%, rgba(255, 221, 87, 0.16), transparent 24%),
     linear-gradient(180deg, #201401, #0e0902 46%, #030201 100%);
@@ -770,7 +799,6 @@ body.is-trophy::before {
 }
 
 body.is-trophy .card {
-  border-color: rgba(255, 221, 87, 0.82);
   box-shadow:
     0 0 74px rgba(255, 221, 87, 0.34),
     0 0 32px rgba(255, 79, 216, 0.18),
@@ -1634,6 +1662,110 @@ body.is-trophy .profile-crown {
   z-index: 2;
 }
 
+.cursor-fx {
+  --cursor-x: -999px;
+  --cursor-y: -999px;
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cursor-comet {
+  position: absolute;
+  left: var(--cursor-x);
+  top: var(--cursor-y);
+  transform: translate(-50%, -50%) scale(0.96);
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.12)),
+    linear-gradient(90deg, rgba(0, 255, 204, 0.95), rgba(255, 0, 255, 0.9));
+  box-shadow:
+    0 0 8px rgba(0, 255, 204, 0.72),
+    0 0 12px rgba(255, 0, 255, 0.54),
+    0 0 18px rgba(255, 255, 255, 0.14);
+  mix-blend-mode: screen;
+  transition: opacity 120ms ease, transform 120ms ease;
+  will-change: left, top, opacity, transform;
+}
+
+.cursor-fx.is-visible .cursor-comet {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.cursor-comet__pixel {
+  position: absolute;
+  left: var(--pixel-x);
+  top: var(--pixel-y);
+  width: var(--pixel-size);
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--pixel-color);
+  box-shadow:
+    0 0 6px var(--pixel-color),
+    0 0 12px var(--pixel-color);
+  opacity: 0;
+  animation: cursor-comet-pop 680ms ease-out forwards;
+  animation-delay: var(--pixel-delay);
+  will-change: transform, opacity;
+}
+
+.cursor-comet__pixel::after {
+  content: '';
+  position: absolute;
+  inset: 25%;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.85);
+  opacity: 0.9;
+}
+
+.cursor-comet__pixel--head {
+  z-index: 1;
+  transform: rotate(45deg);
+}
+
+.cursor-comet__tail {
+  position: absolute;
+  left: var(--pixel-x);
+  top: var(--pixel-y);
+  width: calc(var(--pixel-size) * 0.86);
+  height: calc(var(--pixel-size) * 0.86);
+  border-radius: 2px;
+  opacity: 0;
+  background: var(--pixel-color);
+  box-shadow: 0 0 8px var(--pixel-color);
+  animation: cursor-comet-tail 680ms ease-out forwards;
+  animation-delay: var(--pixel-delay);
+  will-change: transform, opacity;
+}
+
+.cursor-spark {
+  position: absolute;
+  left: var(--spark-x);
+  top: var(--spark-y);
+  width: var(--spark-size);
+  height: var(--spark-size);
+  border-radius: 2px;
+  opacity: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.18)),
+    var(--spark-color);
+  box-shadow:
+    0 0 8px var(--spark-color),
+    0 0 16px var(--spark-color),
+    0 0 28px rgba(255, 255, 255, 0.16);
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%) scale(0.4) rotate(0deg);
+  animation: cursor-spark-pop 560ms ease-out forwards;
+  animation-delay: var(--spark-delay, 0ms);
+  will-change: transform, opacity;
+}
+
 @keyframes scan {
   from {
     transform: translateY(-100%);
@@ -1675,6 +1807,65 @@ body.is-trophy .profile-crown {
       12% 92%,
       18% 0%,
       100% 50%;
+  }
+}
+
+@keyframes cursor-comet-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.42) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate3d(var(--pixel-end-x), var(--pixel-end-y), 0)
+      scale(0.1)
+      rotate(var(--pixel-rotate));
+  }
+}
+
+@keyframes cursor-comet-tail {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.95);
+  }
+
+  16% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate3d(calc(var(--pixel-end-x) * -1), calc(var(--pixel-end-y) * -1), 0)
+      scale(0.18);
+  }
+}
+
+@keyframes cursor-spark-pop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(0.35) rotate(0deg);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate(-50%, -50%)
+      translate3d(var(--spark-end-x), var(--spark-end-y), 0)
+      scale(0.06)
+      rotate(var(--spark-rotate));
   }
 }
 
@@ -2031,7 +2222,6 @@ body.is-trophy .profile-crown {
 }
 
 body.is-matrix .card {
-  border-color: rgba(0, 255, 136, 0.88);
   box-shadow:
     0 0 84px rgba(0, 255, 136, 0.42),
     0 0 30px rgba(0, 255, 204, 0.22),
@@ -3161,6 +3351,10 @@ body.is-matrix .card-content::before {
   }
 
   .particles {
+    display: none;
+  }
+
+  .cursor-fx {
     display: none;
   }
 
