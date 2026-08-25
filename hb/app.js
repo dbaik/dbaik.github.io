@@ -2501,7 +2501,7 @@ function toggleLanguage() {
     }
 
     async function shareBirthday() {
-      const shareUrl = window.location.protocol === 'file:' ? 'https://dbaik.github.io/hb.html' : window.location.href;
+      const shareUrl = window.location.protocol === 'file:' ? 'https://dbaik.github.io/hb/' : window.location.href;
       const shareData = {
         title: UI_COPY.sharePageTitle,
         text: UI_COPY.sharePageText,

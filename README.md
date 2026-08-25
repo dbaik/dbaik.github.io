@@ -1,3 +1,4 @@
 # dbaik.github.io
 
-- [hb.html](https://dbaik.github.io/hb.html)
+- [Portfolio](https://dbaik.github.io/)
+- [Birthday page](https://dbaik.github.io/hb/)
