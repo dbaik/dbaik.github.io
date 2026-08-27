@@ -3,3 +3,4 @@ node_modules/
 portfolio/node_modules/
 portfolio/dist/
 portfolio/src/assets/images/originals/
+portfolio/.playwright-cli/

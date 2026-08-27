@@ -6,35 +6,22 @@ const ROOT = process.cwd();
 const SRC_DIR = path.join(ROOT, 'src/assets/images');
 const ORIGINALS_DIR = path.join(SRC_DIR, 'originals');
 const COVERS_DIR = path.join(SRC_DIR, 'covers');
-const PUBLIC_IMAGES_DIR = path.join(ROOT, 'public/images');
-const CASES_JSON = path.join(ROOT, 'public/cases.json');
+const COVER_IMAGES_MODULE = path.join(ROOT, 'src/data/coverImages.ts');
 
-const DISPLAY_WIDTH = 1376;
-const RETINA_WIDTH = 2752;
+const OUTPUT_WIDTHS = [640, 960, 1376, 2752];
 const WEBP_QUALITY = 82;
 const AVIF_QUALITY = 62;
 
 const PROJECT_COVERS = [
-  { source: 'image (3).png', slug: 'wwf' },
-  { source: 'image (5).png', slug: 'mvp' },
-  { source: 'image (2).png', slug: 'precision' },
-  { source: 'image (6).png', slug: 'mochi' },
-  { source: 'image (7).png', slug: 'bopper' },
-  { source: 'image (4).png', slug: 'eleven' },
-  { source: 'image.png', slug: 'schoolhouse' },
-  { source: 'gaido-source.png', slug: 'gaido', legacySource: 'gaido.jpg' },
+  { source: 'image (3).png', slug: 'wwf', width: 1376, height: 768 },
+  { source: 'image (5).png', slug: 'mvp', width: 1376, height: 768 },
+  { source: 'image (2).png', slug: 'precision', width: 1376, height: 768 },
+  { source: 'image (6).png', slug: 'mochi', width: 1376, height: 768 },
+  { source: 'image (7).png', slug: 'bopper', width: 1376, height: 768 },
+  { source: 'image (4).png', slug: 'eleven', width: 1376, height: 768 },
+  { source: 'image.png', slug: 'schoolhouse', width: 1376, height: 768 },
+  { source: 'gaido-source.png', slug: 'gaido', width: 1376, height: 880, legacySource: 'gaido.jpg' },
 ];
-
-const PUBLIC_COVER_MAP = {
-  'wwf-cover.jpg': 'wwf',
-  'mvp-cover.jpg': 'mvp',
-  'precision-cover.jpg': 'precision',
-  'mochi-cover.jpg': 'mochi',
-  'bopper-cover.jpg': 'bopper',
-  'eleven-cover.jpg': 'eleven',
-  'schoolhouse-cover.jpg': 'schoolhouse',
-  'gaido-cover.jpg': 'gaido',
-};
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
@@ -90,15 +77,25 @@ async function encodeVariant(inputPath, outputPath, width, format) {
   return fs.statSync(outputPath).size;
 }
 
+function removeLegacyCoverOutputs() {
+  if (!fs.existsSync(COVERS_DIR)) {
+    return;
+  }
+
+  for (const fileName of fs.readdirSync(COVERS_DIR)) {
+    if (/^[^.]+\.(avif|webp)$/.test(fileName) || /^[^.]+\@2x\.(avif|webp)$/.test(fileName)) {
+      fs.unlinkSync(path.join(COVERS_DIR, fileName));
+    }
+  }
+}
+
 async function optimizeCoverSet(inputPath, slug, stats) {
   const metadata = await createImagePipeline(inputPath).metadata();
   const outputs = [];
 
-  for (const width of [DISPLAY_WIDTH, RETINA_WIDTH]) {
-    const suffix = width === DISPLAY_WIDTH ? '' : '@2x';
-
+  for (const width of OUTPUT_WIDTHS) {
     for (const format of ['webp', 'avif']) {
-      const fileName = `${slug}${suffix}.${format}`;
+      const fileName = `${slug}-w${width}.${format}`;
       const outputPath = path.join(COVERS_DIR, fileName);
       const bytes = await encodeVariant(inputPath, outputPath, width, format);
       outputs.push({ fileName, bytes });
@@ -109,21 +106,6 @@ async function optimizeCoverSet(inputPath, slug, stats) {
   console.log(
     `  ${slug}: ${metadata.width}x${metadata.height} -> ${outputs.map((item) => `${item.fileName} (${formatBytes(item.bytes)})`).join(', ')}`,
   );
-}
-
-async function optimizeStandalonePublicImage(inputPath, stats) {
-  const baseName = path.basename(inputPath, path.extname(inputPath));
-
-  for (const width of [DISPLAY_WIDTH, RETINA_WIDTH]) {
-    const suffix = width === DISPLAY_WIDTH ? '' : '@2x';
-
-    for (const format of ['webp', 'avif']) {
-      const outputPath = path.join(PUBLIC_IMAGES_DIR, `${baseName}${suffix}.${format}`);
-      const bytes = await encodeVariant(inputPath, outputPath, width, format);
-      stats.outputBytes += bytes;
-      console.log(`  ${path.basename(outputPath)} (${formatBytes(bytes)})`);
-    }
-  }
 }
 
 function moveOriginals() {
@@ -139,43 +121,55 @@ function moveOriginals() {
   }
 }
 
-function cleanupLegacyPublicImages() {
-  for (const fileName of fs.readdirSync(PUBLIC_IMAGES_DIR)) {
-    if (!/\.(jpe?g|png)$/i.test(fileName)) continue;
-
-    const baseName = fileName.replace(/\.(jpe?g|png)$/i, '');
-    const webpPath = path.join(PUBLIC_IMAGES_DIR, `${baseName}.webp`);
-    if (!fs.existsSync(webpPath)) continue;
-
-    fs.unlinkSync(path.join(PUBLIC_IMAGES_DIR, fileName));
-    console.log(`  removed legacy ${fileName}`);
-  }
+function toImportName(slug, width, format) {
+  return `${slug}_w${width}_${format}`;
 }
 
-function updateCasesJson() {
-  if (!fs.existsSync(CASES_JSON)) return;
+function generateCoverImagesModule() {
+  const importLines = [];
+  const registryEntries = [];
 
-  const cases = JSON.parse(fs.readFileSync(CASES_JSON, 'utf8'));
-  let updated = 0;
+  for (const { slug, width, height } of PROJECT_COVERS) {
+    const variantLines = [];
 
-  for (const item of cases) {
-    if (!item.cover_image || typeof item.cover_image !== 'string') continue;
-
-    const fileName = path.basename(item.cover_image);
-    if (PUBLIC_COVER_MAP[fileName] || item.cover_image.endsWith('.jpg') || item.cover_image.endsWith('.jpeg') || item.cover_image.endsWith('.png')) {
-      item.cover_image = item.cover_image.replace(/\.(jpe?g|png)$/i, '.webp');
-      updated += 1;
-      continue;
+    for (const outputWidth of OUTPUT_WIDTHS) {
+      for (const format of ['avif', 'webp']) {
+        const importName = toImportName(slug, outputWidth, format);
+        const fileName = `${slug}-w${outputWidth}.${format}`;
+        importLines.push(`import ${importName} from '../assets/images/covers/${fileName}';`);
+      }
     }
+
+    for (const outputWidth of OUTPUT_WIDTHS) {
+      variantLines.push(
+        `      { width: ${outputWidth}, avif: ${toImportName(slug, outputWidth, 'avif')}, webp: ${toImportName(slug, outputWidth, 'webp')} },`,
+      );
+    }
+
+    registryEntries.push(
+      `  ${slug}: coverImageSet([\n${variantLines.join('\n')}\n    ], ${width}, ${height}),`,
+    );
   }
 
-  fs.writeFileSync(CASES_JSON, `${JSON.stringify(cases, null, 2)}\n`);
-  console.log(`Updated ${updated} cover_image entries in cases.json`);
+  const contents = `// AUTO-GENERATED by scripts/optimize-images.mjs — do not edit manually.
+
+import { coverImageSet, type CoverImageRegistry } from '../types/coverImage';
+
+${importLines.join('\n')}
+
+export const COVER_IMAGES = {
+${registryEntries.join('\n')}
+} satisfies CoverImageRegistry;
+`;
+
+  fs.writeFileSync(COVER_IMAGES_MODULE, contents);
+  console.log(`\nGenerated ${path.relative(ROOT, COVER_IMAGES_MODULE)}`);
 }
 
 async function main() {
   ensureDir(COVERS_DIR);
   moveOriginals();
+  removeLegacyCoverOutputs();
 
   const stats = { inputBytes: 0, outputBytes: 0 };
 
@@ -196,53 +190,7 @@ async function main() {
     await optimizeCoverSet(inputPath, slug, stats);
   }
 
-  console.log('\nOptimizing standalone public images...');
-
-  const publicImages = fs
-    .readdirSync(PUBLIC_IMAGES_DIR)
-    .filter((file) => /\.(jpe?g|png)$/i.test(file))
-    .sort();
-
-  for (const fileName of publicImages) {
-    if (PUBLIC_COVER_MAP[fileName]) {
-      console.log(`  skip ${fileName} (generated from project source)`);
-      continue;
-    }
-
-    const baseName = path.basename(fileName, path.extname(fileName));
-    if (fs.existsSync(path.join(PUBLIC_IMAGES_DIR, `${baseName}.webp`))) {
-      console.log(`  skip ${fileName} (already optimized)`);
-      continue;
-    }
-
-    const inputPath = path.join(PUBLIC_IMAGES_DIR, fileName);
-    stats.inputBytes += fs.statSync(inputPath).size;
-    await optimizeStandalonePublicImage(inputPath, stats);
-  }
-
-  for (const [publicName, slug] of Object.entries(PUBLIC_COVER_MAP)) {
-    const originalPath = path.join(
-      ORIGINALS_DIR,
-      PROJECT_COVERS.find((item) => item.slug === slug)?.source ?? '',
-    );
-    if (!fs.existsSync(originalPath)) continue;
-
-    for (const width of [DISPLAY_WIDTH, RETINA_WIDTH]) {
-      const suffix = width === DISPLAY_WIDTH ? '' : '@2x';
-      for (const format of ['webp', 'avif']) {
-        const outputPath = path.join(PUBLIC_IMAGES_DIR, `${publicName.replace(/\.jpe?g$/i, '')}${suffix}.${format}`);
-        const bytes = await encodeVariant(originalPath, outputPath, width, format);
-        stats.outputBytes += bytes;
-      }
-    }
-
-    console.log(`  synced public variants for ${publicName}`);
-  }
-
-  console.log('\nRemoving legacy public image formats...');
-  cleanupLegacyPublicImages();
-
-  updateCasesJson();
+  generateCoverImagesModule();
 
   const saved = stats.inputBytes - stats.outputBytes;
   const ratio = stats.inputBytes > 0 ? ((saved / stats.inputBytes) * 100).toFixed(1) : '0.0';

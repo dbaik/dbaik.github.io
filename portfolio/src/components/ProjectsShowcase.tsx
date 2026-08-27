@@ -6,8 +6,13 @@ import {
   CheckCircle2, Info
 } from 'lucide-react';
 import { PROJECTS_DATA } from '../data/portfolioData';
+import { COVER_IMAGES } from '../data/coverImages';
 import { Project } from '../types';
 import { BrowserFrame } from './BrowserFrame';
+
+function projectCoverImage(project: Project) {
+  return project.coverKey ? COVER_IMAGES[project.coverKey] : undefined;
+}
 
 export default function ProjectsShowcase() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -192,10 +197,10 @@ export default function ProjectsShowcase() {
                   </div>
 
                   {/* Visual Work First: BrowserFrame with Progressive Disclosure Overlay */}
-                  {project.coverImage && (
+                  {projectCoverImage(project) && (
                     <div className="relative mt-1">
                       <BrowserFrame
-                        src={project.coverImage}
+                        src={projectCoverImage(project)!}
                         alt={`${project.title} (${project.domain}) live production website`}
                         domain={project.domain}
                         onClick={() => toggleRevealCard(project.id)}
@@ -328,7 +333,7 @@ export default function ProjectsShowcase() {
                       >
                         {proj.title}
                       </button>
-                      <span className="font-mono text-xs text-slate-500 block mt-0.5">
+                      <span className="font-mono text-xs text-slate-400 block mt-0.5">
                         {proj.domain}
                       </span>
                     </td>
@@ -384,7 +389,7 @@ export default function ProjectsShowcase() {
                     >
                       {proj.title}
                     </button>
-                    <span className="font-mono text-xs text-slate-500 block mt-0.5">
+                    <span className="font-mono text-xs text-slate-400 block mt-0.5">
                       {proj.domain}
                     </span>
                   </div>
@@ -486,10 +491,10 @@ export default function ProjectsShowcase() {
                   </p>
 
                   {/* Original Production Screenshot Preview */}
-                  {activeModalProject.coverImage && (
+                  {projectCoverImage(activeModalProject) && (
                     <div className="mb-6">
                       <BrowserFrame
-                        src={activeModalProject.coverImage}
+                        src={projectCoverImage(activeModalProject)!}
                         alt={`${activeModalProject.title} live screenshot`}
                         domain={activeModalProject.domain}
                         url={activeModalProject.url}

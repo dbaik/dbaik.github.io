@@ -1,5 +1,4 @@
 import { Project, ExperienceItem, SkillGroup, ScrollStoryFrame, BenchmarkStat } from '../types';
-import { COVER_IMAGES } from './coverImages';
 
 export const PERSONAL_INFO = {
   name: 'Dmitry Bashkatov',
@@ -78,7 +77,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'National conservation platform' },
       { label: 'Architecture', value: 'Accessible custom Gutenberg' }
     ],
-    coverImage: COVER_IMAGES.wwf,
+    coverKey: 'wwf',
     featured: true,
     accentColor: '#10b981',
     metrics: { speedScore: 99, loadTime: '0.44s', traffic: 'National NGO' }
@@ -105,7 +104,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Artwork upload workflow' },
       { label: 'System', value: 'Request-a-quote flow' }
     ],
-    coverImage: COVER_IMAGES.mvp,
+    coverKey: 'mvp',
     featured: true,
     accentColor: '#3b82f6',
     metrics: { speedScore: 98, loadTime: '0.52s', traffic: 'B2B Enterprise' }
@@ -132,7 +131,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'LiDAR-focused product presentation' },
       { label: 'Content UX', value: 'Custom Gutenberg blocks' }
     ],
-    coverImage: COVER_IMAGES.precision,
+    coverKey: 'precision',
     featured: true,
     accentColor: '#06b6d4',
     metrics: { speedScore: 99, loadTime: '0.49s', traffic: 'Alpine Tech' }
@@ -158,7 +157,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Interactive storefront' },
       { label: 'Content UX', value: 'Merchant-managed theme sections' }
     ],
-    coverImage: COVER_IMAGES.mochi,
+    coverKey: 'mochi',
     featured: true,
     accentColor: '#ec4899',
     metrics: { speedScore: 99, loadTime: '0.48s', traffic: 'Global EdTech' }
@@ -187,7 +186,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Dark / light theme experience' },
       { label: 'Motion', value: 'Micro-interactions' }
     ],
-    coverImage: COVER_IMAGES.bopper,
+    coverKey: 'bopper',
     featured: true,
     accentColor: '#a855f7',
     metrics: { speedScore: 99, loadTime: '0.42s', traffic: 'Web3 Branding' }
@@ -214,7 +213,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Merchant-managed sections' },
       { label: 'Merchandising', value: 'Product variants UX' }
     ],
-    coverImage: COVER_IMAGES.eleven,
+    coverKey: 'eleven',
     featured: true,
     accentColor: '#6366f1',
     metrics: { speedScore: 99, loadTime: '0.46s', traffic: 'Direct Retail' }
@@ -242,7 +241,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Mailchimp integration' },
       { label: 'Blocks', value: 'Reusable Gutenberg' }
     ],
-    coverImage: COVER_IMAGES.schoolhouse,
+    coverKey: 'schoolhouse',
     featured: false,
     accentColor: '#8b5cf6',
     metrics: { speedScore: 98, loadTime: '0.55s', traffic: 'K-12 Classrooms' }
@@ -267,7 +266,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Focus', value: 'Curated travel experience' },
       { label: 'Implementation', value: 'Figma to custom WordPress theme' }
     ],
-    coverImage: COVER_IMAGES.gaido,
+    coverKey: 'gaido',
     featured: false,
     accentColor: '#38bdf8',
     metrics: { speedScore: 99, loadTime: '0.45s', traffic: 'Travel Tech' }

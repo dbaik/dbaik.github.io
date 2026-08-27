@@ -13,14 +13,20 @@ export default function ScrollStoryCanvas() {
   const [activeStageIndex, setActiveStageIndex] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
-  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
   const [isTouch, setIsTouch] = useState<boolean>(false);
 
+  const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const inspectorPrimaryRef = useRef<HTMLSpanElement | null>(null);
+  const inspectorSecondaryRef = useRef<HTMLSpanElement | null>(null);
+  const inspectorPlaceholderRef = useRef<HTMLSpanElement | null>(null);
   const autoPlayTimerRef = useRef<number | null>(null);
   const pointerPosRef = useRef<{ x: number; y: number; isInside: boolean }>({ x: -100, y: -100, isInside: false });
   const animTimeRef = useRef<number>(0);
+  const hoveredRegionRef = useRef<string | null>(null);
+  const canvasSizeRef = useRef({ width: 400, height: 260 });
+  const isCanvasActiveRef = useRef(true);
 
   const currentStage = SCROLL_STORY_FRAMES[activeStageIndex];
 
@@ -78,10 +84,40 @@ export default function ScrollStoryCanvas() {
     setIsRunning(true);
   };
 
+  const updateInspectorDisplay = useCallback((text: string | null) => {
+    if (hoveredRegionRef.current === text) return;
+    hoveredRegionRef.current = text;
+
+    const primaryEl = inspectorPrimaryRef.current;
+    const secondaryEl = inspectorSecondaryRef.current;
+    const placeholderEl = inspectorPlaceholderRef.current;
+    if (!primaryEl || !secondaryEl || !placeholderEl) return;
+
+    if (!text) {
+      primaryEl.textContent = '';
+      secondaryEl.textContent = '';
+      secondaryEl.classList.add('hidden');
+      placeholderEl.classList.remove('hidden');
+      return;
+    }
+
+    const parts = text.split(' · ');
+    primaryEl.textContent = parts[0] ?? '';
+    placeholderEl.classList.add('hidden');
+
+    if (parts.length > 1) {
+      secondaryEl.textContent = `· ${parts.slice(1).join(' · ')}`;
+      secondaryEl.classList.remove('hidden');
+    } else {
+      secondaryEl.textContent = '';
+      secondaryEl.classList.add('hidden');
+    }
+  }, []);
+
   const handleStageSelect = (index: number) => {
     setIsRunning(false);
     setActiveStageIndex(index);
-    setHoveredRegion(null);
+    updateInspectorDisplay(null);
     if (index === SCROLL_STORY_FRAMES.length - 1) {
       setIsCompleted(true);
     } else {
@@ -984,38 +1020,86 @@ export default function ScrollStoryCanvas() {
   // Main Render Loop for Canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const sectionEl = sectionRef.current;
+    if (!canvas || !sectionEl) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animId: number;
+    let animId: number | null = null;
 
     const updateSize = () => {
-      if (!canvas || !canvas.parentElement) return;
+      if (!canvas.parentElement) return;
       const rect = canvas.parentElement.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
+      canvasSizeRef.current = { width: rect.width, height: rect.height };
+    };
+
+    const renderLoop = (timestamp: number) => {
+      if (!isCanvasActiveRef.current) {
+        animId = null;
+        return;
+      }
+
+      animTimeRef.current = timestamp * 0.001;
+      const { width, height } = canvasSizeRef.current;
+      drawCanvas(ctx, width, height, animTimeRef.current);
+      animId = requestAnimationFrame(renderLoop);
+    };
+
+    const startLoop = () => {
+      if (animId !== null || !isCanvasActiveRef.current) return;
+      animId = requestAnimationFrame(renderLoop);
+    };
+
+    const stopLoop = () => {
+      if (animId !== null) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
     };
 
     updateSize();
     window.addEventListener('resize', updateSize);
 
-    const renderLoop = (timestamp: number) => {
-      animTimeRef.current = timestamp * 0.001;
-      const rect = canvas.parentElement?.getBoundingClientRect();
-      const w = rect?.width || 400;
-      const h = rect?.height || 260;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        isCanvasActiveRef.current = entry?.isIntersecting ?? false;
+        if (isCanvasActiveRef.current && !document.hidden) {
+          startLoop();
+        } else {
+          stopLoop();
+        }
+      },
+      { threshold: 0.05 },
+    );
+    observer.observe(sectionEl);
 
-      drawCanvas(ctx, w, h, animTimeRef.current);
-      animId = requestAnimationFrame(renderLoop);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+        return;
+      }
+      if (isCanvasActiveRef.current) {
+        startLoop();
+      }
     };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    animId = requestAnimationFrame(renderLoop);
+    if (isCanvasActiveRef.current && !document.hidden) {
+      startLoop();
+    }
 
     return () => {
-      cancelAnimationFrame(animId);
+      stopLoop();
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', updateSize);
     };
   }, [drawCanvas]);
@@ -1032,16 +1116,14 @@ export default function ScrollStoryCanvas() {
     const semanticObj = getSemanticObjectAt(x, y, rect.width, rect.height);
     if (semanticObj) {
       if (isTouch || isTouchEvent) {
-        setHoveredRegion(semanticObj);
+        updateInspectorDisplay(semanticObj);
       } else {
-        setHoveredRegion(`${semanticObj} · ${Math.round(x)}, ${Math.round(y)}`);
+        updateInspectorDisplay(`${semanticObj} · ${Math.round(x)}, ${Math.round(y)}`);
       }
+    } else if (isTouch || isTouchEvent) {
+      updateInspectorDisplay(null);
     } else {
-      if (isTouch || isTouchEvent) {
-        setHoveredRegion(null);
-      } else {
-        setHoveredRegion(`${Math.round(x)}, ${Math.round(y)}`);
-      }
+      updateInspectorDisplay(`${Math.round(x)}, ${Math.round(y)}`);
     }
   };
 
@@ -1055,11 +1137,12 @@ export default function ScrollStoryCanvas() {
 
   const handlePointerLeave = () => {
     pointerPosRef.current = { x: -100, y: -100, isInside: false };
-    setHoveredRegion(null);
+    updateInspectorDisplay(null);
   };
 
   return (
     <section 
+      ref={sectionRef}
       id="scroll-story" 
       className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5"
     >
@@ -1104,7 +1187,7 @@ export default function ScrollStoryCanvas() {
                   />
                 )}
 
-                <span className={`font-mono text-xs font-bold tracking-wider mb-1 ${isActive ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-400'}`}>
+                <span className={`font-mono text-xs font-bold tracking-wider mb-1 ${isActive ? 'text-indigo-400' : 'text-slate-400 group-hover:text-slate-300'}`}>
                   {frame.stageNumber}
                 </span>
                 <span className="font-display text-sm font-bold text-white mb-0.5">
@@ -1242,7 +1325,7 @@ export default function ScrollStoryCanvas() {
                   </span>
                 </div>
 
-                <div className="text-xs text-slate-500 font-mono tracking-wider uppercase hidden sm:block">
+                <div className="text-xs text-slate-400 font-mono tracking-wider uppercase hidden sm:block">
                   STAGE CANVAS
                 </div>
               </div>
@@ -1259,29 +1342,17 @@ export default function ScrollStoryCanvas() {
               </div>
 
               {/* Integrated Bottom Status Bar - Sole Inspection State */}
-              <div className="flex items-center justify-between px-3 sm:px-3.5 bg-slate-950/80 border-t border-white/5 font-mono text-xs text-slate-500 shrink-0 h-8 min-h-[32px] overflow-hidden">
-                <span className="whitespace-nowrap shrink-0 text-slate-500">STAGE INSPECTOR · {currentStage.stageNumber.split(' / ')[0]}</span>
+              <div className="flex items-center justify-between px-3 sm:px-3.5 bg-slate-950/80 border-t border-white/5 font-mono text-xs text-slate-400 shrink-0 h-8 min-h-[32px] overflow-hidden">
+                <span className="whitespace-nowrap shrink-0 text-slate-400">STAGE INSPECTOR · {currentStage.stageNumber.split(' / ')[0]}</span>
                 <div className="text-slate-400 truncate ml-2 min-w-0 flex items-center justify-end gap-1.5">
                   <MousePointer size={12} className="text-indigo-400 shrink-0" />
-                  {hoveredRegion ? (
-                    (() => {
-                      const parts = hoveredRegion.split(' · ');
-                      return (
-                        <span className="truncate whitespace-nowrap">
-                          <span className="text-indigo-200 font-semibold">{parts[0]}</span>
-                          {parts.length > 1 && (
-                            <span className="text-slate-500 ml-1.5 hidden md:inline">
-                              · {parts.slice(1).join(' · ')}
-                            </span>
-                          )}
-                        </span>
-                      );
-                    })()
-                  ) : (
-                    <span className="text-slate-500 whitespace-nowrap">
+                  <span className="truncate whitespace-nowrap">
+                    <span ref={inspectorPrimaryRef} className="text-indigo-200 font-semibold" />
+                    <span ref={inspectorSecondaryRef} className="text-slate-400 ml-1.5 hidden md:inline" />
+                    <span ref={inspectorPlaceholderRef} className="text-slate-400 whitespace-nowrap">
                       {isTouch ? 'Tap elements to inspect' : 'Hover elements to inspect'}
                     </span>
-                  )}
+                  </span>
                 </div>
               </div>
 

@@ -27,22 +27,55 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 30);
+    };
 
-      const sections = ['hero', 'featured-work', 'archive', 'how-i-work', 'experience', 'skills', 'contact'];
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 140 && rect.bottom >= 140) {
-            setActiveSection(section);
-            break;
-          }
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sectionIds = ['hero', 'featured-work', 'archive', 'how-i-work', 'experience', 'skills', 'contact'];
+    const anchorY = 140;
+    let rafId: number | null = null;
+
+    const updateActiveSection = () => {
+      rafId = null;
+      let current = sectionIds[0];
+
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+
+        const { top, bottom } = el.getBoundingClientRect();
+        if (top <= anchorY && bottom > anchorY) {
+          current = id;
+          break;
         }
+
+        if (top <= anchorY) {
+          current = id;
+        }
+      }
+
+      setActiveSection(current);
+    };
+
+    const handleScroll = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(updateActiveSection);
       }
     };
 
+    updateActiveSection();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Tactile physical 3D tilt response on "db" logo
@@ -122,6 +155,7 @@ export default function Header() {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
+    setActiveSection(href.replace('#', ''));
     scrollToSection(href);
   };
 
