@@ -1,5 +1,11 @@
 import React from 'react';
-import { CoverImageSet, isCoverImageSet } from '../types/coverImage';
+import {
+  buildFormatSrcSet,
+  CoverImageSet,
+  COVER_IMAGE_SIZES,
+  defaultCoverSrc,
+  isCoverImageSet,
+} from '../types/coverImage';
 
 interface BrowserFrameProps {
   src: string | CoverImageSet;
@@ -29,16 +35,16 @@ function renderImage(src: string | CoverImageSet, alt: string, className: string
     <picture>
       <source
         type="image/avif"
-        srcSet={`${src.avif1x} 1x, ${src.avif2x} 2x`}
-        sizes="(min-width: 768px) 688px, 100vw"
+        srcSet={buildFormatSrcSet(src.variants, 'avif')}
+        sizes={COVER_IMAGE_SIZES}
       />
       <source
         type="image/webp"
-        srcSet={`${src.webp1x} 1x, ${src.webp2x} 2x`}
-        sizes="(min-width: 768px) 688px, 100vw"
+        srcSet={buildFormatSrcSet(src.variants, 'webp')}
+        sizes={COVER_IMAGE_SIZES}
       />
       <img
-        src={src.webp1x}
+        src={defaultCoverSrc(src)}
         alt={alt}
         width={src.width}
         height={src.height}

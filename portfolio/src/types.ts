@@ -1,6 +1,6 @@
-import { CoverImageSet } from './types/coverImage';
+import { CoverImageSlug } from './types/coverImage';
 
-export type { CoverImageSet } from './types/coverImage';
+export type { CoverImageSet, CoverImageSlug } from './types/coverImage';
 
 export interface Project {
   id: string;
@@ -19,7 +19,7 @@ export interface Project {
     label: string;
     value: string;
   }[];
-  coverImage?: CoverImageSet;
+  coverKey?: CoverImageSlug;
   featured: boolean;
   metrics?: {
     speedScore?: number;

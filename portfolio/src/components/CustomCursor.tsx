@@ -1,58 +1,87 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
-  const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [hovered, setHovered] = useState(false);
-  const [cursorLabel, setCursorLabel] = useState<string | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  
   const cursorRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef({ x: -100, y: -100 });
+  const hoverRef = useRef({ hovered: false, label: null as string | null });
+
+  const [mounted, setMounted] = useState(false);
+  const [isTouchDevice] = useState(
+    () => typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0),
+  );
+
+  const applyCursorStyles = () => {
+    const cursorEl = cursorRef.current;
+    const ringEl = ringRef.current;
+    const labelEl = labelRef.current;
+    const dotEl = dotRef.current;
+    if (!cursorEl || !ringEl || !labelEl || !dotEl) return;
+
+    const { x, y } = positionRef.current;
+    const { hovered, label } = hoverRef.current;
+    const scale = hovered ? 1.2 : 1;
+
+    cursorEl.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale})`;
+
+    if (label) {
+      ringEl.className =
+        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-16 w-16 bg-white text-black mix-blend-normal';
+      labelEl.textContent = label;
+      labelEl.classList.remove('hidden');
+      dotEl.classList.add('hidden');
+    } else if (hovered) {
+      ringEl.className =
+        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-10 w-10 bg-white/20';
+      labelEl.classList.add('hidden');
+      dotEl.className = 'rounded-full bg-white transition-all duration-300 h-1.5 w-1.5 bg-black block';
+    } else {
+      ringEl.className =
+        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-6 w-6';
+      labelEl.classList.add('hidden');
+      dotEl.className = 'rounded-full bg-white transition-all duration-300 h-1 w-1 block';
+    }
+  };
+
+  const setHoverState = (hovered: boolean, label: string | null) => {
+    if (hoverRef.current.hovered === hovered && hoverRef.current.label === label) return;
+    hoverRef.current = { hovered, label };
+    applyCursorStyles();
+  };
 
   useEffect(() => {
-    // Check if touch device
-    const touchCheck = () => {
-      setIsTouchDevice(
-        'ontouchstart' in window || 
-        navigator.maxTouchPoints > 0
-      );
-    };
-    touchCheck();
-
     if (isTouchDevice) return;
 
+    setMounted(true);
+
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      if (!isVisible) setIsVisible(true);
+      positionRef.current = { x: e.clientX, y: e.clientY };
+      applyCursorStyles();
+      cursorRef.current?.classList.remove('opacity-0');
     };
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const hoverTarget = target.closest('[data-cursor]');
-      
+
       if (hoverTarget) {
-        setHovered(true);
         const label = hoverTarget.getAttribute('data-cursor');
-        setCursorLabel(label && label !== 'true' ? label : null);
-      } else {
-        // Also check if hovering standard links/buttons for default hover style
-        const standardInteractive = target.closest('a, button, select, input, textarea');
-        if (standardInteractive) {
-          setHovered(true);
-          setCursorLabel(null);
-        } else {
-          setHovered(false);
-          setCursorLabel(null);
-        }
+        setHoverState(true, label && label !== 'true' ? label : null);
+        return;
       }
+
+      const standardInteractive = target.closest('a, button, select, input, textarea');
+      setHoverState(Boolean(standardInteractive), null);
     };
 
     const handleMouseLeave = () => {
-      setIsVisible(false);
+      cursorRef.current?.classList.add('opacity-0');
     };
 
     const handleMouseEnter = () => {
-      setIsVisible(true);
+      cursorRef.current?.classList.remove('opacity-0');
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -66,37 +95,24 @@ export default function CustomCursor() {
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
     };
-  }, [isVisible, isTouchDevice]);
+  }, [isTouchDevice]);
 
-  if (isTouchDevice || !isVisible) return null;
+  if (isTouchDevice || !mounted) return null;
 
   return (
     <div
       ref={cursorRef}
-      className="pointer-events-none fixed top-0 left-0 z-[99999] mix-blend-difference will-change-transform"
+      className="pointer-events-none fixed top-0 left-0 z-[99999] mix-blend-difference will-change-transform opacity-0"
       style={{
-        transform: `translate3d(${position.x}px, ${position.y}px, 0) translate(-50%, -50%) scale(${hovered ? 1.2 : 1})`,
         transition: 'transform 0.08s cubic-bezier(0.2, 0, 0.2, 1)',
       }}
     >
-      {/* Outer ring */}
-      <div className={`flex items-center justify-center rounded-full border border-white transition-all duration-300 ${
-        cursorLabel 
-          ? 'h-16 w-16 bg-white text-black mix-blend-normal' 
-          : hovered 
-            ? 'h-10 w-10 bg-white/20' 
-            : 'h-6 w-6'
-      }`}>
-        {cursorLabel ? (
-          <span className="font-mono text-[10px] font-bold tracking-widest text-black">
-            {cursorLabel}
-          </span>
-        ) : (
-          /* Inner Dot */
-          <div className={`rounded-full bg-white transition-all duration-300 ${
-            hovered ? 'h-1.5 w-1.5 bg-black' : 'h-1 w-1'
-          }`} />
-        )}
+      <div
+        ref={ringRef}
+        className="flex items-center justify-center rounded-full border border-white transition-all duration-300 h-6 w-6"
+      >
+        <span ref={labelRef} className="hidden font-mono text-[10px] font-bold tracking-widest text-black" />
+        <div ref={dotRef} className="rounded-full bg-white transition-all duration-300 h-1 w-1" />
       </div>
     </div>
   );

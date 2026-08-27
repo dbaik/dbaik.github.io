@@ -25,7 +25,7 @@ export default function Footer() {
 
         {/* Utilities: Copyright & Back to Top */}
         <div className="flex items-center gap-4 shrink-0">
-          <span className="text-slate-500 text-xs font-mono">
+          <span className="text-slate-400 text-xs font-mono">
             © {new Date().getFullYear()}
           </span>
 

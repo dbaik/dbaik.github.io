@@ -103,7 +103,7 @@ export default function ExperienceTimeline() {
               <div key={i} className="rounded-xl border border-white/5 bg-slate-950/40 p-5">
                 <div className="font-display text-sm font-bold text-white">{edu.institution}</div>
                 <div className="font-sans text-xs sm:text-sm text-indigo-400 font-medium mt-0.5">{edu.degree}</div>
-                <div className="font-mono text-xs text-slate-500 mt-2">{edu.period}</div>
+                <div className="font-mono text-xs text-slate-400 mt-2">{edu.period}</div>
               </div>
             ))}
           </div>
