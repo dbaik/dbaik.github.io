@@ -8,7 +8,7 @@ const ORIGINALS_DIR = path.join(SRC_DIR, 'originals');
 const COVERS_DIR = path.join(SRC_DIR, 'covers');
 const COVER_IMAGES_MODULE = path.join(ROOT, 'src/data/coverImages.ts');
 
-const OUTPUT_WIDTHS = [640, 960, 1376, 2752];
+const OUTPUT_WIDTHS = [640, 688, 960, 1376, 2752];
 const WEBP_QUALITY = 82;
 const AVIF_QUALITY = 62;
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
 import { ArrowDown, ArrowUpRight, Github, CheckCircle2 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import HeroVisualGrid from './HeroVisualGrid';
@@ -31,72 +30,79 @@ export default function Hero() {
 
     let prefersReducedMotion = reducedMotionQuery.matches;
     let hasFineHover = hoverQuery.matches;
+    let cancelled = false;
+    let ctx: { revert: () => void } | null = null;
+    let gsapModule: typeof import('gsap').default | null = null;
 
-    // 1. Entrance Timeline using GSAP (animates container wrapper so 3D planes remain pure)
-    let ctx: gsap.Context | null = null;
-    if (!prefersReducedMotion) {
-      ctx = gsap.context(() => {
-        const tl = gsap.timeline({
-          defaults: {
-            ease: 'power2.out',
-          }
-        });
-
-        tl.fromTo(
-          statusRef.current,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35 },
-          0
-        )
-        .fromTo(
-          namePlaneRef.current,
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.38 },
-          0.06
-        )
-        .fromTo(
-          [roleRef.current, headlineRef.current],
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 },
-          0.12
-        )
-        .fromTo(
-          descRef.current,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35 },
-          0.18
-        )
-        .fromTo(
-          proofRef.current,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35 },
-          0.24
-        )
-        .fromTo(
-          ctaRef.current,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.35 },
-          0.3
-        );
-      }, heroRef);
-    }
-
-    // 2. Coordinated Depth Hierarchy (Single camera / pointer space across Hero)
-    // Foreground: Hero Name (100% intensity)
     let rotateXTo: ((value: number) => void) | null = null;
     let rotateYTo: ((value: number) => void) | null = null;
     let translateZTo: ((value: number) => void) | null = null;
     let xTo: ((value: number) => void) | null = null;
     let yTo: ((value: number) => void) | null = null;
-
-    // Midground: Role + Positioning Block (25-35% intensity, cohesive unit)
     let midRotateXTo: ((value: number) => void) | null = null;
     let midRotateYTo: ((value: number) => void) | null = null;
     let midTranslateZTo: ((value: number) => void) | null = null;
     let midXTo: ((value: number) => void) | null = null;
     let midYTo: ((value: number) => void) | null = null;
 
-    if (hasFineHover && !prefersReducedMotion) {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (prefersReducedMotion || !hasFineHover) return;
+
+      const rect = heroEl.getBoundingClientRect();
+      const centerX = rect.left + rect.width * 0.35;
+      const centerY = rect.top + rect.height * 0.35;
+      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width * 0.45)));
+      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height * 0.45)));
+      const distFromCenter = Math.sqrt(normX * normX + normY * normY);
+
+      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl) {
+        rotateXTo(-normY * 7.5);
+        rotateYTo(normX * 9.5);
+        translateZTo(Math.max(0, (1 - distFromCenter * 0.45) * 8));
+        xTo(normX * 4.5);
+        yTo(normY * 3);
+
+        const shadowX = (-normX * 8).toFixed(1);
+        const shadowY = (-normY * 5 + 3).toFixed(1);
+        nameEl.style.textShadow = `${shadowX}px ${shadowY}px 18px rgba(99, 102, 241, 0.22), ${shadowX}px ${shadowY}px 5px rgba(0, 0, 0, 0.5)`;
+      }
+
+      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
+        midRotateXTo(-normY * 2.2);
+        midRotateYTo(normX * 2.8);
+        midTranslateZTo(Math.max(0, (1 - distFromCenter * 0.45) * 2.4));
+        midXTo(normX * 1.5);
+        midYTo(normY * 1.0);
+      }
+    };
+
+    const handlePointerLeave = () => {
+      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl && gsapModule) {
+        rotateXTo(0);
+        rotateYTo(0);
+        translateZTo(0);
+        xTo(0);
+        yTo(0);
+        gsapModule.to(nameEl, {
+          textShadow: '0px 0px 0px rgba(0,0,0,0)',
+          duration: 0.6,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }
+
+      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
+        midRotateXTo(0);
+        midRotateYTo(0);
+        midTranslateZTo(0);
+        midXTo(0);
+        midYTo(0);
+      }
+    };
+
+    const setupHover = (gsap: typeof import('gsap').default) => {
+      if (!hasFineHover || prefersReducedMotion) return;
+
       if (nameEl) {
         gsap.set(nameEl, {
           transformOrigin: 'left center',
@@ -104,7 +110,6 @@ export default function Hero() {
           backfaceVisibility: 'hidden',
           willChange: 'transform, text-shadow',
         });
-
         rotateXTo = gsap.quickTo(nameEl, 'rotateX', { duration: 0.45, ease: 'power2.out' });
         rotateYTo = gsap.quickTo(nameEl, 'rotateY', { duration: 0.45, ease: 'power2.out' });
         translateZTo = gsap.quickTo(nameEl, 'translateZ', { duration: 0.45, ease: 'power2.out' });
@@ -119,125 +124,70 @@ export default function Hero() {
           backfaceVisibility: 'hidden',
           willChange: 'transform',
         });
-
         midRotateXTo = gsap.quickTo(midgroundEl, 'rotateX', { duration: 0.45, ease: 'power2.out' });
         midRotateYTo = gsap.quickTo(midgroundEl, 'rotateY', { duration: 0.45, ease: 'power2.out' });
         midTranslateZTo = gsap.quickTo(midgroundEl, 'translateZ', { duration: 0.45, ease: 'power2.out' });
         midXTo = gsap.quickTo(midgroundEl, 'x', { duration: 0.45, ease: 'power2.out' });
         midYTo = gsap.quickTo(midgroundEl, 'y', { duration: 0.45, ease: 'power2.out' });
       }
-    }
 
-    const handlePointerMove = (e: PointerEvent) => {
-      if (prefersReducedMotion || !hasFineHover) return;
-
-      const rect = heroEl.getBoundingClientRect();
-      const centerX = rect.left + rect.width * 0.35;
-      const centerY = rect.top + rect.height * 0.35;
-
-      // Unified single pointer coordinate system
-      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (rect.width * 0.45)));
-      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (rect.height * 0.45)));
-      const distFromCenter = Math.sqrt(normX * normX + normY * normY);
-
-      // --- Layer 1: Foreground - Hero Name (100% intensity) ---
-      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl) {
-        const targetRotateX = -normY * 7.5;
-        const targetRotateY = normX * 9.5;
-        const targetTranslateZ = Math.max(0, (1 - distFromCenter * 0.45) * 8);
-        const targetX = normX * 4.5;
-        const targetY = normY * 3;
-
-        rotateXTo(targetRotateX);
-        rotateYTo(targetRotateY);
-        translateZTo(targetTranslateZ);
-        xTo(targetX);
-        yTo(targetY);
-
-        // Subtle dynamic lighting depth cue that shifts synchronously with 3D tilt
-        const shadowX = (-normX * 8).toFixed(1);
-        const shadowY = (-normY * 5 + 3).toFixed(1);
-        nameEl.style.textShadow = `${shadowX}px ${shadowY}px 18px rgba(99, 102, 241, 0.22), ${shadowX}px ${shadowY}px 5px rgba(0, 0, 0, 0.5)`;
-      }
-
-      // --- Layer 2: Midground - Role & Positioning (25-35% coordinated intensity) ---
-      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
-        const midRotateX = -normY * 2.2;
-        const midRotateY = normX * 2.8;
-        const midTranslateZ = Math.max(0, (1 - distFromCenter * 0.45) * 2.4);
-        const midX = normX * 1.5;
-        const midY = normY * 1.0;
-
-        midRotateXTo(midRotateX);
-        midRotateYTo(midRotateY);
-        midTranslateZTo(midTranslateZ);
-        midXTo(midX);
-        midYTo(midY);
-      }
-    };
-
-    const handlePointerLeave = () => {
-      // Smooth synchronized return of all layers to neutral resting state
-      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl) {
-        rotateXTo(0);
-        rotateYTo(0);
-        translateZTo(0);
-        xTo(0);
-        yTo(0);
-        
-        gsap.to(nameEl, {
-          textShadow: '0px 0px 0px rgba(0,0,0,0)',
-          duration: 0.6,
-          ease: 'power2.out',
-          overwrite: 'auto'
-        });
-      }
-
-      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
-        midRotateXTo(0);
-        midRotateYTo(0);
-        midTranslateZTo(0);
-        midXTo(0);
-        midYTo(0);
-      }
-    };
-
-    if (hasFineHover && !prefersReducedMotion) {
       heroEl.addEventListener('pointermove', handlePointerMove, { passive: true });
       heroEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
-    }
+    };
+
+    const resetTransforms = () => {
+      if (!gsapModule) return;
+      if (nameEl) gsapModule.set(nameEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
+      if (midgroundEl) {
+        gsapModule.set(midgroundEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
+      }
+    };
+
+    void import('gsap').then(({ default: gsap }) => {
+      if (cancelled) return;
+      gsapModule = gsap;
+
+      if (!prefersReducedMotion) {
+        ctx = gsap.context(() => {
+          const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+          tl.fromTo(statusRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0)
+            .fromTo(namePlaneRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.38 }, 0.06)
+            .fromTo(
+              [roleRef.current, headlineRef.current],
+              { opacity: 0, y: 12 },
+              { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 },
+              0.12,
+            )
+            .fromTo(descRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.18)
+            .fromTo(proofRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.24)
+            .fromTo(ctaRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.3);
+        }, heroRef);
+      }
+
+      setupHover(gsap);
+    });
 
     const handleReducedMotionChange = (e: MediaQueryListEvent) => {
       prefersReducedMotion = e.matches;
-      if (prefersReducedMotion) {
-        if (nameEl) gsap.set(nameEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-        if (midgroundEl) gsap.set(midgroundEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-      }
+      if (prefersReducedMotion) resetTransforms();
     };
 
     const handleHoverChange = (e: MediaQueryListEvent) => {
       hasFineHover = e.matches;
-      if (!hasFineHover) {
-        if (nameEl) gsap.set(nameEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-        if (midgroundEl) gsap.set(midgroundEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-      }
+      if (!hasFineHover) resetTransforms();
     };
 
     reducedMotionQuery.addEventListener('change', handleReducedMotionChange);
     hoverQuery.addEventListener('change', handleHoverChange);
 
     return () => {
+      cancelled = true;
       ctx?.revert();
       heroEl.removeEventListener('pointermove', handlePointerMove);
       heroEl.removeEventListener('pointerleave', handlePointerLeave);
       reducedMotionQuery.removeEventListener('change', handleReducedMotionChange);
       hoverQuery.removeEventListener('change', handleHoverChange);
-      if (nameEl) {
-        gsap.set(nameEl, { clearProps: 'all' });
-      }
-      if (midgroundEl) {
-        gsap.set(midgroundEl, { clearProps: 'all' });
-      }
+      resetTransforms();
     };
   }, []);
 
@@ -340,8 +290,8 @@ export default function Hero() {
             <span>WordPress & Shopify Specialist</span>
           </div>
           <span className="hidden sm:inline text-slate-700">·</span>
-          <div className="flex items-center gap-2 text-slate-400 font-normal">
-            <CheckCircle2 size={13} className="text-slate-400 shrink-0" />
+          <div className="flex items-center gap-2 text-slate-300">
+            <CheckCircle2 size={14} className="text-indigo-400 shrink-0" />
             <span>Performance & Core Web Vitals</span>
           </div>
         </div>

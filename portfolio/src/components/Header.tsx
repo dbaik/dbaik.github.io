@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 import { PERSONAL_INFO, PROJECTS_DATA } from '../data/portfolioData';
 import { scrollToSection } from '../utils/scroll';
@@ -78,7 +76,7 @@ export default function Header() {
     };
   }, []);
 
-  // Tactile physical 3D tilt response on "db" logo
+  // Load GSAP only on fine-pointer hover — keeps it off the initial critical path
   useEffect(() => {
     const brandEl = brandLinkRef.current;
     const stageEl = logoStageRef.current;
@@ -87,68 +85,79 @@ export default function Header() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isTouch = 'ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches;
-
     if (prefersReducedMotion || isTouch) return;
 
-    gsap.set(logoEl, {
-      transformOrigin: '50% 50%',
-      transformStyle: 'preserve-3d',
-      backfaceVisibility: 'hidden',
-      willChange: 'transform',
-    });
+    let cancelled = false;
+    let cleanupTilt: (() => void) | null = null;
 
-    const rotateXTo = gsap.quickTo(logoEl, 'rotationX', { duration: 0.3, ease: 'power2.out' });
-    const rotateYTo = gsap.quickTo(logoEl, 'rotationY', { duration: 0.3, ease: 'power2.out' });
-    const zTo = gsap.quickTo(logoEl, 'z', { duration: 0.3, ease: 'power2.out' });
-    const xTo = gsap.quickTo(logoEl, 'x', { duration: 0.3, ease: 'power2.out' });
-    const yTo = gsap.quickTo(logoEl, 'y', { duration: 0.3, ease: 'power2.out' });
+    const enableTilt = async () => {
+      const { default: gsap } = await import('gsap');
+      if (cancelled || !brandEl.isConnected) return;
 
-    const handlePointerMove = (e: PointerEvent) => {
-      const stageRect = stageEl.getBoundingClientRect();
-      if (!stageRect.width || !stageRect.height) return;
+      gsap.set(logoEl, {
+        transformOrigin: '50% 50%',
+        transformStyle: 'preserve-3d',
+        backfaceVisibility: 'hidden',
+        willChange: 'transform',
+      });
 
-      const centerX = stageRect.left + stageRect.width / 2;
-      const centerY = stageRect.top + stageRect.height / 2;
+      const rotateXTo = gsap.quickTo(logoEl, 'rotationX', { duration: 0.3, ease: 'power2.out' });
+      const rotateYTo = gsap.quickTo(logoEl, 'rotationY', { duration: 0.3, ease: 'power2.out' });
+      const zTo = gsap.quickTo(logoEl, 'z', { duration: 0.3, ease: 'power2.out' });
+      const xTo = gsap.quickTo(logoEl, 'x', { duration: 0.3, ease: 'power2.out' });
+      const yTo = gsap.quickTo(logoEl, 'y', { duration: 0.3, ease: 'power2.out' });
 
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
+      const handlePointerMove = (e: PointerEvent) => {
+        const stageRect = stageEl.getBoundingClientRect();
+        if (!stageRect.width || !stageRect.height) return;
 
-      // Soft non-linear mapping with distance falloff across the full brand link
-      // Prevents hard clamping and saturation when moving from db square to name and subtitle
-      const absX = Math.abs(dx);
-      const absY = Math.abs(dy);
-      const signX = dx === 0 ? 0 : Math.sign(dx);
-      const signY = dy === 0 ? 0 : Math.sign(dy);
+        const centerX = stageRect.left + stageRect.width / 2;
+        const centerY = stageRect.top + stageRect.height / 2;
+        const dx = e.clientX - centerX;
+        const dy = e.clientY - centerY;
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+        const signX = dx === 0 ? 0 : Math.sign(dx);
+        const signY = dy === 0 ? 0 : Math.sign(dy);
+        const normX = signX * Math.min(1, Math.pow(absX / (absX + 50), 0.7));
+        const normY = signY * Math.min(1, Math.pow(absY / (absY + 16), 0.7));
 
-      // Smooth progression: responsive within logo (0-18px), organic gradient across name (30-140px), gentle orientation across subtitle (150-260px)
-      const normX = signX * Math.min(1, Math.pow(absX / (absX + 50), 0.7));
-      const normY = signY * Math.min(1, Math.pow(absY / (absY + 16), 0.7));
+        rotateXTo(-normY * 18);
+        rotateYTo(normX * 20);
+        zTo(6);
+        xTo(normX * 2.5);
+        yTo(normY * 2.5);
+      };
 
-      // Tactile physical 3D tilt & micro-displacement proportional to pointer position relative to logo
-      rotateXTo(-normY * 18);
-      rotateYTo(normX * 20);
-      zTo(6);
-      xTo(normX * 2.5);
-      yTo(normY * 2.5);
+      const handlePointerLeave = () => {
+        rotateXTo(0);
+        rotateYTo(0);
+        zTo(0);
+        xTo(0);
+        yTo(0);
+      };
+
+      brandEl.addEventListener('pointermove', handlePointerMove, { passive: true });
+      brandEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
+
+      cleanupTilt = () => {
+        brandEl.removeEventListener('pointermove', handlePointerMove);
+        brandEl.removeEventListener('pointerleave', handlePointerLeave);
+        gsap.set(logoEl, { clearProps: 'all' });
+      };
     };
 
-    const handlePointerLeave = () => {
-      rotateXTo(0);
-      rotateYTo(0);
-      zTo(0);
-      xTo(0);
-      yTo(0);
+    const handleFirstEnter = () => {
+      brandEl.removeEventListener('pointerenter', handleFirstEnter);
+      void enableTilt();
     };
 
-    brandEl.addEventListener('pointerenter', handlePointerMove, { passive: true });
-    brandEl.addEventListener('pointermove', handlePointerMove, { passive: true });
-    brandEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
+    brandEl.addEventListener('pointerenter', handleFirstEnter, { passive: true });
 
     return () => {
-      brandEl.removeEventListener('pointerenter', handlePointerMove);
-      brandEl.removeEventListener('pointermove', handlePointerMove);
-      brandEl.removeEventListener('pointerleave', handlePointerLeave);
-      gsap.set(logoEl, { clearProps: 'all' });
+      cancelled = true;
+      brandEl.removeEventListener('pointerenter', handleFirstEnter);
+      cleanupTilt?.();
     };
   }, []);
 
@@ -168,29 +177,23 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        
-        {/* Brand identity */}
-        <a 
+        <a
           ref={brandLinkRef}
-          href="#hero" 
+          href="#hero"
           onClick={(e) => handleNavClick(e, '#hero')}
           className="group flex items-center gap-2.5 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg p-1 -m-1"
         >
-          {/* 3D Perspective Stage for db Logo */}
-          <div 
+          <div
             ref={logoStageRef}
             className="relative flex items-center justify-center cursor-pointer p-0.5"
             style={{ perspective: '180px' }}
           >
-            <div 
+            <div
               ref={logoBoxRef}
               className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-indigo-500/15 border border-indigo-500/35 text-indigo-400 font-mono text-xs sm:text-sm font-bold transition-colors duration-200 group-hover:bg-indigo-500/25 group-hover:border-indigo-400 group-hover:text-indigo-200 select-none will-change-transform"
               style={{ transformStyle: 'preserve-3d' }}
             >
-              <span 
-                className="inline-block pointer-events-none font-bold" 
-                style={{ transform: 'translateZ(4px)' }}
-              >
+              <span className="inline-block pointer-events-none font-bold" style={{ transform: 'translateZ(4px)' }}>
                 db
               </span>
             </div>
@@ -206,8 +209,7 @@ export default function Header() {
           </div>
         </a>
 
-        {/* Desktop Navigation */}
-        <nav 
+        <nav
           aria-label="Main Navigation"
           className="hidden md:flex items-center gap-0.5 lg:gap-1 rounded-full border border-white/10 bg-slate-950/70 p-1 backdrop-blur-md shrink-0"
         >
@@ -218,26 +220,18 @@ export default function Header() {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`relative px-3 py-1.5 text-xs font-medium tracking-wide whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-full ${
+                className={`relative px-3 py-1.5 text-xs font-medium tracking-wide whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-full ${
                   isActive
-                    ? 'text-white font-semibold'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'text-white font-semibold bg-white/10 border border-white/15'
+                    : 'text-slate-400 hover:text-slate-200 border border-transparent'
                 }`}
               >
-                {isActive && (
-                  <motion.span
-                    layoutId="activeNavTab"
-                    className="absolute inset-0 rounded-full bg-white/10 border border-white/15"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
                 <span className="relative z-10">{link.name}</span>
               </a>
             );
           })}
         </nav>
 
-        {/* Mobile Menu Toggle */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
@@ -248,30 +242,25 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-b border-white/10 bg-[#070b15]/95 backdrop-blur-xl px-6 py-5"
-          >
-            <nav className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => handleNavClick(e, link.href)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className={`md:hidden overflow-hidden border-b border-white/10 bg-[#070b15]/95 backdrop-blur-xl transition-[max-height,opacity] duration-300 ease-out ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 border-b-0'
+        }`}
+      >
+        <nav className="flex flex-col gap-1 px-4 sm:px-6 py-5" aria-hidden={!isMobileMenuOpen}>
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
+              tabIndex={isMobileMenuOpen ? 0 : -1}
+              className="rounded-lg px-1 py-2 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+      </div>
     </header>
   );
 }

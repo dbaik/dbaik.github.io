@@ -106,11 +106,16 @@ export default function SkillsRadar() {
           <h4 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-3">
             WORKING LANGUAGES
           </h4>
-          <ul className="space-y-2 font-sans text-sm text-slate-300">
+          <ul className="font-sans text-sm text-slate-300">
             {PERSONAL_INFO.languages.map((lang) => (
-              <li key={lang.name} className="flex items-center justify-between border-b border-white/5 py-1.5">
-                <span className="font-bold text-white">{lang.name}</span>
-                <span className="text-slate-400">{lang.level}</span>
+              <li
+                key={lang.name}
+                className="flex flex-col gap-0.5 border-b border-white/5 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+              >
+                <span className="font-bold text-white shrink-0">{lang.name}</span>
+                <span className="text-slate-400 text-xs sm:text-sm sm:text-right leading-relaxed">
+                  {lang.level}
+                </span>
               </li>
             ))}
           </ul>

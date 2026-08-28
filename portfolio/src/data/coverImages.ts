@@ -4,6 +4,8 @@ import { coverImageSet, type CoverImageRegistry } from '../types/coverImage';
 
 import wwf_w640_avif from '../assets/images/covers/wwf-w640.avif';
 import wwf_w640_webp from '../assets/images/covers/wwf-w640.webp';
+import wwf_w688_avif from '../assets/images/covers/wwf-w688.avif';
+import wwf_w688_webp from '../assets/images/covers/wwf-w688.webp';
 import wwf_w960_avif from '../assets/images/covers/wwf-w960.avif';
 import wwf_w960_webp from '../assets/images/covers/wwf-w960.webp';
 import wwf_w1376_avif from '../assets/images/covers/wwf-w1376.avif';
@@ -12,6 +14,8 @@ import wwf_w2752_avif from '../assets/images/covers/wwf-w2752.avif';
 import wwf_w2752_webp from '../assets/images/covers/wwf-w2752.webp';
 import mvp_w640_avif from '../assets/images/covers/mvp-w640.avif';
 import mvp_w640_webp from '../assets/images/covers/mvp-w640.webp';
+import mvp_w688_avif from '../assets/images/covers/mvp-w688.avif';
+import mvp_w688_webp from '../assets/images/covers/mvp-w688.webp';
 import mvp_w960_avif from '../assets/images/covers/mvp-w960.avif';
 import mvp_w960_webp from '../assets/images/covers/mvp-w960.webp';
 import mvp_w1376_avif from '../assets/images/covers/mvp-w1376.avif';
@@ -20,6 +24,8 @@ import mvp_w2752_avif from '../assets/images/covers/mvp-w2752.avif';
 import mvp_w2752_webp from '../assets/images/covers/mvp-w2752.webp';
 import precision_w640_avif from '../assets/images/covers/precision-w640.avif';
 import precision_w640_webp from '../assets/images/covers/precision-w640.webp';
+import precision_w688_avif from '../assets/images/covers/precision-w688.avif';
+import precision_w688_webp from '../assets/images/covers/precision-w688.webp';
 import precision_w960_avif from '../assets/images/covers/precision-w960.avif';
 import precision_w960_webp from '../assets/images/covers/precision-w960.webp';
 import precision_w1376_avif from '../assets/images/covers/precision-w1376.avif';
@@ -28,6 +34,8 @@ import precision_w2752_avif from '../assets/images/covers/precision-w2752.avif';
 import precision_w2752_webp from '../assets/images/covers/precision-w2752.webp';
 import mochi_w640_avif from '../assets/images/covers/mochi-w640.avif';
 import mochi_w640_webp from '../assets/images/covers/mochi-w640.webp';
+import mochi_w688_avif from '../assets/images/covers/mochi-w688.avif';
+import mochi_w688_webp from '../assets/images/covers/mochi-w688.webp';
 import mochi_w960_avif from '../assets/images/covers/mochi-w960.avif';
 import mochi_w960_webp from '../assets/images/covers/mochi-w960.webp';
 import mochi_w1376_avif from '../assets/images/covers/mochi-w1376.avif';
@@ -36,6 +44,8 @@ import mochi_w2752_avif from '../assets/images/covers/mochi-w2752.avif';
 import mochi_w2752_webp from '../assets/images/covers/mochi-w2752.webp';
 import bopper_w640_avif from '../assets/images/covers/bopper-w640.avif';
 import bopper_w640_webp from '../assets/images/covers/bopper-w640.webp';
+import bopper_w688_avif from '../assets/images/covers/bopper-w688.avif';
+import bopper_w688_webp from '../assets/images/covers/bopper-w688.webp';
 import bopper_w960_avif from '../assets/images/covers/bopper-w960.avif';
 import bopper_w960_webp from '../assets/images/covers/bopper-w960.webp';
 import bopper_w1376_avif from '../assets/images/covers/bopper-w1376.avif';
@@ -44,6 +54,8 @@ import bopper_w2752_avif from '../assets/images/covers/bopper-w2752.avif';
 import bopper_w2752_webp from '../assets/images/covers/bopper-w2752.webp';
 import eleven_w640_avif from '../assets/images/covers/eleven-w640.avif';
 import eleven_w640_webp from '../assets/images/covers/eleven-w640.webp';
+import eleven_w688_avif from '../assets/images/covers/eleven-w688.avif';
+import eleven_w688_webp from '../assets/images/covers/eleven-w688.webp';
 import eleven_w960_avif from '../assets/images/covers/eleven-w960.avif';
 import eleven_w960_webp from '../assets/images/covers/eleven-w960.webp';
 import eleven_w1376_avif from '../assets/images/covers/eleven-w1376.avif';
@@ -52,6 +64,8 @@ import eleven_w2752_avif from '../assets/images/covers/eleven-w2752.avif';
 import eleven_w2752_webp from '../assets/images/covers/eleven-w2752.webp';
 import schoolhouse_w640_avif from '../assets/images/covers/schoolhouse-w640.avif';
 import schoolhouse_w640_webp from '../assets/images/covers/schoolhouse-w640.webp';
+import schoolhouse_w688_avif from '../assets/images/covers/schoolhouse-w688.avif';
+import schoolhouse_w688_webp from '../assets/images/covers/schoolhouse-w688.webp';
 import schoolhouse_w960_avif from '../assets/images/covers/schoolhouse-w960.avif';
 import schoolhouse_w960_webp from '../assets/images/covers/schoolhouse-w960.webp';
 import schoolhouse_w1376_avif from '../assets/images/covers/schoolhouse-w1376.avif';
@@ -60,6 +74,8 @@ import schoolhouse_w2752_avif from '../assets/images/covers/schoolhouse-w2752.av
 import schoolhouse_w2752_webp from '../assets/images/covers/schoolhouse-w2752.webp';
 import gaido_w640_avif from '../assets/images/covers/gaido-w640.avif';
 import gaido_w640_webp from '../assets/images/covers/gaido-w640.webp';
+import gaido_w688_avif from '../assets/images/covers/gaido-w688.avif';
+import gaido_w688_webp from '../assets/images/covers/gaido-w688.webp';
 import gaido_w960_avif from '../assets/images/covers/gaido-w960.avif';
 import gaido_w960_webp from '../assets/images/covers/gaido-w960.webp';
 import gaido_w1376_avif from '../assets/images/covers/gaido-w1376.avif';
@@ -70,48 +86,56 @@ import gaido_w2752_webp from '../assets/images/covers/gaido-w2752.webp';
 export const COVER_IMAGES = {
   wwf: coverImageSet([
       { width: 640, avif: wwf_w640_avif, webp: wwf_w640_webp },
+      { width: 688, avif: wwf_w688_avif, webp: wwf_w688_webp },
       { width: 960, avif: wwf_w960_avif, webp: wwf_w960_webp },
       { width: 1376, avif: wwf_w1376_avif, webp: wwf_w1376_webp },
       { width: 2752, avif: wwf_w2752_avif, webp: wwf_w2752_webp },
     ], 1376, 768),
   mvp: coverImageSet([
       { width: 640, avif: mvp_w640_avif, webp: mvp_w640_webp },
+      { width: 688, avif: mvp_w688_avif, webp: mvp_w688_webp },
       { width: 960, avif: mvp_w960_avif, webp: mvp_w960_webp },
       { width: 1376, avif: mvp_w1376_avif, webp: mvp_w1376_webp },
       { width: 2752, avif: mvp_w2752_avif, webp: mvp_w2752_webp },
     ], 1376, 768),
   precision: coverImageSet([
       { width: 640, avif: precision_w640_avif, webp: precision_w640_webp },
+      { width: 688, avif: precision_w688_avif, webp: precision_w688_webp },
       { width: 960, avif: precision_w960_avif, webp: precision_w960_webp },
       { width: 1376, avif: precision_w1376_avif, webp: precision_w1376_webp },
       { width: 2752, avif: precision_w2752_avif, webp: precision_w2752_webp },
     ], 1376, 768),
   mochi: coverImageSet([
       { width: 640, avif: mochi_w640_avif, webp: mochi_w640_webp },
+      { width: 688, avif: mochi_w688_avif, webp: mochi_w688_webp },
       { width: 960, avif: mochi_w960_avif, webp: mochi_w960_webp },
       { width: 1376, avif: mochi_w1376_avif, webp: mochi_w1376_webp },
       { width: 2752, avif: mochi_w2752_avif, webp: mochi_w2752_webp },
     ], 1376, 768),
   bopper: coverImageSet([
       { width: 640, avif: bopper_w640_avif, webp: bopper_w640_webp },
+      { width: 688, avif: bopper_w688_avif, webp: bopper_w688_webp },
       { width: 960, avif: bopper_w960_avif, webp: bopper_w960_webp },
       { width: 1376, avif: bopper_w1376_avif, webp: bopper_w1376_webp },
       { width: 2752, avif: bopper_w2752_avif, webp: bopper_w2752_webp },
     ], 1376, 768),
   eleven: coverImageSet([
       { width: 640, avif: eleven_w640_avif, webp: eleven_w640_webp },
+      { width: 688, avif: eleven_w688_avif, webp: eleven_w688_webp },
       { width: 960, avif: eleven_w960_avif, webp: eleven_w960_webp },
       { width: 1376, avif: eleven_w1376_avif, webp: eleven_w1376_webp },
       { width: 2752, avif: eleven_w2752_avif, webp: eleven_w2752_webp },
     ], 1376, 768),
   schoolhouse: coverImageSet([
       { width: 640, avif: schoolhouse_w640_avif, webp: schoolhouse_w640_webp },
+      { width: 688, avif: schoolhouse_w688_avif, webp: schoolhouse_w688_webp },
       { width: 960, avif: schoolhouse_w960_avif, webp: schoolhouse_w960_webp },
       { width: 1376, avif: schoolhouse_w1376_avif, webp: schoolhouse_w1376_webp },
       { width: 2752, avif: schoolhouse_w2752_avif, webp: schoolhouse_w2752_webp },
     ], 1376, 768),
   gaido: coverImageSet([
       { width: 640, avif: gaido_w640_avif, webp: gaido_w640_webp },
+      { width: 688, avif: gaido_w688_avif, webp: gaido_w688_webp },
       { width: 960, avif: gaido_w960_avif, webp: gaido_w960_webp },
       { width: 1376, avif: gaido_w1376_avif, webp: gaido_w1376_webp },
       { width: 2752, avif: gaido_w2752_avif, webp: gaido_w2752_webp },

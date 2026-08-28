@@ -1,18 +1,59 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import type { Plugin } from 'vite';
+import { defineConfig } from 'vite';
+
+/** Inject <link rel="preload"> for hashed woff2 fonts so they start with CSS, not after it. */
+function preloadFontsPlugin(): Plugin {
+  return {
+    name: 'preload-fonts',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const bundle = ctx.bundle;
+        if (!bundle) return html;
+
+        const fontHrefs = Object.values(bundle)
+          .filter((item) => item.type === 'asset' && item.fileName.endsWith('.woff2'))
+          .map((item) => (item.type === 'asset' ? item.fileName : ''))
+          .filter(Boolean)
+          .sort();
+
+        if (fontHrefs.length === 0) return html;
+
+        const links = fontHrefs
+          .map(
+            (fileName) =>
+              `    <link rel="preload" href="./${fileName}" as="font" type="font/woff2" crossorigin />`,
+          )
+          .join('\n');
+
+        return html.replace(/\s*<\/head>/, `\n${links}\n  </head>`);
+      },
+    },
+  };
+}
 
 export default defineConfig(() => {
   return {
     base: './',
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), preloadFontsPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
       },
     },
     build: {
+      cssCodeSplit: false,
+      modulePreload: {
+        resolveDependencies(filename, deps) {
+          // Keep motion/gsap off the initial modulepreload list; they load with lazy sections / hover.
+          return deps.filter(
+            (dep) => !dep.includes('motion') && !dep.includes('gsap'),
+          );
+        },
+      },
       rollupOptions: {
         output: {
           manualChunks(id) {

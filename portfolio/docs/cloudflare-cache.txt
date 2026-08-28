@@ -1,0 +1,15 @@
+# Cloudflare Cache Rules for GitHub Pages
+#
+# GitHub Pages serves /assets/* with ~10 minute Cache-Control.
+# Put the custom domain (or github.io) behind Cloudflare (orange cloud), then:
+#
+# 1. Caching → Cache Rules → Create rule
+# 2. If: Hostname equals dbaik.github.io
+#        AND URI Path starts with /assets/
+# 3. Then: Eligible for cache = True
+#          Edge TTL = Ignore cache-control header / Override = 1 month
+#          Browser TTL = Override = 1 year (safe: filenames are content-hashed)
+#
+# Optional second rule for favicon.ico / favicon.svg / apple-touch-icon.png:
+# URI Path is in {/favicon.ico /favicon.svg /apple-touch-icon.png}
+# Browser TTL = 1 week

@@ -29,7 +29,9 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
         </div>
         <h3 className="font-display text-xl sm:text-2xl font-extrabold text-white tracking-tight">Message sent successfully</h3>
         <p className="mt-2 font-sans text-sm text-slate-400 max-w-sm leading-relaxed">
-          Thank you for reaching out. Dmitry will respond within 24 hours.
+          Thank you for reaching out.
+          <br />
+          Dmitry will respond within 24 hours.
         </p>
         <button
           type="button"
