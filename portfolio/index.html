@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dmitry Bashkatov (dbaik) // Senior Frontend & UI/UX Specialist</title>
     <meta name="description" content="15+ years experience crafting custom WordPress Gutenberg architectures, high-conversion Shopify storefronts, and sub-second React web apps." />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      {
+        const colorScheme = localStorage.getItem('color-scheme');
+        if (colorScheme === 'light' || colorScheme === 'dark') {
+          const meta = document.querySelector('meta[name="color-scheme"]');
+          if (meta) meta.setAttribute('content', colorScheme);
+          document.documentElement.classList.add('scheme-' + colorScheme);
+        }
+      }
+    </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

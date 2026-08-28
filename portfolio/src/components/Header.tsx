@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import { PERSONAL_INFO, PROJECTS_DATA } from '../data/portfolioData';
 import { scrollToSection } from '../utils/scroll';
+import ThemeToggle from './ThemeToggle';
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,6 +32,32 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } | null }).__lenis;
+    lenis?.stop();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      lenis?.start();
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const sectionIds = ['hero', 'featured-work', 'archive', 'how-i-work', 'experience', 'skills', 'contact'];
@@ -168,20 +195,22 @@ export default function Header() {
     scrollToSection(href);
   };
 
+  const headerFilled = isScrolled || isMobileMenuOpen;
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#070b15]/90 backdrop-blur-md border-b border-white/10 py-3 shadow-lg shadow-black/20'
-          : 'bg-transparent py-4 sm:py-5'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 transition-[background-color,border-color,box-shadow,padding] duration-300 ${
+        headerFilled
+          ? 'border-b border-white/10 bg-[#070b15]'
+          : 'bg-transparent'
+      } ${isScrolled && !isMobileMenuOpen ? 'py-3 shadow-lg shadow-black/20' : 'py-4 sm:py-5'}`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between">
         <a
           ref={brandLinkRef}
           href="#hero"
           onClick={(e) => handleNavClick(e, '#hero')}
-          className="group flex items-center gap-2.5 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg p-1 -m-1"
+          className="group flex items-center gap-2.5 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
         >
           <div
             ref={logoStageRef}
@@ -232,22 +261,27 @@ export default function Header() {
           })}
         </nav>
 
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-          aria-label={isMobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
-          aria-expanded={isMobileMenuOpen}
-        >
-          {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <ThemeToggle />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            aria-label={isMobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-nav"
+          >
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </div>
 
       <div
-        className={`md:hidden overflow-hidden border-b border-white/10 bg-[#070b15]/95 backdrop-blur-xl transition-[max-height,opacity] duration-300 ease-out ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 border-b-0'
+        id="mobile-nav"
+        className={`mx-auto w-full max-w-6xl md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <nav className="flex flex-col gap-1 px-4 sm:px-6 py-5" aria-hidden={!isMobileMenuOpen}>
+        <nav className="flex flex-col gap-1 py-5" aria-hidden={!isMobileMenuOpen}>
           {navLinks.map((link) => (
             <a
               key={link.name}

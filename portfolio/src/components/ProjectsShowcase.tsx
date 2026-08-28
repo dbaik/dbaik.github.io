@@ -453,13 +453,13 @@ export default function ProjectsShowcase() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 15 }}
                 data-lenis-prevent="true"
-                className="relative w-full max-w-2xl sm:max-w-3xl rounded-2xl border border-white/15 bg-slate-950 p-6 sm:p-8 shadow-2xl z-10 my-auto max-h-[calc(100vh-5.5rem)] sm:max-h-[calc(100vh-6.5rem)] overflow-y-auto overscroll-contain isolate outline-none focus:outline-none [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.15)_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/15 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/25"
+                className="relative w-full max-w-2xl sm:max-w-3xl rounded-2xl border p-6 sm:p-8 shadow-2xl z-10 my-auto max-h-[calc(100vh-5.5rem)] sm:max-h-[calc(100vh-6.5rem)] overflow-y-auto overscroll-contain isolate outline-none focus:outline-none [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full"
               >
                 {/* Close Button */}
                 <button
                   ref={modalCloseBtnRef}
                   onClick={handleCloseModal}
-                  className="absolute top-5 right-5 h-8 w-8 rounded-lg border border-white/10 bg-slate-900/90 sm:bg-white/5 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer outline-none focus:outline-none focus-visible:ring-1 focus-visible:ring-white/40 z-20"
+                  className="project-modal-close absolute top-5 right-5 h-8 w-8 rounded-lg border flex items-center justify-center transition-colors cursor-pointer outline-none focus:outline-none focus-visible:ring-1 focus-visible:ring-indigo-400/40 z-20"
                   aria-label="Close modal"
                 >
                   <X size={16} />
@@ -479,7 +479,7 @@ export default function ProjectsShowcase() {
                       href={activeModalProject.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-xs text-slate-400 hover:text-indigo-300 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+                      className="font-mono text-xs text-slate-400 hover:text-indigo-400 flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
                     >
                       <span>{activeModalProject.domain}</span>
                       <ArrowUpRight size={12} />
@@ -509,7 +509,7 @@ export default function ProjectsShowcase() {
                     </h4>
                     <ul className="space-y-2.5">
                       {activeModalProject.responsibilities.map((resp, i) => (
-                        <li key={i} className="flex items-start gap-2.5 text-sm text-slate-200">
+                        <li key={i} className="flex items-start gap-2.5 text-sm text-slate-300">
                           <CheckCircle2 size={15} className="text-indigo-400 mt-0.5 shrink-0" />
                           <span className="leading-relaxed">{resp}</span>
                         </li>
@@ -524,7 +524,7 @@ export default function ProjectsShowcase() {
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {activeModalProject.technologies.map((tech) => (
-                        <span key={tech} className="rounded-md bg-white/5 border border-white/10 px-2.5 py-1 font-mono text-xs text-slate-300">
+                        <span key={tech} className="project-modal-chip rounded-md border px-2.5 py-1 font-mono text-xs">
                           {tech}
                         </span>
                       ))}
