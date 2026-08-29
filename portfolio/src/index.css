@@ -101,6 +101,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+#hero canvas {
+  background-color: transparent;
+}
+
 .bg-\[\#070b15\],
 .bg-\[\#070b15\]\/90,
 .bg-\[\#070b15\]\/95,

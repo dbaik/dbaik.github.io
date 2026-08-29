@@ -21,14 +21,15 @@ const MARQUEE_ITEMS = [
   'WordPress',
   'Shopify',
   'Gutenberg',
-  'Liquid',
-  'GSAP',
-  'Core Web Vitals',
-  'PHP',
-  'SCSS',
-  'Figma',
   'ACF',
-  'Polylang',
+  'Liquid',
+  'WooCommerce',
+  'Tailwind CSS',
+  'Core Web Vitals',
+  'Technical SEO',
+  'GA4',
+  'Figma',
+  'GSAP',
 ];
 
 export default function App() {

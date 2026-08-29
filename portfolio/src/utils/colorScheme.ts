@@ -23,6 +23,10 @@ export function resolvedColorScheme(pinned: PinnedColorScheme | null): PinnedCol
   return systemPrefersDark() ? 'dark' : 'light';
 }
 
+export function isLightScheme(): boolean {
+  return resolvedColorScheme(readPinnedColorScheme()) === 'light';
+}
+
 export function applyColorScheme(pinned: PinnedColorScheme | null): void {
   const html = document.documentElement;
   html.classList.remove('scheme-light', 'scheme-dark');

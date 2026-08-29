@@ -10,7 +10,7 @@ const projectTypes = [
   'Shopify E-Commerce Storefront',
   'Performance & Core Web Vitals Optimization',
   'Figma to Pixel-Perfect HTML/CSS',
-  'Contract / Full-Time Senior Role'
+  'B2B / Contract Engagement'
 ]
 
 const inputClassName =
@@ -185,7 +185,7 @@ export default function ContactSection() {
             </h2>
 
             <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed">
-              Available for custom theme builds, Shopify storefronts, performance audits, and senior developer roles.
+              {PERSONAL_INFO.availability} WordPress and Shopify from Figma to production — including performance, technical SEO, analytics, and AI-assisted workflows.
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row lg:flex-col gap-3">

@@ -1,50 +1,12 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { PERSONAL_INFO } from '../data/portfolioData';
+import { PERSONAL_INFO, SKILL_GROUPS } from '../data/portfolioData';
 
 export default function SkillsRadar() {
-  const skillCategories = [
-    {
-      group: 'CMS & E-Commerce',
-      lead: [
-        'WordPress',
-        'Gutenberg Blocks',
-        'ACF Pro',
-        'Elementor',
-        'Shopify Liquid',
-        'Polylang'
-      ]
-    },
-    {
-      group: 'Frontend & Architecture',
-      lead: [
-        'HTML5 / Semantic Markup',
-        'CSS3 / SCSS',
-        'JavaScript (ES6+)',
-        'TypeScript',
-        'React & Next.js',
-        'AJAX / REST'
-      ]
-    },
-    {
-      group: 'Motion & Web Vitals',
-      lead: [
-        'GSAP & ScrollTrigger',
-        'Micro-Interactions',
-        'Core Web Vitals · LCP · CLS · INP'
-      ]
-    },
-    {
-      group: 'Backend & Tooling',
-      lead: [
-        'PHP & MySQL',
-        'Git & GitHub',
-        'Vite & Webpack',
-        'WP Engine & Cloudways',
-        'Figma Design Handoff'
-      ]
-    }
-  ];
+  const skillCategories = SKILL_GROUPS.map((group) => ({
+    group: group.category,
+    lead: group.skills.map((skill) => skill.name)
+  }));
 
   return (
     <section 
@@ -62,7 +24,7 @@ export default function SkillsRadar() {
             Technical Stack
           </h2>
           <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-slate-400">
-            A production-proven technology stack built over 15+ years of delivering custom commercial web solutions.
+            WordPress, Shopify, frontend, performance, SEO, analytics, and AI-assisted workflows.
           </p>
         </div>
 
@@ -113,9 +75,11 @@ export default function SkillsRadar() {
                 className="flex flex-col gap-0.5 border-b border-white/5 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
               >
                 <span className="font-bold text-white shrink-0">{lang.name}</span>
-                <span className="text-slate-400 text-xs sm:text-sm sm:text-right leading-relaxed">
-                  {lang.level}
-                </span>
+                {lang.level ? (
+                  <span className="text-slate-400 text-xs sm:text-sm sm:text-right leading-relaxed">
+                    {lang.level}
+                  </span>
+                ) : null}
               </li>
             ))}
           </ul>

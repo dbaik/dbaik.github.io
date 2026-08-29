@@ -5,7 +5,7 @@ import {
   ArrowUpRight, ExternalLink, X, 
   CheckCircle2, Info
 } from 'lucide-react';
-import { PROJECTS_DATA } from '../data/portfolioData';
+import { FEATURED_PROJECT_IDS, PROJECTS_DATA } from '../data/portfolioData';
 import { COVER_IMAGES } from '../data/coverImages';
 import { Project } from '../types';
 import { BrowserFrame } from './BrowserFrame';
@@ -21,7 +21,9 @@ export default function ProjectsShowcase() {
   const triggerButtonRef = useRef<HTMLElement | null>(null);
   const modalCloseBtnRef = useRef<HTMLButtonElement | null>(null);
 
-  const featuredProjects = PROJECTS_DATA.filter((p) => p.featured);
+  const featuredProjects = FEATURED_PROJECT_IDS
+    .map((id) => PROJECTS_DATA.find((project) => project.id === id))
+    .filter((project): project is Project => project !== undefined);
   
   const archiveProjects = selectedCategory === 'all'
     ? PROJECTS_DATA
@@ -141,7 +143,7 @@ export default function ProjectsShowcase() {
               </h2>
             </div>
             <p className="max-w-md font-sans text-xs sm:text-sm text-slate-400 leading-relaxed">
-              Selected production work across custom WordPress, Gutenberg, and Shopify builds. Hover or tap any project to reveal technical details.
+              Selected work from the current CV: Shopify storefronts and custom WordPress themes. Hover or tap a project for technical details.
             </p>
           </div>
 
@@ -153,11 +155,11 @@ export default function ProjectsShowcase() {
               return (
                 <motion.article
                   key={project.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.08 }}
-                  className="group/card relative flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-6 backdrop-blur-xl hover:border-white/20 transition-all shadow-lg overflow-hidden"
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.4, delay: idx * 0.06, ease: 'easeOut' }}
+                  className="group/card relative flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-6 backdrop-blur-xl hover:border-white/20 transition-colors shadow-lg overflow-hidden"
                 >
                   {/* Default Top Bar: Short Eyebrow + Project Title */}
                   <div className="flex items-start justify-between gap-3 mb-3.5 sm:mb-4">
@@ -197,7 +199,7 @@ export default function ProjectsShowcase() {
                   </div>
 
                   {/* Visual Work First: BrowserFrame with Progressive Disclosure Overlay */}
-                  {projectCoverImage(project) && (
+                  {projectCoverImage(project) ? (
                     <div className="relative mt-1">
                       <BrowserFrame
                         src={projectCoverImage(project)!}
@@ -261,6 +263,43 @@ export default function ProjectsShowcase() {
                           </div>
                         </div>
                       </BrowserFrame>
+                    </div>
+                  ) : (
+                    <div className="relative mt-1 flex flex-1 flex-col justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-5">
+                      <p className="font-sans text-sm text-slate-300 leading-relaxed">
+                        {project.description}
+                      </p>
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs text-slate-400">
+                          {project.technologies.slice(0, 4).map((tech, i) => (
+                            <span key={tech} className="inline-flex items-center gap-1.5">
+                              <span>{tech}</span>
+                              {i < Math.min(project.technologies.length, 4) - 1 && (
+                                <span className="text-slate-600 font-normal select-none">·</span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => handleOpenModal(project, e)}
+                            className="rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 px-3 py-1.5 font-mono text-xs font-semibold text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                          >
+                            Case Study
+                          </button>
+                          <a
+                            href={project.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 font-mono text-xs font-semibold inline-flex items-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                            title={`Visit ${project.title} live site`}
+                          >
+                            <span>Visit</span>
+                            <ExternalLink size={12} />
+                          </a>
+                        </div>
+                      </div>
                     </div>
                   )}
 

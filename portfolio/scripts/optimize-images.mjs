@@ -21,6 +21,7 @@ const PROJECT_COVERS = [
   { source: 'image (4).png', slug: 'eleven', width: 1376, height: 768 },
   { source: 'image.png', slug: 'schoolhouse', width: 1376, height: 768 },
   { source: 'gaido-source.png', slug: 'gaido', width: 1376, height: 880, legacySource: 'gaido.jpg' },
+  { source: 'energy-coalition.jpg', slug: 'energy', width: 1376, height: 768 },
 ];
 
 function ensureDir(dir) {

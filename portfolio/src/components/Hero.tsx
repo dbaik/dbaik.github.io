@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown, ArrowUpRight, Github } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
 import { scrollToSection } from '../utils/scroll';
 
@@ -184,109 +185,112 @@ export default function Hero() {
   }, []);
 
   return (
-    <section 
+    <section
       ref={heroRef}
-      id="hero" 
-      className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden bg-[#070b15] pt-32 pb-16 px-4 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      id="hero"
+      className="relative flex min-h-0 flex-col justify-center overflow-hidden bg-[#070b15] pt-24 pb-0 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
-      {/* Subtle ambient backdrop glow */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
       </div>
 
-      {/* Interactive technical layout grid motion layer */}
       <HeroVisualGrid containerRef={heroRef} />
 
-      <div className="relative z-10 mx-auto max-w-6xl w-full">
-        
-        <div
-          ref={statusRef}
-          id="hero-status"
-          className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <p className="font-mono text-[11px] sm:text-xs uppercase tracking-widest text-slate-500">
-            WordPress <span className="text-slate-600" aria-hidden="true">·</span> Shopify{' '}
-            <span className="text-slate-600" aria-hidden="true">·</span> Figma to production
-          </p>
-          <p className="inline-flex items-center gap-2 font-mono text-[11px] sm:text-xs text-slate-400">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
-            Available for selected work
-          </p>
-        </div>
-
-        <div className="space-y-5">
-          <div
-            className="inline-block"
-            style={{ perspective: '800px', perspectiveOrigin: 'left center' }}
-          >
-            <h1
-              ref={namePlaneRef}
-              id="hero-name"
-              className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              Dmitry Bashkatov
-            </h1>
-          </div>
-
-          <div
-            ref={midgroundRef}
-            className="origin-left"
-            style={{ transformStyle: 'preserve-3d' }}
-          >
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <div className="lg:col-span-7">
             <div
-              ref={headlineRef}
-              id="hero-tagline"
+              ref={statusRef}
+              id="hero-status"
+              className="mb-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1"
             >
-              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-snug max-w-3xl">
-                Pixel-perfect for users. <br className="hidden sm:inline" />
-                Editable for teams. <br className="hidden sm:inline" />
-                Maintainable for developers.
-              </h2>
+              <p className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-slate-400">
+                WordPress <span aria-hidden="true">·</span> Shopify <span aria-hidden="true">·</span> Figma to production
+              </p>
+              <p className="inline-flex items-center gap-2 font-mono text-[11px] sm:text-xs text-slate-400">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                {PERSONAL_INFO.availability}
+              </p>
+            </div>
+
+            <div className="space-y-5">
+              <div
+                className="inline-block"
+                style={{ perspective: '800px', perspectiveOrigin: 'left center' }}
+              >
+                <h1
+                  ref={namePlaneRef}
+                  id="hero-name"
+                  className="font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  {PERSONAL_INFO.name}
+                </h1>
+              </div>
+
+              <div
+                ref={midgroundRef}
+                className="origin-left"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div ref={headlineRef} id="hero-tagline">
+                  <h2 className="font-display text-2xl sm:text-3xl lg:text-[2rem] xl:text-4xl font-bold text-slate-100 leading-snug max-w-2xl">
+                    Pixel-perfect for users. <br className="hidden sm:inline" />
+                    Editable for teams. <br className="hidden sm:inline" />
+                    Maintainable for developers.
+                  </h2>
+                </div>
+              </div>
+
+              <p
+                ref={descRef}
+                id="hero-desc"
+                className="font-sans text-sm sm:text-base text-slate-400 max-w-[38rem] leading-relaxed"
+              >
+                {PERSONAL_INFO.experienceSummary}
+              </p>
+            </div>
+
+            <div
+              ref={ctaRef}
+              id="hero-cta"
+              className="mt-8 flex flex-wrap items-center gap-4"
+            >
+              <button
+                onClick={() => scrollTo('featured-work')}
+                className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
+              >
+                <span>Explore Featured Work</span>
+                <ArrowDown size={15} />
+              </button>
+
+              <button
+                onClick={() => scrollTo('archive')}
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
+              >
+                <span>View All Projects</span>
+              </button>
+
+              <a
+                href={PERSONAL_INFO.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-3 font-mono text-xs text-slate-400 hover:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
+              >
+                <Github size={15} />
+                <span>github.com/dbaik</span>
+                <ArrowUpRight size={13} className="text-slate-400" />
+              </a>
             </div>
           </div>
 
-          <p
-            ref={descRef}
-            id="hero-desc"
-            className="font-sans text-sm sm:text-base text-slate-400 max-w-[700px] leading-relaxed"
-          >
-            15+ years of frontend experience, building production websites from Figma across custom WordPress themes, Gutenberg blocks, and Shopify Liquid storefronts.
-          </p>
+          <div className="lg:col-span-5 flex justify-center lg:justify-end lg:pb-1">
+            <AsciiArtCanvas
+              src="/hero-portrait.jpg"
+              label="ASCII portrait of Dmitry Bashkatov"
+            />
+          </div>
         </div>
-
-        <div
-          ref={ctaRef}
-          id="hero-cta"
-          className="mt-8 flex flex-wrap items-center gap-4"
-        >
-          <button
-            onClick={() => scrollTo('featured-work')}
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
-          >
-            <span>Explore Featured Work</span>
-            <ArrowDown size={15} />
-          </button>
-
-          <button
-            onClick={() => scrollTo('archive')}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
-          >
-            <span>View All Projects</span>
-          </button>
-
-          <a
-            href={PERSONAL_INFO.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-3 font-mono text-xs text-slate-400 hover:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
-          >
-            <Github size={15} />
-            <span>github.com/dbaik</span>
-            <ArrowUpRight size={13} className="text-slate-400" />
-          </a>
-        </div>
-
       </div>
     </section>
   );
