@@ -19,14 +19,14 @@ interface Glyph {
 }
 
 const CHARS = ' .:-=+*#%@'.split('');
-const PORTRAIT_ASPECT = 1;
+const SOURCE_ASPECT = 723 / 1024;
 const PAPER_LUMA = 0.93;
 const MIN_INK = 0.07;
 
 function canvasBox(viewportWidth: number): { w: number; h: number } {
-  const w =
-    viewportWidth <= 480 ? 260 : viewportWidth <= 900 ? 300 : viewportWidth <= 1280 ? 420 : 460;
-  return { w, h: Math.round(w / PORTRAIT_ASPECT) };
+  const h =
+    viewportWidth <= 480 ? 340 : viewportWidth <= 900 ? 400 : viewportWidth <= 1280 ? 520 : 560;
+  return { w: Math.round(h * SOURCE_ASPECT), h };
 }
 
 function sampleLuma(data: Uint8ClampedArray, width: number, height: number, x: number, y: number): number {
@@ -76,13 +76,16 @@ function processImage(img: HTMLImageElement, width: number, height: number): Gly
   let drawWidth = sampleW;
   let drawHeight = sampleH;
   if (imgAspect > boxAspect) {
-    drawWidth = sampleW;
-    drawHeight = sampleW / imgAspect;
-  } else {
     drawHeight = sampleH;
     drawWidth = sampleH * imgAspect;
+  } else {
+    drawWidth = sampleW;
+    drawHeight = sampleW / imgAspect;
   }
-  ctx.drawImage(img, (sampleW - drawWidth) / 2, (sampleH - drawHeight) / 2, drawWidth, drawHeight);
+  const focusY = 0.19;
+  const dx = (sampleW - drawWidth) / 2;
+  const dy = (sampleH - drawHeight) * focusY;
+  ctx.drawImage(img, dx, dy, drawWidth, drawHeight);
 
   const { data } = ctx.getImageData(0, 0, sampleW, sampleH);
   const fontSize = width <= 270 ? 6 : 7;
@@ -136,7 +139,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
   const pointerRef = useRef({ x: -1000, y: -1000, active: false });
   const startTimeRef = useRef(0);
   const [box, setBox] = useState(() =>
-    typeof window === 'undefined' ? { w: 420, h: 420 } : canvasBox(window.innerWidth),
+    typeof window === 'undefined' ? { w: 367, h: 520 } : canvasBox(window.innerWidth),
   );
   const [ready, setReady] = useState(false);
 
