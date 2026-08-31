@@ -36,7 +36,12 @@ console.log('Publishing to site root (index.html + assets only)...');
 run('rsync', ['-a', '--delete', `${distAssets}/`, path.join(siteRoot, 'assets/')], portfolioRoot);
 copyFile(distIndex, path.join(siteRoot, 'index.html'));
 
-for (const fileName of ['favicon.ico', 'favicon.svg', 'apple-touch-icon.png']) {
+for (const fileName of [
+  'favicon.ico',
+  'favicon.svg',
+  'apple-touch-icon.png',
+  'hero-portrait.jpg',
+]) {
   const from = path.join(distDir, fileName);
   if (fs.existsSync(from)) {
     copyFile(from, path.join(siteRoot, fileName));
