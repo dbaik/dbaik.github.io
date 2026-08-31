@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm, ValidationError } from '@formspree/react'
-import { Mail, Send, CheckCircle2, Copy, Check, Github, ArrowUpRight } from 'lucide-react'
+import { Mail, Send, CheckCircle2, Copy, Check } from 'lucide-react'
 import { PERSONAL_INFO } from '../data/portfolioData'
 
 const FORMSPREE_FORM_ID = 'xaeywwjb'
@@ -209,18 +209,6 @@ export default function ContactSection() {
                 </button>
               </div>
 
-              <a
-                href={PERSONAL_INFO.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-slate-300 hover:text-white hover:bg-white/10 font-mono text-xs transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-              >
-                <div className="flex items-center gap-2">
-                  <Github size={14} className="text-slate-400" />
-                  <span>github.com/dbaik</span>
-                </div>
-                <ArrowUpRight size={13} className="text-slate-400" />
-              </a>
             </div>
           </div>
 

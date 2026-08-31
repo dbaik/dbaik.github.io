@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { ArrowDown, ArrowUpRight, Github } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
@@ -278,16 +278,6 @@ export default function Hero() {
                 <span>View All Projects</span>
               </button>
 
-              <a
-                href={PERSONAL_INFO.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-3 font-mono text-xs text-slate-400 hover:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
-              >
-                <Github size={15} />
-                <span>github.com/dbaik</span>
-                <ArrowUpRight size={13} className="text-slate-400" />
-              </a>
             </div>
           </div>
 

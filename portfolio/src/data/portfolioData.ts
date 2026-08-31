@@ -10,6 +10,7 @@ export const PERSONAL_INFO = {
   availability: 'Open to B2B and contract opportunities.',
   email: 'dbashkatoff@gmail.com',
   github: 'https://github.com/dbaik',
+  linkedin: 'https://www.linkedin.com/in/dbashkatoff/',
   experienceYears: 15,
   howIWork: [
     {

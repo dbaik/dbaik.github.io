@@ -362,6 +362,23 @@ html.lenis, html.lenis body {
   animation-delay: 260ms;
 }
 
+@keyframes fan-fall {
+  from {
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    opacity: 0.95;
+  }
+  to {
+    transform: translate3d(var(--fan-drift, 0px), 112vh, 0) rotate(var(--fan-spin, 480deg));
+    opacity: 0.15;
+  }
+}
+
+.fan-fall {
+  animation-name: fan-fall;
+  animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation-fill-mode: forwards;
+}
+
 @keyframes marquee-shift {
   from {
     transform: translateX(0);
@@ -388,9 +405,9 @@ html.lenis, html.lenis body {
     scroll-behavior: auto !important;
   }
 
-  *:not(.marquee-track):not(.marquee-track *),
-  *:not(.marquee-track):not(.marquee-track *)::before,
-  *:not(.marquee-track):not(.marquee-track *)::after {
+  *:not(.marquee-track):not(.marquee-track *):not(.fan-fall):not(.fan-fall *),
+  *:not(.marquee-track):not(.marquee-track *):not(.fan-fall):not(.fan-fall *)::before,
+  *:not(.marquee-track):not(.marquee-track *):not(.fan-fall):not(.fan-fall *)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
