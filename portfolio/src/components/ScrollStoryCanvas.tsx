@@ -5,7 +5,6 @@ import {
   Play, 
   RotateCcw, 
   ArrowRight,
-  MousePointer
 } from 'lucide-react';
 import { SCROLL_STORY_FRAMES } from '../data/portfolioData';
 
@@ -1105,7 +1104,7 @@ export default function ScrollStoryCanvas() {
   }, [drawCanvas]);
 
   // Pointer Interaction Handlers for Inspection
-  const updatePointer = (clientX: number, clientY: number, isTouchEvent = false) => {
+  const updatePointer = (clientX: number, clientY: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -1115,24 +1114,18 @@ export default function ScrollStoryCanvas() {
 
     const semanticObj = getSemanticObjectAt(x, y, rect.width, rect.height);
     if (semanticObj) {
-      if (isTouch || isTouchEvent) {
-        updateInspectorDisplay(semanticObj);
-      } else {
-        updateInspectorDisplay(`${semanticObj} · ${Math.round(x)}, ${Math.round(y)}`);
-      }
-    } else if (isTouch || isTouchEvent) {
-      updateInspectorDisplay(null);
+      updateInspectorDisplay(semanticObj);
     } else {
-      updateInspectorDisplay(`${Math.round(x)}, ${Math.round(y)}`);
+      updateInspectorDisplay(null);
     }
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    updatePointer(e.clientX, e.clientY, false);
+    updatePointer(e.clientX, e.clientY);
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    updatePointer(e.clientX, e.clientY, true);
+    updatePointer(e.clientX, e.clientY);
   };
 
   const handlePointerLeave = () => {
@@ -1202,7 +1195,7 @@ export default function ScrollStoryCanvas() {
         </div>
 
         {/* Interactive Workspace Panel: 2-Column Balanced Architecture (Top-aligned, independent column heights) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-7 backdrop-blur-xl">
+        <div className="scheme-dark grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start rounded-2xl border border-white/10 bg-slate-950/80 p-5 sm:p-7 backdrop-blur-xl">
           
           {/* Left Column: STAGE BODY (Stable max-height grid stack) + CONTROLS (6 cols) */}
           <div className="lg:col-span-6 flex flex-col space-y-4 h-full">
@@ -1342,18 +1335,14 @@ export default function ScrollStoryCanvas() {
               </div>
 
               {/* Integrated Bottom Status Bar - Sole Inspection State */}
-              <div className="flex items-center justify-between px-3 sm:px-3.5 bg-slate-950/80 border-t border-white/5 font-mono text-xs text-slate-400 shrink-0 h-8 min-h-[32px] overflow-hidden">
-                <span className="whitespace-nowrap shrink-0 text-slate-400">STAGE INSPECTOR · {currentStage.stageNumber.split(' / ')[0]}</span>
-                <div className="text-slate-400 truncate ml-2 min-w-0 flex items-center justify-end gap-1.5">
-                  <MousePointer size={12} className="text-indigo-400 shrink-0" />
-                  <span className="truncate whitespace-nowrap">
-                    <span ref={inspectorPrimaryRef} className="text-indigo-200 font-semibold" />
-                    <span ref={inspectorSecondaryRef} className="text-slate-400 ml-1.5 hidden md:inline" />
-                    <span ref={inspectorPlaceholderRef} className="text-slate-400 whitespace-nowrap">
-                      {isTouch ? 'Tap elements to inspect' : 'Hover elements to inspect'}
-                    </span>
+              <div className="flex items-center px-3 sm:px-3.5 bg-slate-950/80 border-t border-white/5 font-mono text-xs shrink-0 h-8 min-h-[32px] overflow-hidden">
+                <span className="truncate min-w-0 text-slate-500">
+                  <span ref={inspectorPrimaryRef} className="text-slate-300" />
+                  <span ref={inspectorSecondaryRef} className="hidden lg:inline" />
+                  <span ref={inspectorPlaceholderRef}>
+                    {isTouch ? 'Tap to inspect' : 'Hover to inspect'}
                   </span>
-                </div>
+                </span>
               </div>
 
             </div>

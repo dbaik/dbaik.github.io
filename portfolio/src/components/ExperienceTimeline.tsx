@@ -20,12 +20,12 @@ export default function ExperienceTimeline() {
             Professional Experience
           </h2>
           <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-slate-400">
-            15+ years of continuous frontend development across agencies, remote product teams, and high-scale production client builds.
+            Independent contractor since 2017, including an embedded assignment with Goji Labs. 15+ years in frontend across WordPress and Shopify.
           </p>
         </div>
 
         {/* Compact Clean Editorial Timeline */}
-        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-3 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-[1px] before:bg-white/10">
+        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-3 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-px before:bg-[var(--line)]">
           {EXPERIENCE_DATA.map((exp, idx) => {
             const isRecent = idx < 2;
 
@@ -43,7 +43,7 @@ export default function ExperienceTimeline() {
                   className={`absolute left-3 sm:left-4 top-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-[#070b15] transition-all z-10 ${
                     isRecent 
                       ? 'h-3.5 w-3.5 border-indigo-400' 
-                      : 'h-2.5 w-2.5 border-slate-600 group-hover:border-slate-400'
+                      : 'h-2.5 w-2.5 border-indigo-400/35 group-hover:border-indigo-400/55'
                   }`} 
                 />
 
@@ -58,7 +58,7 @@ export default function ExperienceTimeline() {
                       }`}>
                         {exp.company}
                       </h3>
-                      <span className="text-slate-600">·</span>
+                      <span className="text-slate-400/60">·</span>
                       <span className="font-mono text-xs sm:text-sm font-semibold text-indigo-400">
                         {exp.role}
                       </span>
@@ -66,6 +66,7 @@ export default function ExperienceTimeline() {
 
                     <div className="font-mono text-xs text-slate-400 shrink-0">
                       {exp.period}
+                      {exp.location ? ` · ${exp.location}` : ''}
                     </div>
                   </div>
 

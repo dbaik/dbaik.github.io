@@ -82,6 +82,16 @@ import gaido_w1376_avif from '../assets/images/covers/gaido-w1376.avif';
 import gaido_w1376_webp from '../assets/images/covers/gaido-w1376.webp';
 import gaido_w2752_avif from '../assets/images/covers/gaido-w2752.avif';
 import gaido_w2752_webp from '../assets/images/covers/gaido-w2752.webp';
+import energy_w640_avif from '../assets/images/covers/energy-w640.avif';
+import energy_w640_webp from '../assets/images/covers/energy-w640.webp';
+import energy_w688_avif from '../assets/images/covers/energy-w688.avif';
+import energy_w688_webp from '../assets/images/covers/energy-w688.webp';
+import energy_w960_avif from '../assets/images/covers/energy-w960.avif';
+import energy_w960_webp from '../assets/images/covers/energy-w960.webp';
+import energy_w1376_avif from '../assets/images/covers/energy-w1376.avif';
+import energy_w1376_webp from '../assets/images/covers/energy-w1376.webp';
+import energy_w2752_avif from '../assets/images/covers/energy-w2752.avif';
+import energy_w2752_webp from '../assets/images/covers/energy-w2752.webp';
 
 export const COVER_IMAGES = {
   wwf: coverImageSet([
@@ -140,4 +150,11 @@ export const COVER_IMAGES = {
       { width: 1376, avif: gaido_w1376_avif, webp: gaido_w1376_webp },
       { width: 2752, avif: gaido_w2752_avif, webp: gaido_w2752_webp },
     ], 1376, 880),
+  energy: coverImageSet([
+      { width: 640, avif: energy_w640_avif, webp: energy_w640_webp },
+      { width: 688, avif: energy_w688_avif, webp: energy_w688_webp },
+      { width: 960, avif: energy_w960_avif, webp: energy_w960_webp },
+      { width: 1376, avif: energy_w1376_avif, webp: energy_w1376_webp },
+      { width: 2752, avif: energy_w2752_avif, webp: energy_w2752_webp },
+    ], 1376, 768),
 } satisfies CoverImageRegistry;

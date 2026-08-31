@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { ArrowDown, ArrowUpRight, Github, CheckCircle2 } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Github } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
 import { scrollToSection } from '../utils/scroll';
 
@@ -9,10 +10,8 @@ export default function Hero() {
   const statusRef = useRef<HTMLDivElement | null>(null);
   const namePlaneRef = useRef<HTMLHeadingElement | null>(null);
   const midgroundRef = useRef<HTMLDivElement | null>(null);
-  const roleRef = useRef<HTMLParagraphElement | null>(null);
   const headlineRef = useRef<HTMLDivElement | null>(null);
   const descRef = useRef<HTMLParagraphElement | null>(null);
-  const proofRef = useRef<HTMLDivElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
 
   const scrollTo = (id: string) => {
@@ -152,15 +151,9 @@ export default function Hero() {
           const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
           tl.fromTo(statusRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0)
             .fromTo(namePlaneRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.38 }, 0.06)
-            .fromTo(
-              [roleRef.current, headlineRef.current],
-              { opacity: 0, y: 12 },
-              { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 },
-              0.12,
-            )
+            .fromTo(headlineRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, 0.12)
             .fromTo(descRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.18)
-            .fromTo(proofRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.24)
-            .fromTo(ctaRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.3);
+            .fromTo(ctaRef.current, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 0.26);
         }, heroRef);
       }
 
@@ -192,143 +185,112 @@ export default function Hero() {
   }, []);
 
   return (
-    <section 
+    <section
       ref={heroRef}
-      id="hero" 
-      className="relative flex min-h-[90vh] flex-col justify-center overflow-hidden bg-[#070b15] pt-32 pb-16 px-4 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      id="hero"
+      className="relative flex min-h-0 flex-col justify-center overflow-hidden bg-[#070b15] pt-24 pb-0 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
-      {/* Subtle ambient backdrop glow */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
       </div>
 
-      {/* Interactive technical layout grid motion layer */}
       <HeroVisualGrid containerRef={heroRef} />
 
-      <div className="relative z-10 mx-auto max-w-6xl w-full">
-        
-        {/* 1. Availability Status */}
-        <div
-          ref={statusRef}
-          id="hero-status"
-          className="flex items-center gap-3 mb-5"
-        >
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-slate-300 backdrop-blur-sm">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Available for selected work</span>
-          </div>
-        </div>
-
-        {/* 2. Primary Role & Headline */}
-        <div className="space-y-3">
-          {/* Foreground Layer (100%): 3D-reactive Name Plane */}
-          <div 
-            className="inline-block" 
-            style={{ perspective: '800px', perspectiveOrigin: 'left center' }}
-          >
-            <h1 
-              ref={namePlaneRef}
-              id="hero-name"
-              className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
-              style={{ transformStyle: 'preserve-3d' }}
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
+          <div className="lg:col-span-7">
+            <div
+              ref={statusRef}
+              id="hero-status"
+              className="mb-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1"
             >
-              Dmitry Bashkatov
-            </h1>
-          </div>
+              <p className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-slate-400">
+                WordPress <span aria-hidden="true">·</span> Shopify <span aria-hidden="true">·</span> Figma to production
+              </p>
+              <p className="inline-flex items-center gap-2 font-mono text-[11px] sm:text-xs text-slate-400">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500" />
+                {PERSONAL_INFO.availability}
+              </p>
+            </div>
 
-          {/* Midground Layer (25-35%): Role + Positioning Headline as a single cohesive unit */}
-          <div 
-            ref={midgroundRef}
-            className="space-y-3 origin-left"
-            style={{ transformStyle: 'preserve-3d' }}
-          >
-            <p 
-              ref={roleRef}
-              id="hero-role"
-              className="font-mono text-base sm:text-lg text-indigo-400 font-semibold tracking-wide"
-            >
-              Web Developer · WordPress & Shopify
-            </p>
+            <div className="space-y-5">
+              <div
+                className="inline-block"
+                style={{ perspective: '800px', perspectiveOrigin: 'left center' }}
+              >
+                <h1
+                  ref={namePlaneRef}
+                  id="hero-name"
+                  className="font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
+                  style={{ transformStyle: 'preserve-3d' }}
+                >
+                  {PERSONAL_INFO.name}
+                </h1>
+              </div>
 
-            {/* 3. Central Brand Core Idea */}
-            <div 
-              ref={headlineRef}
-              id="hero-tagline"
-              className="pt-1.5 pb-0.5"
+              <div
+                ref={midgroundRef}
+                className="origin-left"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                <div ref={headlineRef} id="hero-tagline">
+                  <h2 className="font-display text-2xl sm:text-3xl lg:text-[2rem] xl:text-4xl font-bold text-slate-100 leading-snug max-w-2xl">
+                    Pixel-perfect for users. <br className="hidden sm:inline" />
+                    Editable for teams. <br className="hidden sm:inline" />
+                    Maintainable for developers.
+                  </h2>
+                </div>
+              </div>
+
+              <p
+                ref={descRef}
+                id="hero-desc"
+                className="font-sans text-sm sm:text-base text-slate-400 max-w-[38rem] leading-relaxed"
+              >
+                {PERSONAL_INFO.experienceSummary}
+              </p>
+            </div>
+
+            <div
+              ref={ctaRef}
+              id="hero-cta"
+              className="mt-8 flex flex-wrap items-center gap-4"
             >
-              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-100 leading-snug max-w-3xl">
-                Pixel-perfect for users. <br className="hidden sm:inline" />
-                Editable for teams. <br className="hidden sm:inline" />
-                Maintainable for developers.
-              </h2>
+              <button
+                onClick={() => scrollTo('featured-work')}
+                className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
+              >
+                <span>Explore Featured Work</span>
+                <ArrowDown size={15} />
+              </button>
+
+              <button
+                onClick={() => scrollTo('archive')}
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
+              >
+                <span>View All Projects</span>
+              </button>
+
+              <a
+                href={PERSONAL_INFO.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-3 font-mono text-xs text-slate-400 hover:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
+              >
+                <Github size={15} />
+                <span>github.com/dbaik</span>
+                <ArrowUpRight size={13} className="text-slate-400" />
+              </a>
             </div>
           </div>
 
-          {/* 4. Supporting Description (constrained to ~680-720px, stable static plane) */}
-          <p 
-            ref={descRef}
-            id="hero-desc"
-            className="font-sans text-sm sm:text-base text-slate-400 max-w-[700px] leading-relaxed"
-          >
-            15+ years of frontend experience, building production websites from Figma across custom WordPress themes, Gutenberg blocks, and Shopify Liquid storefronts.
-          </p>
-        </div>
-
-        {/* 5. Proof Line - Clean spacing separation without competing border-lines */}
-        <div
-          ref={proofRef}
-          id="hero-proof"
-          className="mt-6 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs sm:text-sm font-mono py-1"
-        >
-          <div className="flex items-center gap-2 text-slate-300">
-            <CheckCircle2 size={14} className="text-indigo-400 shrink-0" />
-            <span>15+ Years of Frontend Experience</span>
-          </div>
-          <span className="hidden sm:inline text-slate-700">·</span>
-          <div className="flex items-center gap-2 text-slate-300">
-            <CheckCircle2 size={14} className="text-indigo-400 shrink-0" />
-            <span>WordPress & Shopify Specialist</span>
-          </div>
-          <span className="hidden sm:inline text-slate-700">·</span>
-          <div className="flex items-center gap-2 text-slate-300">
-            <CheckCircle2 size={14} className="text-indigo-400 shrink-0" />
-            <span>Performance & Core Web Vitals</span>
+          <div className="lg:col-span-5 flex justify-center lg:justify-end lg:pb-1">
+            <AsciiArtCanvas
+              src="/hero-portrait.jpg"
+              label="ASCII portrait of Dmitry Bashkatov"
+            />
           </div>
         </div>
-
-        {/* 6. Action CTAs */}
-        <div
-          ref={ctaRef}
-          id="hero-cta"
-          className="mt-6 flex flex-wrap items-center gap-4"
-        >
-          <button
-            onClick={() => scrollTo('featured-work')}
-            className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white shadow-lg shadow-indigo-600/25 hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
-          >
-            <span>Explore Featured Work</span>
-            <ArrowDown size={15} />
-          </button>
-
-          <button
-            onClick={() => scrollTo('archive')}
-            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
-          >
-            <span>View All Projects</span>
-          </button>
-
-          <a
-            href={PERSONAL_INFO.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-3 font-mono text-xs text-slate-400 hover:text-slate-200 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
-          >
-            <Github size={15} />
-            <span>github.com/dbaik</span>
-            <ArrowUpRight size={13} className="text-slate-400" />
-          </a>
-        </div>
-
       </div>
     </section>
   );

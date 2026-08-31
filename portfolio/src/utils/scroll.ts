@@ -15,9 +15,9 @@ export function scrollToSection(
 
   if (!targetEl) return;
 
-  // Sections contain internal top padding (py-14 / py-20 / py-24), so aligning target's top border
-  // to viewport top (offset: 0) ensures the preceding section is completely scrolled out of view.
-  const targetOffset = customOffset ?? 0;
+  // Sections contain internal top padding (py-14 / py-20 / py-24).
+  // A 20px offset leaves a small gap below the sticky header.
+  const targetOffset = customOffset ?? 20;
 
   const globalLenis = (window as unknown as { __lenis?: { scrollTo: (target: unknown, opts: unknown) => void } }).__lenis;
 

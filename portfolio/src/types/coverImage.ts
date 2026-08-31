@@ -18,7 +18,8 @@ export type CoverImageSlug =
   | 'bopper'
   | 'eleven'
   | 'schoolhouse'
-  | 'gaido';
+  | 'gaido'
+  | 'energy';
 
 export type CoverImageRegistry = Record<CoverImageSlug, CoverImageSet>;
 

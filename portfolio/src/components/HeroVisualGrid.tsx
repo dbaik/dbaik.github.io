@@ -4,6 +4,20 @@ interface HeroVisualGridProps {
   containerRef: React.RefObject<HTMLElement | null>;
 }
 
+function isLightScheme(): boolean {
+  const html = document.documentElement;
+  if (html.classList.contains('scheme-light')) return true;
+  if (html.classList.contains('scheme-dark')) return false;
+  return window.matchMedia('(prefers-color-scheme: light)').matches;
+}
+
+function gridInk(alpha: number): string {
+  if (isLightScheme()) {
+    return `rgba(15, 23, 42, ${Math.min(1, alpha * 2.2)})`;
+  }
+  return `rgba(255, 255, 255, ${alpha})`;
+}
+
 interface GridNode {
   baseX: number;
   baseY: number;
@@ -123,7 +137,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
         const y = 16 + r * ((height - 32) / Math.max(1, rows - 1));
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.strokeStyle = gridInk(0.04);
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -135,7 +149,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
-        ctx.strokeStyle = `rgba(255, 255, 255, ${colAlpha})`;
+        ctx.strokeStyle = gridInk(colAlpha);
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -226,7 +240,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
             }
           }
         }
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.strokeStyle = gridInk(0.04);
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -250,7 +264,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
           }
         }
         const colAlpha = 0.035 + (c / cols) * 0.045;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${colAlpha})`;
+        ctx.strokeStyle = gridInk(colAlpha);
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -377,6 +391,18 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
     };
     hoverMediaQuery.addEventListener('change', handleHoverMediaChange);
 
+    const redrawForScheme = () => {
+      if (prefersReducedMotion || !hasFineHover) {
+        drawStaticGrid();
+      } else {
+        wakeUp();
+      }
+    };
+    const schemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    schemeMedia.addEventListener('change', redrawForScheme);
+    const schemeObserver = new MutationObserver(redrawForScheme);
+    schemeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
     // Visibility change
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -422,6 +448,8 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
       observer.disconnect();
       mediaQuery.removeEventListener('change', handleMediaChange);
       hoverMediaQuery.removeEventListener('change', handleHoverMediaChange);
+      schemeMedia.removeEventListener('change', redrawForScheme);
+      schemeObserver.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       container.removeEventListener('pointermove', handlePointerMove);
       container.removeEventListener('pointerenter', handlePointerEnter);
@@ -441,7 +469,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
       <div 
         className="absolute inset-0 z-1 pointer-events-none" 
         style={{
-          background: 'radial-gradient(ellipse 75% 70% at 22% 52%, rgba(7, 11, 21, 0.82) 0%, rgba(7, 11, 21, 0.45) 55%, transparent 100%)',
+          background: 'radial-gradient(ellipse 75% 70% at 22% 52%, color-mix(in srgb, var(--canvas) 82%, transparent) 0%, color-mix(in srgb, var(--canvas) 45%, transparent) 55%, transparent 100%)',
         }}
       />
       

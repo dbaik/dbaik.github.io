@@ -5,7 +5,9 @@ export const PERSONAL_INFO = {
   nickname: 'dbaik',
   title: 'Web Developer | WordPress & Shopify',
   subtitle: 'Pixel-perfect for users. Editable for teams. Maintainable for developers.',
-  experienceSummary: '15+ years of frontend experience, building production websites from Figma across WordPress and Shopify.',
+  experienceSummary:
+    '15+ years in frontend development across WordPress and Shopify, from Figma to production. Custom themes, Gutenberg/ACF, Liquid, responsive frontend, performance, technical SEO, analytics, and AI-assisted workflows.',
+  availability: 'Open to B2B and contract opportunities.',
   email: 'dbashkatoff@gmail.com',
   github: 'https://github.com/dbaik',
   experienceYears: 15,
@@ -30,28 +32,28 @@ export const PERSONAL_INFO = {
     }
   ],
   coreCompetencies: [
-    'Figma → production: custom WordPress themes and Shopify storefronts, responsive and accurate to design.',
-    'WordPress: custom themes, Gutenberg, ACF, Elementor, and editor-friendly content structures.',
+    'Figma → production: custom WordPress themes and Shopify storefronts.',
+    'WordPress: custom themes, Gutenberg, ACF, Elementor, Polylang, WPML, WooCommerce.',
     'Shopify: Liquid, custom themes, reusable sections and blocks, products, collections, and variants.',
-    'Integrations & e-commerce: Mailchimp, customer artwork uploads, quote/contact flows, and third-party forms.',
-    'Frontend: HTML5/CSS3, SCSS/Sass, JavaScript, jQuery, AJAX, responsive and cross-browser development.',
-    'Motion & performance: GSAP/ScrollTrigger, animations, micro-interactions, Core Web Vitals, and technical SEO.'
+    'Frontend: HTML/CSS, JavaScript, jQuery, AJAX, SCSS/Sass, Tailwind CSS, PHP.',
+    'Performance & SEO: Core Web Vitals, semantic HTML, technical/on-page SEO, AI-search visibility.',
+    'Analytics & AI: GA4, GTM, Meta Pixel; ChatGPT, OpenAI Codex, AI-assisted development, research, documentation, image/video production.'
   ],
   languages: [
-    { name: 'English', level: 'Working proficiency, primarily written communication' },
-    { name: 'Ukrainian', level: 'Native / Fluent' },
-    { name: 'Russian', level: 'Native / Fluent' }
+    { name: 'Russian', level: '' },
+    { name: 'Ukrainian', level: '' },
+    { name: 'English', level: 'Working proficiency; strong reading/writing, basic spoken communication' }
   ],
   education: [
     {
       institution: 'Regional Center of New Information Technologies',
-      degree: 'Web design certificate',
-      period: 'September 2009 – December 2009'
+      degree: 'Web Design Certificate',
+      period: '2009'
     },
     {
       institution: 'State Technology University',
       degree: 'Mechanical Engineer',
-      period: 'September 2002 – July 2007'
+      period: '2002–2007'
     }
   ]
 };
@@ -92,7 +94,7 @@ export const PROJECTS_DATA: Project[] = [
     categoryLabel: 'Shopify · Custom Storefront',
     role: 'Shopify Developer',
     technologies: ['Shopify', 'Liquid', 'HTML', 'SCSS', 'JavaScript', 'jQuery', 'Figma'],
-    description: 'Shopify e-commerce store for custom branded event displays and promotional products for commercial enterprises.',
+    description: 'Custom Shopify theme from Figma using Liquid; reusable sections, artwork uploads, variants, and quote flows.',
     responsibilities: [
       'Built a custom Shopify theme from Figma with Liquid, SCSS/CSS, and JavaScript.',
       'Set up reusable sections so storefront content could be updated without touching theme code.',
@@ -119,7 +121,7 @@ export const PROJECTS_DATA: Project[] = [
     categoryLabel: 'WordPress · LiDAR Tech',
     role: 'WordPress Developer',
     technologies: ['WordPress CMS', 'PHP', 'SCSS', 'JavaScript', 'jQuery', 'Git', 'Figma'],
-    description: 'Marketing website for a sports safety app using LiDAR technology for terrain park jumps.',
+    description: 'Custom WordPress theme from Figma with Gutenberg blocks, animation, and performance work.',
     responsibilities: [
       'Turned the Figma design into a custom WordPress theme for the app\'s marketing site.',
       'Built reusable Gutenberg blocks so marketing content could be updated without touching code.',
@@ -158,7 +160,7 @@ export const PROJECTS_DATA: Project[] = [
       { label: 'Content UX', value: 'Merchant-managed theme sections' }
     ],
     coverKey: 'mochi',
-    featured: true,
+    featured: false,
     accentColor: '#ec4899',
     metrics: { speedScore: 99, loadTime: '0.48s', traffic: 'Global EdTech' }
   },
@@ -172,7 +174,7 @@ export const PROJECTS_DATA: Project[] = [
     categoryLabel: 'WordPress · Web3 Agency',
     role: 'WordPress Developer',
     technologies: ['WordPress CMS', 'PHP', 'SCSS', 'JavaScript', 'jQuery', 'Git', 'Figma'],
-    description: 'Marketing website for a Web3 branding agency featuring dark/light theme behaviors and fluid interactions.',
+    description: 'Custom WordPress theme with Gutenberg, dark/light mode, animations, and micro-interactions.',
     responsibilities: [
       'Built the site as a custom WordPress theme from Figma.',
       'Set up reusable Gutenberg blocks for day-to-day content updates.',
@@ -192,16 +194,41 @@ export const PROJECTS_DATA: Project[] = [
     metrics: { speedScore: 99, loadTime: '0.42s', traffic: 'Web3 Branding' }
   },
   {
+    id: 'the-energy-coalition',
+    slug: 'energycoalition-org',
+    title: 'The Energy Coalition',
+    domain: 'energycoalition.org',
+    url: 'https://energycoalition.org/',
+    category: 'wordpress',
+    categoryLabel: 'WordPress · Energy Nonprofit',
+    role: 'WordPress Developer',
+    technologies: ['WordPress CMS', 'ACF', 'Polylang', 'Mailchimp', 'PHP', 'SCSS', 'JavaScript'],
+    description: 'WordPress redesign using ACF, Polylang, Mailchimp, and responsive custom frontend development.',
+    responsibilities: [
+      'Rebuilt the site as a WordPress redesign with a responsive custom frontend.',
+      'Used ACF for structured, editor-managed content.',
+      'Set up Polylang for multilingual publishing.',
+      'Connected Mailchimp for email and signup flows.'
+    ],
+    highlights: [
+      { label: 'CMS', value: 'ACF + Polylang' },
+      { label: 'Integrations', value: 'Mailchimp' }
+    ],
+    coverKey: 'energy',
+    featured: true,
+    accentColor: '#22c55e'
+  },
+  {
     id: '11-nil',
     slug: '11-nil-com',
-    title: '11-Nil',
+    title: '11-nil',
     domain: '11-nil.com',
     url: 'https://11-nil.com/',
     category: 'shopify',
     categoryLabel: 'Shopify · Retail E-Commerce',
     role: 'Shopify Developer',
     technologies: ['Shopify', 'Liquid', 'HTML', 'SCSS', 'JavaScript', 'jQuery', 'Git', 'Figma'],
-    description: 'Bespoke Shopify e-commerce store delivering a tailored retail shopping experience with custom variant management.',
+    description: 'Liquid theme templates, reusable sections/blocks, responsive product and collection pages.',
     responsibilities: [
       'Customized Shopify theme templates with Liquid and frontend code.',
       'Built reusable sections and blocks for merchant-managed storefront content.',
@@ -480,24 +507,48 @@ export const PROJECTS_DATA: Project[] = [
   }
 ];
 
+export const FEATURED_PROJECT_IDS = [
+  'wwf-canada',
+  'mvp-visuals',
+  '11-nil',
+  'precision-approach-sports',
+  'bopper-media',
+  'the-energy-coalition',
+] as const;
+
 export const EXPERIENCE_DATA: ExperienceItem[] = [
   {
     id: 'valant-current',
     company: 'Valant',
     url: 'https://valant.com',
-    role: 'Frontend Developer',
-    period: 'May 2017 – Aug 2026',
+    role: 'Web / Frontend Developer',
+    period: 'May 2017 – Present',
     durationYears: '',
-    location: 'Remote',
-    current: false,
-    description: 'Custom WordPress themes and Shopify storefronts from Figma. Modular Gutenberg block systems, Shopify Liquid sections, animations with GSAP, and Core Web Vitals optimization.',
+    location: 'Contract',
+    current: true,
+    description: 'Independent contractor across long-term client engagements, including an embedded assignment with Goji Labs.',
     highlights: [
-      'Built custom WordPress themes and Shopify storefronts from Figma with high fidelity',
-      'Developed reusable Gutenberg blocks and Shopify sections enabling clients to manage content without code',
-      'Optimized frontends for fast load times and Core Web Vitals compliance',
-      'Engineered e-commerce integrations, custom artwork upload flows, and quote systems'
+      'Custom WordPress themes and Shopify storefronts from Figma to production',
+      'Gutenberg/ACF, Liquid, responsive frontend, performance, and technical SEO',
+      'Analytics and AI-assisted workflows across client work'
     ],
-    technologies: ['WordPress', 'Gutenberg', 'ACF', 'Elementor', 'Shopify Liquid', 'PHP', 'SCSS', 'JavaScript', 'GSAP', 'Git']
+    technologies: ['WordPress', 'Gutenberg', 'ACF', 'Shopify Liquid', 'PHP', 'SCSS', 'JavaScript', 'Git']
+  },
+  {
+    id: 'goji-labs',
+    company: 'Goji Labs',
+    url: 'https://gojilabs.com',
+    role: 'WordPress Developer (via Valant)',
+    period: 'August 2019 – Present',
+    durationYears: '',
+    location: 'Client Assignment',
+    current: true,
+    description: 'Embedded WordPress developer within the client team, delivering custom themes, Gutenberg/ACF, frontend development, integrations, performance, and SEO.',
+    highlights: [
+      'Custom WordPress themes and Gutenberg/ACF builds inside the client team',
+      'Frontend development, integrations, performance, and SEO'
+    ],
+    technologies: ['WordPress', 'Gutenberg', 'ACF', 'PHP', 'SCSS', 'JavaScript', 'Git']
   },
   {
     id: 'webdevs',
@@ -577,61 +628,82 @@ export const EXPERIENCE_DATA: ExperienceItem[] = [
 
 export const SKILL_GROUPS: SkillGroup[] = [
   {
-    category: 'CMS & E-commerce',
+    category: 'WordPress',
     iconName: 'Layout',
     skills: [
-      { name: 'WordPress (Custom Themes, Gutenberg, ACF, Elementor, Polylang)', level: 99, highlight: true },
-      { name: 'Shopify (Liquid, Custom Themes, Sections, Collections, Products, Variants)', level: 98, highlight: true },
-      { name: 'Webflow Integration', level: 90, highlight: false },
-      { name: 'Magento Frontend', level: 86, highlight: false }
+      { name: 'Custom themes', level: 99, highlight: true },
+      { name: 'Gutenberg', level: 99, highlight: true },
+      { name: 'ACF', level: 98, highlight: true },
+      { name: 'Elementor', level: 94, highlight: false },
+      { name: 'Polylang', level: 95, highlight: true },
+      { name: 'WPML', level: 94, highlight: true },
+      { name: 'WooCommerce', level: 93, highlight: false }
     ]
   },
   {
-    category: 'Frontend & Scripting',
+    category: 'Shopify',
+    iconName: 'Layout',
+    skills: [
+      { name: 'Liquid', level: 98, highlight: true },
+      { name: 'Custom themes', level: 98, highlight: true },
+      { name: 'Sections / blocks', level: 98, highlight: true },
+      { name: 'Products, collections, variants', level: 97, highlight: true }
+    ]
+  },
+  {
+    category: 'Other platforms',
+    iconName: 'Layout',
+    skills: [
+      { name: 'Webflow', level: 90, highlight: false },
+      { name: 'Magento', level: 86, highlight: false },
+      { name: 'Drupal', level: 86, highlight: false }
+    ]
+  },
+  {
+    category: 'Frontend',
     iconName: 'Code2',
     skills: [
-      { name: 'HTML5 / CSS3 / Semantic Markup', level: 100, highlight: true },
-      { name: 'JavaScript / jQuery / AJAX', level: 98, highlight: true },
+      { name: 'HTML/CSS', level: 100, highlight: true },
+      { name: 'JavaScript', level: 98, highlight: true },
+      { name: 'TypeScript', level: 90, highlight: true },
       { name: 'React & Next.js', level: 92, highlight: true },
-      { name: 'TypeScript', level: 90, highlight: true }
+      { name: 'jQuery', level: 95, highlight: false },
+      { name: 'AJAX', level: 95, highlight: false },
+      { name: 'SCSS/Sass', level: 99, highlight: true },
+      { name: 'Tailwind CSS', level: 96, highlight: true },
+      { name: 'PHP', level: 95, highlight: true }
     ]
   },
   {
-    category: 'Styling & Architecture',
-    iconName: 'Palette',
-    skills: [
-      { name: 'Tailwind CSS', level: 98, highlight: true },
-      { name: 'SCSS / Sass / Less', level: 99, highlight: true },
-      { name: 'BEM & SMACSS Methodology', level: 98, highlight: true },
-      { name: 'Bootstrap / Foundation / Material UI', level: 94, highlight: false }
-    ]
-  },
-  {
-    category: 'Animation & Motion',
+    category: 'Performance & SEO',
     iconName: 'Zap',
     skills: [
-      { name: 'GSAP & ScrollTrigger', level: 96, highlight: true },
-      { name: 'Anime.js & AOS', level: 92, highlight: false },
-      { name: 'Micro-Interactions & Core Web Vitals', level: 99, highlight: true }
+      { name: 'Core Web Vitals', level: 98, highlight: true },
+      { name: 'Semantic HTML', level: 99, highlight: true },
+      { name: 'Technical / on-page SEO', level: 94, highlight: true },
+      { name: 'AI-search visibility', level: 90, highlight: false }
     ]
   },
   {
-    category: 'Backend & Build Tools',
+    category: 'Analytics & AI',
     iconName: 'Server',
     skills: [
-      { name: 'PHP & MySQL', level: 95, highlight: true },
-      { name: 'Vite, Webpack, Gulp', level: 96, highlight: true },
-      { name: 'Git, GitHub, Bitbucket', level: 98, highlight: true }
+      { name: 'GA4', level: 92, highlight: true },
+      { name: 'GTM', level: 92, highlight: true },
+      { name: 'Meta Pixel', level: 90, highlight: false },
+      { name: 'ChatGPT / OpenAI Codex', level: 94, highlight: true },
+      { name: 'AI-assisted development', level: 94, highlight: true }
     ]
   },
   {
-    category: 'Design & Hosting Platforms',
+    category: 'Tools',
     iconName: 'Figma',
     skills: [
-      { name: 'Figma, Photoshop, Illustrator (Design-to-Code)', level: 99, highlight: true },
-      { name: 'Cloudways, WP Engine, Flywheel, LocalWP, cPanel', level: 98, highlight: true },
-      { name: 'HubSpot, MailChimp, Klaviyo Integration', level: 94, highlight: false },
-      { name: 'JIRA, Linear, Notion, Trello, Bugzilla', level: 96, highlight: false }
+      { name: 'Git / GitHub / Bitbucket', level: 98, highlight: true },
+      { name: 'Figma', level: 99, highlight: true },
+      { name: 'GSAP / ScrollTrigger', level: 96, highlight: true },
+      { name: 'Anime.js / AOS', level: 90, highlight: false },
+      { name: 'Webpack / Vite / Gulp', level: 96, highlight: true }
     ]
   }
 ];

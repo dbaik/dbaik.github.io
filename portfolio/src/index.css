@@ -9,32 +9,213 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
-/* Custom global overrides */
+:root {
+  --canvas-light: #f3f5fb;
+  --canvas-dark: #070b15;
+  --canvas-footer-light: #e8ebf4;
+  --canvas-footer-dark: #050811;
+  --fg-light: #0f172a;
+  --fg-dark: #f1f5f9;
+  --muted-light: #475569;
+  --muted-dark: #94a3b8;
+  --line-light: rgb(15 23 42 / 0.12);
+  --line-dark: rgb(255 255 255 / 0.1);
+  --card-light: rgb(255 255 255 / 0.72);
+  --card-dark: rgb(2 6 23 / 0.6);
+
+  --canvas: var(--canvas-dark);
+  --canvas-footer: var(--canvas-footer-dark);
+  --fg: var(--fg-dark);
+  --muted: var(--muted-dark);
+  --line: var(--line-dark);
+  --card: var(--card-dark);
+
+  color-scheme: light dark;
+  accent-color: #6366f1;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.scheme-dark) {
+    --canvas: var(--canvas-light);
+    --canvas-footer: var(--canvas-footer-light);
+    --fg: var(--fg-light);
+    --muted: var(--muted-light);
+    --line: var(--line-light);
+    --card: var(--card-light);
+  }
+}
+
+html.scheme-light {
+  color-scheme: light;
+  --canvas: var(--canvas-light);
+  --canvas-footer: var(--canvas-footer-light);
+  --fg: var(--fg-light);
+  --muted: var(--muted-light);
+  --line: var(--line-light);
+  --card: var(--card-light);
+}
+
+html.scheme-dark {
+  color-scheme: dark;
+  --canvas: var(--canvas-dark);
+  --canvas-footer: var(--canvas-footer-dark);
+  --fg: var(--fg-dark);
+  --muted: var(--muted-dark);
+  --line: var(--line-dark);
+  --card: var(--card-dark);
+}
+
+.scheme-dark {
+  color-scheme: dark;
+  --canvas: var(--canvas-dark);
+  --canvas-footer: var(--canvas-footer-dark);
+  --fg: var(--fg-dark);
+  --muted: var(--muted-dark);
+  --line: var(--line-dark);
+  --card: var(--card-dark);
+  color: var(--fg);
+}
+
+@supports (color: light-dark(white, black)) {
+  :root {
+    --canvas: light-dark(var(--canvas-light), var(--canvas-dark));
+    --canvas-footer: light-dark(var(--canvas-footer-light), var(--canvas-footer-dark));
+    --fg: light-dark(var(--fg-light), var(--fg-dark));
+    --muted: light-dark(var(--muted-light), var(--muted-dark));
+    --line: light-dark(var(--line-light), var(--line-dark));
+    --card: light-dark(var(--card-light), var(--card-dark));
+  }
+}
+
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem; /* 80px invisible offset so fixed header never hides section content */
-  background-color: #070b15;
+  scroll-padding-top: 5rem;
+  background-color: var(--canvas);
 }
 
 body {
-  color: #F1F5F9;
+  color: var(--fg);
+  background-color: var(--canvas);
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar styling */
+#hero canvas {
+  background-color: transparent;
+}
+
+.bg-\[\#070b15\],
+.bg-\[\#070b15\]\/90,
+.bg-\[\#070b15\]\/95,
+.bg-\[\#040711\] {
+  background-color: var(--canvas);
+}
+
+.bg-\[\#050811\] {
+  background-color: var(--canvas-footer);
+}
+
+.text-white,
+.text-slate-100 {
+  color: var(--fg);
+}
+
+.hover\:text-white:hover {
+  color: var(--fg);
+}
+
+button.bg-indigo-600,
+a.bg-indigo-600,
+.bg-indigo-600.text-white {
+  color: #fff;
+}
+
+.text-slate-300 {
+  color: light-dark(#334155, #cbd5e1);
+}
+
+.text-slate-200 {
+  color: light-dark(#475569, #e2e8f0);
+}
+
+.text-slate-400 {
+  color: var(--muted);
+}
+
+.border-white\/5,
+.border-white\/10,
+.border-white\/15,
+.border-white\/20 {
+  border-color: var(--line);
+}
+
+.bg-white\/5,
+.bg-white\/10,
+.bg-slate-950,
+.bg-slate-950\/40,
+.bg-slate-950\/60,
+.bg-slate-950\/70,
+.bg-slate-950\/80,
+.bg-slate-900 {
+  background-color: var(--card);
+}
+
+.text-indigo-400 {
+  color: light-dark(#4338ca, #818cf8);
+}
+
+.focus-visible\:ring-offset-\[\#070b15\]:focus-visible {
+  --tw-ring-offset-color: var(--canvas);
+}
+
+@supports not (color: light-dark(white, black)) {
+  .text-slate-300 {
+    color: #cbd5e1;
+  }
+
+  .text-indigo-400 {
+    color: #818cf8;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not(.scheme-dark) .text-slate-300 {
+      color: #334155;
+    }
+
+    :root:not(.scheme-dark) .text-slate-200 {
+      color: #475569;
+    }
+
+    :root:not(.scheme-dark) .text-indigo-400 {
+      color: #4338ca;
+    }
+  }
+
+  html.scheme-light .text-slate-300 {
+    color: #334155;
+  }
+
+  html.scheme-light .text-slate-200 {
+    color: #475569;
+  }
+
+  html.scheme-light .text-indigo-400 {
+    color: #4338ca;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #070b15;
+  background: var(--canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--line);
   border-radius: 9999px;
 }
 
@@ -42,7 +223,6 @@ body {
   background: rgba(99, 102, 241, 0.6);
 }
 
-/* Lenis scroll classes */
 html.lenis, html.lenis body {
   height: auto;
 }
@@ -63,16 +243,74 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* Custom glass utilities */
+.bg-black\/40 {
+  background-color: light-dark(rgb(255 255 255 / 0.9), rgb(0 0 0 / 0.4));
+}
+
 .bg-white\/3 {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: light-dark(rgb(15 23 42 / 0.03), rgb(255 255 255 / 0.03));
 }
 
-.bg-white\/5 {
-  background-color: rgba(255, 255, 255, 0.05);
+#project-detail-modal-box {
+  background-color: light-dark(#ffffff, rgb(2 6 23 / 0.96));
+  color: var(--fg);
+  border-color: var(--line);
+  scrollbar-color: light-dark(rgb(15 23 42 / 0.18), rgb(255 255 255 / 0.15)) transparent;
 }
 
-/* Animation helpers */
+#project-detail-modal-box .project-modal-chip {
+  background-color: light-dark(rgb(15 23 42 / 0.04), rgb(255 255 255 / 0.05));
+  border-color: var(--line);
+  color: light-dark(#334155, #cbd5e1);
+}
+
+#project-detail-modal-box .project-modal-close {
+  background-color: light-dark(rgb(255 255 255 / 0.92), rgb(15 23 42 / 0.9));
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+#project-detail-modal-box .project-modal-close:hover {
+  color: var(--fg);
+}
+
+#project-detail-modal-box::-webkit-scrollbar-thumb {
+  background: light-dark(rgb(15 23 42 / 0.18), rgb(255 255 255 / 0.15));
+}
+
+#project-detail-modal-box::-webkit-scrollbar-thumb:hover {
+  background: light-dark(rgb(15 23 42 / 0.28), rgb(255 255 255 / 0.25));
+}
+
+.page-ambient-grid {
+  background-image:
+    linear-gradient(to right, light-dark(rgb(15 23 42 / 0.06), rgb(255 255 255 / 0.012)) 1px, transparent 1px),
+    linear-gradient(to bottom, light-dark(rgb(15 23 42 / 0.06), rgb(255 255 255 / 0.012)) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+@supports not (color: light-dark(white, black)) {
+  .page-ambient-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.012) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.012) 1px, transparent 1px);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not(.scheme-dark) .page-ambient-grid {
+      background-image:
+        linear-gradient(to right, rgb(15 23 42 / 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(15 23 42 / 0.06) 1px, transparent 1px);
+    }
+  }
+
+  html.scheme-light .page-ambient-grid {
+    background-image:
+      linear-gradient(to right, rgb(15 23 42 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(15 23 42 / 0.06) 1px, transparent 1px);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -88,15 +326,42 @@ html.lenis, html.lenis body {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Reduced motion preference */
+@keyframes marquee-shift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-shift 42s linear infinite;
+}
+
+.marquee-fade-l {
+  background: linear-gradient(to right, var(--canvas), transparent);
+}
+
+.marquee-fade-r {
+  background: linear-gradient(to left, var(--canvas), transparent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
   }
-  *, *::before, *::after {
+
+  *:not(.marquee-track):not(.marquee-track *),
+  *:not(.marquee-track):not(.marquee-track *)::before,
+  *:not(.marquee-track):not(.marquee-track *)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .marquee-track {
+    animation: none;
   }
 }

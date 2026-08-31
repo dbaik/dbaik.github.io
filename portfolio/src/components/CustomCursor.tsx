@@ -6,7 +6,7 @@ export default function CustomCursor() {
   const labelRef = useRef<HTMLSpanElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef({ x: -100, y: -100 });
-  const hoverRef = useRef({ hovered: false, label: null as string | null });
+  const hoverRef = useRef({ hovered: false, label: null as string | null, hidden: false });
 
   const [mounted, setMounted] = useState(false);
   const [isTouchDevice] = useState(
@@ -21,10 +21,11 @@ export default function CustomCursor() {
     if (!cursorEl || !ringEl || !labelEl || !dotEl) return;
 
     const { x, y } = positionRef.current;
-    const { hovered, label } = hoverRef.current;
+    const { hovered, label, hidden } = hoverRef.current;
     const scale = hovered ? 1.2 : 1;
 
     cursorEl.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${scale})`;
+    cursorEl.classList.toggle('opacity-0', hidden);
 
     if (label) {
       ringEl.className =
@@ -45,9 +46,15 @@ export default function CustomCursor() {
     }
   };
 
-  const setHoverState = (hovered: boolean, label: string | null) => {
-    if (hoverRef.current.hovered === hovered && hoverRef.current.label === label) return;
-    hoverRef.current = { hovered, label };
+  const setHoverState = (hovered: boolean, label: string | null, hidden = false) => {
+    if (
+      hoverRef.current.hovered === hovered &&
+      hoverRef.current.label === label &&
+      hoverRef.current.hidden === hidden
+    ) {
+      return;
+    }
+    hoverRef.current = { hovered, label, hidden };
     applyCursorStyles();
   };
 
@@ -58,8 +65,16 @@ export default function CustomCursor() {
 
     const handleMouseMove = (e: MouseEvent) => {
       positionRef.current = { x: e.clientX, y: e.clientY };
+      const overPhoto = Boolean(
+        document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-cursor="hide"]'),
+      );
+      if (overPhoto !== hoverRef.current.hidden) {
+        setHoverState(hoverRef.current.hovered, hoverRef.current.label, overPhoto);
+      }
       applyCursorStyles();
-      cursorRef.current?.classList.remove('opacity-0');
+      if (!hoverRef.current.hidden) {
+        cursorRef.current?.classList.remove('opacity-0');
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -68,12 +83,16 @@ export default function CustomCursor() {
 
       if (hoverTarget) {
         const label = hoverTarget.getAttribute('data-cursor');
-        setHoverState(true, label && label !== 'true' ? label : null);
+        if (label === 'hide') {
+          setHoverState(false, null, true);
+          return;
+        }
+        setHoverState(true, label && label !== 'true' ? label : null, false);
         return;
       }
 
       const standardInteractive = target.closest('a, button, select, input, textarea');
-      setHoverState(Boolean(standardInteractive), null);
+      setHoverState(Boolean(standardInteractive), null, false);
     };
 
     const handleMouseLeave = () => {

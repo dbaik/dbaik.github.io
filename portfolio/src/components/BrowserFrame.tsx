@@ -72,7 +72,7 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   const frameContent = (
     <div
       onClick={onClick}
-      className={`group/browser block overflow-hidden rounded-xl border border-white/10 bg-slate-950/80 shadow-md transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5 relative isolate transform-gpu ${className}`}
+      className={`group/browser block overflow-hidden rounded-xl border border-white/10 bg-slate-950/80 shadow-md transition-all duration-300 hover:border-white/20 hover:-translate-y-0.5 relative isolate transform-gpu scheme-dark ${className}`}
     >
       <div className="flex h-8 sm:h-9 items-center justify-between px-3 sm:px-3.5 bg-slate-950 border-b border-white/10 select-none rounded-t-[11px]">
         <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">

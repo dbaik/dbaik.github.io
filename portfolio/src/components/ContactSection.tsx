@@ -10,13 +10,43 @@ const projectTypes = [
   'Shopify E-Commerce Storefront',
   'Performance & Core Web Vitals Optimization',
   'Figma to Pixel-Perfect HTML/CSS',
-  'Contract / Full-Time Senior Role'
+  'B2B / Contract Engagement'
 ]
 
 const inputClassName =
   'w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors'
 
 const labelClassName = 'font-mono text-xs font-semibold text-slate-300 tracking-wider'
+
+async function copyText(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch {
+    // Clipboard API can fail outside a secure context or without permission.
+  }
+
+  const field = document.createElement('textarea')
+  field.value = text
+  field.setAttribute('readonly', '')
+  field.style.position = 'fixed'
+  field.style.left = '-9999px'
+  document.body.appendChild(field)
+  field.select()
+  field.setSelectionRange(0, text.length)
+
+  let copied = false
+  try {
+    copied = document.execCommand('copy')
+  } catch {
+    copied = false
+  }
+
+  field.remove()
+  return copied
+}
 
 function InquiryForm({ onReset }: { onReset: () => void }) {
   const [state, handleSubmit] = useForm(FORMSPREE_FORM_ID)
@@ -79,9 +109,13 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           id="contact-project-type"
           name="project_type"
           aria-labelledby="contact-project-type-label"
-          defaultValue={projectTypes[0]}
+          defaultValue=""
+          required
           className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
         >
+          <option value="" disabled hidden>
+            Select project focus…
+          </option>
           {projectTypes.map((type) => (
             <option key={type} value={type} className="bg-slate-900 text-white">
               {type}
@@ -129,10 +163,12 @@ export default function ContactSection() {
   const [copiedEmail, setCopiedEmail] = useState(false)
   const [formKey, setFormKey] = useState(0)
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(PERSONAL_INFO.email)
+  const handleCopyEmail = async () => {
+    const copied = await copyText(PERSONAL_INFO.email)
+    if (!copied) return
+
     setCopiedEmail(true)
-    setTimeout(() => setCopiedEmail(false), 2500)
+    window.setTimeout(() => setCopiedEmail(false), 2500)
   }
 
   return (
@@ -149,7 +185,7 @@ export default function ContactSection() {
             </h2>
 
             <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed">
-              Available for custom theme builds, Shopify storefronts, performance audits, and senior developer roles.
+              {PERSONAL_INFO.availability} WordPress and Shopify from Figma to production — including performance, technical SEO, analytics, and AI-assisted workflows.
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row lg:flex-col gap-3">
@@ -165,7 +201,7 @@ export default function ContactSection() {
                 <button
                   type="button"
                   onClick={handleCopyEmail}
-                  className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded text-xs font-mono text-slate-200 transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                  className="flex items-center gap-1.5 rounded border border-white/10 bg-white/3 px-2.5 py-1 text-xs font-mono text-slate-400 hover:text-indigo-400 hover:border-indigo-400/30 transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
                   title="Copy email to clipboard"
                 >
                   {copiedEmail ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}

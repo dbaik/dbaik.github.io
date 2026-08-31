@@ -3,6 +3,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import CustomCursor from './components/CustomCursor';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import MarqueeStrip from './components/MarqueeStrip';
 import Footer from './components/Footer';
 
 const ProjectsShowcase = lazy(() => import('./components/ProjectsShowcase'));
@@ -15,6 +16,21 @@ const ContactSection = lazy(() => import('./components/ContactSection'));
 function SectionFallback() {
   return <div className="min-h-[16rem]" aria-hidden="true" />;
 }
+
+const MARQUEE_ITEMS = [
+  'WordPress',
+  'Shopify',
+  'Gutenberg',
+  'ACF',
+  'Liquid',
+  'WooCommerce',
+  'Tailwind CSS',
+  'Core Web Vitals',
+  'Technical SEO',
+  'GA4',
+  'Figma',
+  'GSAP',
+];
 
 export default function App() {
   useEffect(() => {
@@ -89,7 +105,7 @@ export default function App() {
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-600/10 rounded-full blur-[140px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[140px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_20%,#000_30%,transparent_100%)]" />
+        <div className="page-ambient-grid absolute inset-0 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_20%,#000_30%,transparent_100%)]" />
       </div>
 
       <CustomCursor />
@@ -103,6 +119,7 @@ export default function App() {
         <Suspense fallback={<SectionFallback />}>
           <HowIWork />
         </Suspense>
+        <MarqueeStrip items={MARQUEE_ITEMS} />
         <Suspense fallback={<SectionFallback />}>
           <ScrollStoryCanvas />
         </Suspense>
