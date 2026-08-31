@@ -3,15 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dmitry Bashkatov (dbaik) // Senior Frontend & UI/UX Specialist</title>
-    <meta name="description" content="15+ years experience crafting custom WordPress Gutenberg architectures, high-conversion Shopify storefronts, and sub-second React web apps." />
+    <title>Dmitry Bashkatov (dbaik) // Web Developer | WordPress & Shopify</title>
+    <meta name="description" content="15+ years in frontend development across WordPress and Shopify, from Figma to production. Open to B2B and contract opportunities." />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      {
+        const colorScheme = localStorage.getItem('color-scheme');
+        if (colorScheme === 'light' || colorScheme === 'dark') {
+          const meta = document.querySelector('meta[name="color-scheme"]');
+          if (meta) meta.setAttribute('content', colorScheme);
+          document.documentElement.classList.add('scheme-' + colorScheme);
+        }
+      }
+    </script>
     <link rel="icon" href="./favicon.ico" sizes="any" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <script type="module" crossorigin src="./assets/index-CBB86vbc.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/icons-rya18jY2.js">
-    <link rel="stylesheet" crossorigin href="./assets/style-Dq6flQcF.css">
-      <link rel="preload" href="./assets/plus-jakarta-sans-latin-400-normal-Dhut76fR.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="module" crossorigin src="./assets/index-6Wp2wbSw.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/icons-LAYKuU4Y.js">
+    <link rel="stylesheet" crossorigin href="./assets/style-OOopIXqU.css">
+    <link rel="preload" href="./assets/plus-jakarta-sans-latin-400-normal-Dhut76fR.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./assets/plus-jakarta-sans-latin-700-normal-CfpNZvy6.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./assets/syne-latin-800-normal-EehdNYzx.woff2" as="font" type="font/woff2" crossorigin />
   </head>
