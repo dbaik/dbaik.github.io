@@ -48,9 +48,12 @@ export default defineConfig(() => {
       cssCodeSplit: false,
       modulePreload: {
         resolveDependencies(filename, deps) {
-          // Keep motion/gsap off the initial modulepreload list; they load with lazy sections / hover.
+          // Keep motion/gsap/lenis off the initial modulepreload list; they load on demand.
           return deps.filter(
-            (dep) => !dep.includes('motion') && !dep.includes('gsap'),
+            (dep) =>
+              !dep.includes('motion') &&
+              !dep.includes('gsap') &&
+              !dep.includes('lenis'),
           );
         },
       },

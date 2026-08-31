@@ -25,6 +25,7 @@ export default function ScrollStoryCanvas() {
   const animTimeRef = useRef<number>(0);
   const hoveredRegionRef = useRef<string | null>(null);
   const canvasSizeRef = useRef({ width: 400, height: 260 });
+  const canvasOffsetRef = useRef({ left: 0, top: 0 });
   const isCanvasActiveRef = useRef(true);
 
   const currentStage = SCROLL_STORY_FRAMES[activeStageIndex];
@@ -1037,6 +1038,13 @@ export default function ScrollStoryCanvas() {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
       canvasSizeRef.current = { width: rect.width, height: rect.height };
+      const canvasRect = canvas.getBoundingClientRect();
+      canvasOffsetRef.current = { left: canvasRect.left, top: canvasRect.top };
+    };
+
+    const syncOffsetOnly = () => {
+      const canvasRect = canvas.getBoundingClientRect();
+      canvasOffsetRef.current = { left: canvasRect.left, top: canvasRect.top };
     };
 
     const renderLoop = (timestamp: number) => {
@@ -1065,6 +1073,7 @@ export default function ScrollStoryCanvas() {
 
     updateSize();
     window.addEventListener('resize', updateSize);
+    window.addEventListener('scroll', syncOffsetOnly, { passive: true });
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -1100,19 +1109,21 @@ export default function ScrollStoryCanvas() {
       observer.disconnect();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', updateSize);
+      window.removeEventListener('scroll', syncOffsetOnly);
     };
   }, [drawCanvas]);
 
   // Pointer Interaction Handlers for Inspection
   const updatePointer = (clientX: number, clientY: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
+    const { width, height } = canvasSizeRef.current;
+    if (!width || !height) return;
+
+    const { left, top } = canvasOffsetRef.current;
+    const x = clientX - left;
+    const y = clientY - top;
     pointerPosRef.current = { x, y, isInside: true };
 
-    const semanticObj = getSemanticObjectAt(x, y, rect.width, rect.height);
+    const semanticObj = getSemanticObjectAt(x, y, width, height);
     if (semanticObj) {
       updateInspectorDisplay(semanticObj);
     } else {
@@ -1120,11 +1131,23 @@ export default function ScrollStoryCanvas() {
     }
   };
 
+  const handlePointerEnter = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    canvasOffsetRef.current = { left: rect.left, top: rect.top };
+  };
+
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     updatePointer(e.clientX, e.clientY);
   };
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      canvasOffsetRef.current = { left: rect.left, top: rect.top };
+    }
     updatePointer(e.clientX, e.clientY);
   };
 
@@ -1327,6 +1350,7 @@ export default function ScrollStoryCanvas() {
               <div className="relative min-h-[290px] xs:min-h-[310px] sm:min-h-[340px] md:min-h-[360px] lg:min-h-[370px] w-full">
                 <canvas 
                   ref={canvasRef} 
+                  onPointerEnter={handlePointerEnter}
                   onPointerMove={handlePointerMove}
                   onPointerDown={handlePointerDown}
                   onPointerLeave={handlePointerLeave}

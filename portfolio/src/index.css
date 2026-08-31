@@ -326,6 +326,42 @@ html.lenis, html.lenis body {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-reveal {
+  opacity: 0;
+  animation: hero-reveal 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-reveal-delay-0 {
+  animation-delay: 0ms;
+}
+
+.hero-reveal-delay-1 {
+  animation-delay: 60ms;
+}
+
+.hero-reveal-delay-2 {
+  animation-delay: 120ms;
+}
+
+.hero-reveal-delay-3 {
+  animation-delay: 180ms;
+}
+
+.hero-reveal-delay-4 {
+  animation-delay: 260ms;
+}
+
 @keyframes marquee-shift {
   from {
     transform: translateX(0);

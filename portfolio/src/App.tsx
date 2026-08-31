@@ -1,10 +1,11 @@
 import type Lenis from 'lenis';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, useEffect } from 'react';
 import CustomCursor from './components/CustomCursor';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import MarqueeStrip from './components/MarqueeStrip';
 import Footer from './components/Footer';
+import LazyWhenVisible from './components/LazyWhenVisible';
 
 const ProjectsShowcase = lazy(() => import('./components/ProjectsShowcase'));
 const HowIWork = lazy(() => import('./components/HowIWork'));
@@ -32,8 +33,20 @@ const MARQUEE_ITEMS = [
   'GSAP',
 ];
 
+function prefersCoarsePointer(): boolean {
+  return (
+    window.matchMedia('(pointer: coarse)').matches ||
+    ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches)
+  );
+}
+
 export default function App() {
   useEffect(() => {
+    // Lenis adds little on touch browsers and competes with the critical path on mobile lab tests.
+    if (prefersCoarsePointer() || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
     let lenis: Lenis | null = null;
     let rafId: number | null = null;
     let cancelled = false;
@@ -59,27 +72,45 @@ export default function App() {
       }
     };
 
-    void import('lenis')
-      .then(({ default: Lenis }) => {
-        if (cancelled) return;
+    const boot = () => {
+      void import('lenis')
+        .then(({ default: Lenis }) => {
+          if (cancelled) return;
 
-        try {
-          lenis = new Lenis({
-            duration: 1.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            gestureOrientation: 'vertical',
-            smoothWheel: true,
-          });
+          try {
+            lenis = new Lenis({
+              duration: 1.1,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+              gestureOrientation: 'vertical',
+              smoothWheel: true,
+            });
 
-          (window as unknown as { __lenis?: Lenis | null }).__lenis = lenis;
-          startLenis();
-        } catch (e) {
+            (window as unknown as { __lenis?: Lenis | null }).__lenis = lenis;
+            startLenis();
+          } catch (e) {
+            console.warn('Smooth scroll fallback:', e);
+          }
+        })
+        .catch((e) => {
           console.warn('Smooth scroll fallback:', e);
-        }
-      })
-      .catch((e) => {
-        console.warn('Smooth scroll fallback:', e);
-      });
+        });
+    };
+
+    // Defer past first paint so hero CSS/JS win the network.
+    let cancelBoot: () => void;
+    const idleWindow = window as Window &
+      typeof globalThis & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        cancelIdleCallback?: (id: number) => void;
+      };
+
+    if (typeof idleWindow.requestIdleCallback === 'function') {
+      const idleId = idleWindow.requestIdleCallback(boot, { timeout: 1800 });
+      cancelBoot = () => idleWindow.cancelIdleCallback?.(idleId);
+    } else {
+      const timeoutId = window.setTimeout(boot, 200);
+      cancelBoot = () => window.clearTimeout(timeoutId);
+    }
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -93,6 +124,7 @@ export default function App() {
 
     return () => {
       cancelled = true;
+      cancelBoot();
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       stopLenis();
       (window as unknown as { __lenis?: Lenis | null }).__lenis = null;
@@ -113,25 +145,25 @@ export default function App() {
 
       <main className="relative z-10">
         <Hero />
-        <Suspense fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} rootMargin="480px 0px">
           <ProjectsShowcase />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
+        </LazyWhenVisible>
+        <LazyWhenVisible fallback={<SectionFallback />}>
           <HowIWork />
-        </Suspense>
+        </LazyWhenVisible>
         <MarqueeStrip items={MARQUEE_ITEMS} />
-        <Suspense fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />}>
           <ScrollStoryCanvas />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
+        </LazyWhenVisible>
+        <LazyWhenVisible fallback={<SectionFallback />}>
           <ExperienceTimeline />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
+        </LazyWhenVisible>
+        <LazyWhenVisible fallback={<SectionFallback />}>
           <SkillsRadar />
-        </Suspense>
-        <Suspense fallback={<SectionFallback />}>
+        </LazyWhenVisible>
+        <LazyWhenVisible fallback={<SectionFallback />}>
           <ContactSection />
-        </Suspense>
+        </LazyWhenVisible>
       </main>
 
       <Footer />
