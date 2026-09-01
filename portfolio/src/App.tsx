@@ -145,23 +145,23 @@ export default function App() {
 
       <main className="relative z-10">
         <Hero />
-        <LazyWhenVisible fallback={<SectionFallback />} rootMargin="480px 0px">
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="featured-work archive">
           <ProjectsShowcase />
         </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="how-i-work">
           <HowIWork />
         </LazyWhenVisible>
         <MarqueeStrip items={MARQUEE_ITEMS} />
-        <LazyWhenVisible fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="scroll-story">
           <ScrollStoryCanvas />
         </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="experience">
           <ExperienceTimeline />
         </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="skills">
           <SkillsRadar />
         </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />}>
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="contact">
           <ContactSection />
         </LazyWhenVisible>
       </main>

@@ -6,7 +6,12 @@ const ROOT = process.cwd();
 const SRC_DIR = path.join(ROOT, 'src/assets/images');
 const ORIGINALS_DIR = path.join(SRC_DIR, 'originals');
 const COVERS_DIR = path.join(SRC_DIR, 'covers');
+const PUBLIC_DIR = path.join(ROOT, 'public');
 const COVER_IMAGES_MODULE = path.join(ROOT, 'src/data/coverImages.ts');
+const HERO_PORTRAIT_SOURCE = path.join(ORIGINALS_DIR, 'hero-portrait.jpg');
+const HERO_PORTRAIT_OUTPUT = path.join(PUBLIC_DIR, 'hero-portrait.jpg');
+const HERO_PORTRAIT_WIDTH = 560;
+const HERO_JPEG_QUALITY = 70;
 
 const OUTPUT_WIDTHS = [640, 688, 960, 1376, 2752];
 const WEBP_QUALITY = 82;
@@ -126,6 +131,39 @@ function toImportName(slug, width, format) {
   return `${slug}_w${width}_${format}`;
 }
 
+async function optimizeHeroPortrait() {
+  const publicHero = path.join(PUBLIC_DIR, 'hero-portrait.jpg');
+
+  if (!fs.existsSync(HERO_PORTRAIT_SOURCE)) {
+    if (!fs.existsSync(publicHero)) {
+      throw new Error(`Missing hero portrait source: ${HERO_PORTRAIT_SOURCE}`);
+    }
+    ensureDir(ORIGINALS_DIR);
+    fs.copyFileSync(publicHero, HERO_PORTRAIT_SOURCE);
+  }
+
+  ensureDir(PUBLIC_DIR);
+  await createImagePipeline(HERO_PORTRAIT_SOURCE)
+    .rotate()
+    .resize({
+      width: HERO_PORTRAIT_WIDTH,
+      withoutEnlargement: true,
+      fit: 'inside',
+    })
+    .jpeg({
+      quality: HERO_JPEG_QUALITY,
+      mozjpeg: true,
+      progressive: true,
+    })
+    .toFile(HERO_PORTRAIT_OUTPUT);
+
+  const sourceBytes = fs.statSync(HERO_PORTRAIT_SOURCE).size;
+  const outputBytes = fs.statSync(HERO_PORTRAIT_OUTPUT).size;
+  console.log(
+    `  hero-portrait: ${formatBytes(sourceBytes)} -> ${path.relative(ROOT, HERO_PORTRAIT_OUTPUT)} (${formatBytes(outputBytes)})`,
+  );
+}
+
 function generateCoverImagesModule() {
   const importLines = [];
   const registryEntries = [];
@@ -173,6 +211,9 @@ async function main() {
   removeLegacyCoverOutputs();
 
   const stats = { inputBytes: 0, outputBytes: 0 };
+
+  console.log('Optimizing hero portrait...');
+  await optimizeHeroPortrait();
 
   console.log('Optimizing project covers...');
 
