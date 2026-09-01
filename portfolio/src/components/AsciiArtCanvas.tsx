@@ -19,21 +19,24 @@ interface Glyph {
 }
 
 const CHARS = ' .:-=+*#%@'.split('');
-const SOURCE_ASPECT = 723 / 1024;
+const SOURCE_ASPECT = 1;
 const PAPER_LUMA = 0.93;
 const MIN_INK = 0.07;
 
 function canvasBox(viewportWidth: number): { w: number; h: number } {
-  const h =
-    viewportWidth <= 480 ? 340 : viewportWidth <= 900 ? 400 : viewportWidth <= 1280 ? 520 : 560;
-  return { w: Math.round(h * SOURCE_ASPECT), h };
+  const size =
+    viewportWidth <= 480 ? 340 : viewportWidth <= 900 ? 380 : viewportWidth <= 1280 ? 400 : 420;
+  return { w: size, h: Math.round(size / SOURCE_ASPECT) };
 }
 
 function sampleLuma(data: Uint8ClampedArray, width: number, height: number, x: number, y: number): number {
   const cx = Math.max(0, Math.min(width - 1, Math.floor(x)));
   const cy = Math.max(0, Math.min(height - 1, Math.floor(y)));
   const i = (cy * width + cx) * 4;
-  return (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255;
+  const alpha = data[i + 3] / 255;
+  if (alpha < 0.06) return 1;
+  const luma = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114) / 255;
+  return luma * alpha + (1 - alpha);
 }
 
 function cellAvg(
@@ -139,7 +142,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
   const pointerRef = useRef({ x: -1000, y: -1000, active: false });
   const startTimeRef = useRef(0);
   const [box, setBox] = useState(() =>
-    typeof window === 'undefined' ? { w: 367, h: 520 } : canvasBox(window.innerWidth),
+    typeof window === 'undefined' ? { w: 400, h: 400 } : canvasBox(window.innerWidth),
   );
   const [ready, setReady] = useState(false);
 
@@ -195,7 +198,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
       ctx.textBaseline = 'middle';
 
       const elapsed = (performance.now() - startTimeRef.current) / 1000;
-      const revealRow = instant || reducedMotion ? Number.POSITIVE_INFINITY : elapsed * 48;
+      const revealRow = instant || reducedMotion ? Number.POSITIVE_INFINITY : elapsed * 88;
       const pointer = pointerRef.current;
       const scheme = currentScheme();
 
@@ -234,7 +237,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     const stillRevealing = () => {
       if (reducedMotion) return false;
       const elapsed = (performance.now() - startTimeRef.current) / 1000;
-      return elapsed * 48 < maxRow + 2;
+      return elapsed * 88 < maxRow + 2;
     };
 
     const loop = () => {
@@ -322,8 +325,8 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
         role="img"
         aria-label={label ?? 'ASCII art'}
         data-cursor="hide"
-        className="block max-w-full cursor-none touch-none bg-transparent"
-        style={{ width: box.w, height: box.h, backgroundColor: 'transparent' }}
+        className="block h-auto max-w-full cursor-none touch-none bg-transparent"
+        style={{ width: box.w, aspectRatio: `${SOURCE_ASPECT}`, backgroundColor: 'transparent' }}
       />
     </div>
   );

@@ -40,11 +40,18 @@ for (const fileName of [
   'favicon.ico',
   'favicon.svg',
   'apple-touch-icon.png',
-  'hero-portrait.jpg',
+  'hero-portrait.webp',
 ]) {
   const from = path.join(distDir, fileName);
   if (fs.existsSync(from)) {
     copyFile(from, path.join(siteRoot, fileName));
+  }
+}
+
+for (const staleName of ['hero-portrait.jpg', 'hero-portrait.png']) {
+  const stale = path.join(siteRoot, staleName);
+  if (fs.existsSync(stale)) {
+    fs.unlinkSync(stale);
   }
 }
 

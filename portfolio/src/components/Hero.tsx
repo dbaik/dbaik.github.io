@@ -4,6 +4,7 @@ import { PERSONAL_INFO } from '../data/portfolioData';
 import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
 import { scrollToSection } from '../utils/scroll';
+import { readPinnedColorScheme, resolvedColorScheme } from '../utils/colorScheme';
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
@@ -62,28 +63,33 @@ export default function Hero() {
 
       const centerX = left + width * 0.35;
       const centerY = top + height * 0.35;
-      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (width * 0.45)));
-      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (height * 0.45)));
+      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (width * 0.42)));
+      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (height * 0.42)));
       const distFromCenter = Math.sqrt(normX * normX + normY * normY);
 
       if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl) {
-        rotateXTo(-normY * 7.5);
-        rotateYTo(normX * 9.5);
-        translateZTo(Math.max(0, (1 - distFromCenter * 0.45) * 8));
-        xTo(normX * 4.5);
-        yTo(normY * 3);
+        rotateXTo(-normY * 16);
+        rotateYTo(normX * 20);
+        translateZTo(Math.max(0, (1 - distFromCenter * 0.35) * 24));
+        xTo(normX * 14);
+        yTo(normY * 10);
 
-        const shadowX = (-normX * 8).toFixed(1);
-        const shadowY = (-normY * 5 + 3).toFixed(1);
-        nameEl.style.textShadow = `${shadowX}px ${shadowY}px 18px rgba(99, 102, 241, 0.22), ${shadowX}px ${shadowY}px 5px rgba(0, 0, 0, 0.5)`;
+        const shadowX = (-normX * 14).toFixed(1);
+        const shadowY = (-normY * 9 + 4).toFixed(1);
+        const scheme = resolvedColorScheme(readPinnedColorScheme());
+        if (scheme === 'dark') {
+          nameEl.style.textShadow = `${shadowX}px ${shadowY}px 32px rgba(129, 140, 248, 0.5), ${shadowX}px ${shadowY}px 10px rgba(226, 232, 240, 0.16)`;
+        } else {
+          nameEl.style.textShadow = `${shadowX}px ${shadowY}px 24px rgba(99, 102, 241, 0.32), ${shadowX}px ${shadowY}px 8px rgba(15, 23, 42, 0.22)`;
+        }
       }
 
       if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
-        midRotateXTo(-normY * 2.2);
-        midRotateYTo(normX * 2.8);
-        midTranslateZTo(Math.max(0, (1 - distFromCenter * 0.45) * 2.4));
-        midXTo(normX * 1.5);
-        midYTo(normY * 1.0);
+        midRotateXTo(-normY * 4);
+        midRotateYTo(normX * 5);
+        midTranslateZTo(Math.max(0, (1 - distFromCenter * 0.35) * 5));
+        midXTo(normX * 3);
+        midYTo(normY * 2);
       }
     };
 
@@ -121,11 +127,11 @@ export default function Hero() {
           backfaceVisibility: 'hidden',
           willChange: 'transform, text-shadow',
         });
-        rotateXTo = gsap.quickTo(nameEl, 'rotateX', { duration: 0.45, ease: 'power2.out' });
-        rotateYTo = gsap.quickTo(nameEl, 'rotateY', { duration: 0.45, ease: 'power2.out' });
-        translateZTo = gsap.quickTo(nameEl, 'translateZ', { duration: 0.45, ease: 'power2.out' });
-        xTo = gsap.quickTo(nameEl, 'x', { duration: 0.45, ease: 'power2.out' });
-        yTo = gsap.quickTo(nameEl, 'y', { duration: 0.45, ease: 'power2.out' });
+        rotateXTo = gsap.quickTo(nameEl, 'rotateX', { duration: 0.32, ease: 'power2.out' });
+        rotateYTo = gsap.quickTo(nameEl, 'rotateY', { duration: 0.32, ease: 'power2.out' });
+        translateZTo = gsap.quickTo(nameEl, 'translateZ', { duration: 0.32, ease: 'power2.out' });
+        xTo = gsap.quickTo(nameEl, 'x', { duration: 0.32, ease: 'power2.out' });
+        yTo = gsap.quickTo(nameEl, 'y', { duration: 0.32, ease: 'power2.out' });
       }
 
       if (midgroundEl) {
@@ -195,7 +201,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-0 flex-col justify-center overflow-hidden bg-[#070b15] pt-24 pb-0 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      className="relative flex min-h-0 flex-col justify-center overflow-hidden bg-[#070b15] pt-24 pb-10 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
@@ -204,7 +210,7 @@ export default function Hero() {
       <HeroVisualGrid containerRef={heroRef} />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl">
-        <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12 lg:items-end lg:gap-12">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <div
               ref={statusRef}
@@ -222,13 +228,13 @@ export default function Hero() {
 
             <div className="space-y-5">
               <div
-                className="inline-block"
-                style={{ perspective: '800px', perspectiveOrigin: 'left center' }}
+                className="hero-reveal hero-reveal-delay-1 inline-block"
+                style={{ perspective: '620px', perspectiveOrigin: 'left center' }}
               >
                 <h1
                   ref={namePlaneRef}
                   id="hero-name"
-                  className="hero-reveal hero-reveal-delay-1 font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
+                  className="font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
                   style={{ transformStyle: 'preserve-3d' }}
                 >
                   {PERSONAL_INFO.name}
@@ -281,9 +287,9 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex justify-center lg:justify-end lg:pb-1">
+          <div className="flex justify-center lg:col-span-5">
             <AsciiArtCanvas
-              src="/hero-portrait.jpg"
+              src="/hero-portrait.webp"
               label="ASCII portrait of Dmitry Bashkatov"
             />
           </div>

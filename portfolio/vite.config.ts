@@ -17,7 +17,7 @@ function preloadFontsPlugin(): Plugin {
         const fontHrefs = Object.values(bundle)
           .filter((item) => item.type === 'asset' && item.fileName.endsWith('.woff2'))
           .map((item) => (item.type === 'asset' ? item.fileName : ''))
-          .filter(Boolean)
+          .filter((fileName) => fileName.includes('syne-latin-800'))
           .sort();
 
         if (fontHrefs.length === 0) return html;
