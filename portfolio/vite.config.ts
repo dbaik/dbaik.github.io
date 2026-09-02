@@ -1,18 +1,49 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
+import fs from 'fs';
 import path from 'path';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
-/** Inject <link rel="preload"> for hashed woff2 fonts so they start with CSS, not after it. */
-function preloadFontsPlugin(): Plugin {
+function rewriteCssUrlsForHtml(css: string, fileName: string): string {
+  const cssDir = path.posix.dirname(fileName);
+  if (cssDir === '.' || cssDir === '') return css;
+
+  return css.replace(/url\((['"]?)(\.\/[^'")]+)\1\)/g, (_match, quote: string, url: string) => {
+    const rewritten = `./${cssDir}/${url.slice(2)}`;
+    return `url(${quote}${rewritten}${quote})`;
+  });
+}
+
+/** Inline the main stylesheet and preload only the hero display font. */
+function inlineCssAndPreloadFontsPlugin(): Plugin {
+  const inlinedCss = new Set<string>();
+
   return {
-    name: 'preload-fonts',
+    name: 'inline-css-and-preload-fonts',
     transformIndexHtml: {
       order: 'post',
       handler(html, ctx) {
         const bundle = ctx.bundle;
         if (!bundle) return html;
+
+        let next = html;
+
+        for (const item of Object.values(bundle)) {
+          if (item.type !== 'asset' || !item.fileName.endsWith('.css')) continue;
+
+          const href = `./${item.fileName}`;
+          const raw = typeof item.source === 'string' ? item.source : item.source.toString();
+          const css = rewriteCssUrlsForHtml(raw, item.fileName).replace(/<\/style>/gi, '<\\/style>');
+          const linkPattern = new RegExp(
+            `\\s*<link[^>]*rel=["']stylesheet["'][^>]*href=["']${href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*>`,
+            'i',
+          );
+          if (linkPattern.test(next)) {
+            inlinedCss.add(item.fileName);
+            next = next.replace(linkPattern, `\n    <style>${css}</style>`);
+          }
+        }
 
         const fontHrefs = Object.values(bundle)
           .filter((item) => item.type === 'asset' && item.fileName.endsWith('.woff2'))
@@ -20,7 +51,7 @@ function preloadFontsPlugin(): Plugin {
           .filter((fileName) => fileName.includes('syne-latin-800'))
           .sort();
 
-        if (fontHrefs.length === 0) return html;
+        if (fontHrefs.length === 0) return next;
 
         const links = fontHrefs
           .map(
@@ -29,8 +60,21 @@ function preloadFontsPlugin(): Plugin {
           )
           .join('\n');
 
-        return html.replace(/\s*<\/head>/, `\n${links}\n  </head>`);
+        return next.replace(/\s*<\/head>/, `\n${links}\n  </head>`);
       },
+    },
+    writeBundle(options) {
+      const outDir = options.dir;
+      if (!outDir) return;
+
+      for (const fileName of inlinedCss) {
+        const filePath = path.join(outDir, fileName);
+        try {
+          fs.unlinkSync(filePath);
+        } catch {
+          // File may already be gone on incremental rebuilds.
+        }
+      }
     },
   };
 }
@@ -38,14 +82,14 @@ function preloadFontsPlugin(): Plugin {
 export default defineConfig(() => {
   return {
     base: './',
-    plugins: [react(), tailwindcss(), preloadFontsPlugin()],
+    plugins: [react(), tailwindcss(), inlineCssAndPreloadFontsPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
       },
     },
     build: {
-      cssCodeSplit: false,
+      cssCodeSplit: true,
       modulePreload: {
         resolveDependencies(filename, deps) {
           // Keep motion/gsap/lenis off the initial modulepreload list; they load on demand.
