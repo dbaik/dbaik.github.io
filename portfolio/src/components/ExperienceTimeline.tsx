@@ -20,7 +20,7 @@ export default function ExperienceTimeline() {
             Professional Experience
           </h2>
           <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-slate-400">
-            Independent contractor since 2017, including an embedded assignment with Goji Labs. 15+ years in frontend across WordPress and Shopify.
+            Independent contractor since 2017. 15+ years in frontend across WordPress and Shopify.
           </p>
         </div>
 

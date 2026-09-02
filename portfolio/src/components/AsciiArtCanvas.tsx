@@ -22,6 +22,12 @@ const CHARS = ' .:-=+*#%@'.split('');
 const SOURCE_ASPECT = 1;
 const PAPER_LUMA = 0.93;
 const MIN_INK = 0.07;
+const CELL_WIDTH_RATIO = 0.72;
+const CELL_HEIGHT_RATIO = 1.12;
+
+function glyphFontSize(width: number): number {
+  return width <= 270 ? 6 : 7;
+}
 
 function canvasBox(viewportWidth: number): { w: number; h: number } {
   const size =
@@ -91,9 +97,9 @@ function processImage(img: HTMLImageElement, width: number, height: number): Gly
   ctx.drawImage(img, dx, dy, drawWidth, drawHeight);
 
   const { data } = ctx.getImageData(0, 0, sampleW, sampleH);
-  const fontSize = width <= 270 ? 6 : 7;
-  const cellW = fontSize * 0.58;
-  const cellH = fontSize * 0.92;
+  const fontSize = glyphFontSize(width);
+  const cellW = fontSize * CELL_WIDTH_RATIO;
+  const cellH = fontSize * CELL_HEIGHT_RATIO;
   const glyphs: Glyph[] = [];
 
   for (let y = 0, row = 0; y < height; y += cellH, row += 1) {
@@ -184,7 +190,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     canvas.height = box.h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const fontSize = box.w <= 270 ? 6 : 7;
+    const fontSize = glyphFontSize(box.w);
     const maxRow = glyphsRef.current.reduce((max, glyph) => Math.max(max, glyph.row), 0);
     let frameId = 0;
     let visible = true;

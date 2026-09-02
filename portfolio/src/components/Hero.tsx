@@ -4,17 +4,10 @@ import { PERSONAL_INFO } from '../data/portfolioData';
 import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
 import { scrollToSection } from '../utils/scroll';
-import { readPinnedColorScheme, resolvedColorScheme } from '../utils/colorScheme';
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
-  const statusRef = useRef<HTMLDivElement | null>(null);
-  const namePlaneRef = useRef<HTMLHeadingElement | null>(null);
-  const midgroundRef = useRef<HTMLDivElement | null>(null);
-  const headlineRef = useRef<HTMLDivElement | null>(null);
-  const descRef = useRef<HTMLParagraphElement | null>(null);
-  const ctaRef = useRef<HTMLDivElement | null>(null);
-  const heroBoundsRef = useRef({ left: 0, top: 0, width: 0, height: 0 });
+  const portraitRef = useRef<HTMLDivElement | null>(null);
 
   const scrollTo = (id: string) => {
     scrollToSection(id);
@@ -22,178 +15,97 @@ export default function Hero() {
 
   useEffect(() => {
     const heroEl = heroRef.current;
-    const nameEl = namePlaneRef.current;
-    const midgroundEl = midgroundRef.current;
-    if (!heroEl) return;
+    const portraitEl = portraitRef.current;
+    if (!heroEl || !portraitEl) return;
 
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const hoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     let prefersReducedMotion = reducedMotionQuery.matches;
     let hasFineHover = hoverQuery.matches;
-    let cancelled = false;
-    let gsapModule: typeof import('gsap').default | null = null;
+    const target = { x: 0, y: 0 };
+    const current = { x: 0, y: 0 };
+    let frameId = 0;
 
-    let rotateXTo: ((value: number) => void) | null = null;
-    let rotateYTo: ((value: number) => void) | null = null;
-    let translateZTo: ((value: number) => void) | null = null;
-    let xTo: ((value: number) => void) | null = null;
-    let yTo: ((value: number) => void) | null = null;
-    let midRotateXTo: ((value: number) => void) | null = null;
-    let midRotateYTo: ((value: number) => void) | null = null;
-    let midTranslateZTo: ((value: number) => void) | null = null;
-    let midXTo: ((value: number) => void) | null = null;
-    let midYTo: ((value: number) => void) | null = null;
+    const maxRotate = 10;
 
-    const syncHeroBounds = () => {
-      const rect = heroEl.getBoundingClientRect();
-      heroBoundsRef.current = {
-        left: rect.left,
-        top: rect.top,
-        width: rect.width,
-        height: rect.height,
-      };
+    const applyTilt = () => {
+      portraitEl.style.transform = `rotateY(${current.x.toFixed(2)}deg) rotateX(${current.y.toFixed(2)}deg)`;
+    };
+
+    const tick = () => {
+      current.x += (target.x - current.x) * 0.12;
+      current.y += (target.y - current.y) * 0.12;
+
+      if (Math.abs(target.x - current.x) < 0.02 && Math.abs(target.y - current.y) < 0.02) {
+        current.x = target.x;
+        current.y = target.y;
+        applyTilt();
+        frameId = 0;
+        return;
+      }
+
+      applyTilt();
+      frameId = window.requestAnimationFrame(tick);
+    };
+
+    const startTick = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(tick);
     };
 
     const handlePointerMove = (e: PointerEvent) => {
       if (prefersReducedMotion || !hasFineHover) return;
 
-      const { left, top, width, height } = heroBoundsRef.current;
-      if (!width || !height) return;
+      const rect = heroEl.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
 
-      const centerX = left + width * 0.35;
-      const centerY = top + height * 0.35;
-      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (width * 0.42)));
-      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (height * 0.42)));
-      const distFromCenter = Math.sqrt(normX * normX + normY * normY);
-
-      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl) {
-        rotateXTo(-normY * 16);
-        rotateYTo(normX * 20);
-        translateZTo(Math.max(0, (1 - distFromCenter * 0.35) * 24));
-        xTo(normX * 14);
-        yTo(normY * 10);
-
-        const shadowX = (-normX * 14).toFixed(1);
-        const shadowY = (-normY * 9 + 4).toFixed(1);
-        const scheme = resolvedColorScheme(readPinnedColorScheme());
-        if (scheme === 'dark') {
-          nameEl.style.textShadow = `${shadowX}px ${shadowY}px 32px rgba(129, 140, 248, 0.5), ${shadowX}px ${shadowY}px 10px rgba(226, 232, 240, 0.16)`;
-        } else {
-          nameEl.style.textShadow = `${shadowX}px ${shadowY}px 24px rgba(99, 102, 241, 0.32), ${shadowX}px ${shadowY}px 8px rgba(15, 23, 42, 0.22)`;
-        }
-      }
-
-      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
-        midRotateXTo(-normY * 4);
-        midRotateYTo(normX * 5);
-        midTranslateZTo(Math.max(0, (1 - distFromCenter * 0.35) * 5));
-        midXTo(normX * 3);
-        midYTo(normY * 2);
-      }
+      const normX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const normY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+      target.x = Math.max(-1, Math.min(1, normX)) * maxRotate;
+      target.y = Math.max(-1, Math.min(1, -normY)) * maxRotate;
+      startTick();
     };
 
     const handlePointerLeave = () => {
-      if (rotateXTo && rotateYTo && translateZTo && xTo && yTo && nameEl && gsapModule) {
-        rotateXTo(0);
-        rotateYTo(0);
-        translateZTo(0);
-        xTo(0);
-        yTo(0);
-        gsapModule.to(nameEl, {
-          textShadow: '0px 0px 0px rgba(0,0,0,0)',
-          duration: 0.6,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        });
-      }
-
-      if (midRotateXTo && midRotateYTo && midTranslateZTo && midXTo && midYTo) {
-        midRotateXTo(0);
-        midRotateYTo(0);
-        midTranslateZTo(0);
-        midXTo(0);
-        midYTo(0);
-      }
+      target.x = 0;
+      target.y = 0;
+      startTick();
     };
 
-    const setupHover = (gsap: typeof import('gsap').default) => {
-      if (!hasFineHover || prefersReducedMotion) return;
-
-      if (nameEl) {
-        gsap.set(nameEl, {
-          transformOrigin: 'left center',
-          transformStyle: 'preserve-3d',
-          backfaceVisibility: 'hidden',
-          willChange: 'transform, text-shadow',
-        });
-        rotateXTo = gsap.quickTo(nameEl, 'rotateX', { duration: 0.32, ease: 'power2.out' });
-        rotateYTo = gsap.quickTo(nameEl, 'rotateY', { duration: 0.32, ease: 'power2.out' });
-        translateZTo = gsap.quickTo(nameEl, 'translateZ', { duration: 0.32, ease: 'power2.out' });
-        xTo = gsap.quickTo(nameEl, 'x', { duration: 0.32, ease: 'power2.out' });
-        yTo = gsap.quickTo(nameEl, 'y', { duration: 0.32, ease: 'power2.out' });
-      }
-
-      if (midgroundEl) {
-        gsap.set(midgroundEl, {
-          transformOrigin: 'left center',
-          transformStyle: 'preserve-3d',
-          backfaceVisibility: 'hidden',
-          willChange: 'transform',
-        });
-        midRotateXTo = gsap.quickTo(midgroundEl, 'rotateX', { duration: 0.45, ease: 'power2.out' });
-        midRotateYTo = gsap.quickTo(midgroundEl, 'rotateY', { duration: 0.45, ease: 'power2.out' });
-        midTranslateZTo = gsap.quickTo(midgroundEl, 'translateZ', { duration: 0.45, ease: 'power2.out' });
-        midXTo = gsap.quickTo(midgroundEl, 'x', { duration: 0.45, ease: 'power2.out' });
-        midYTo = gsap.quickTo(midgroundEl, 'y', { duration: 0.45, ease: 'power2.out' });
-      }
-
-      syncHeroBounds();
+    if (hasFineHover && !prefersReducedMotion) {
       heroEl.addEventListener('pointermove', handlePointerMove, { passive: true });
       heroEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
-      window.addEventListener('resize', syncHeroBounds, { passive: true });
-      window.addEventListener('scroll', syncHeroBounds, { passive: true });
-    };
-
-    const resetTransforms = () => {
-      if (!gsapModule) return;
-      if (nameEl) gsapModule.set(nameEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-      if (midgroundEl) {
-        gsapModule.set(midgroundEl, { rotateX: 0, rotateY: 0, translateZ: 0, x: 0, y: 0, clearProps: 'all' });
-      }
-    };
-
-    // Entrance uses CSS (hero-reveal). Load GSAP only for desktop tilt hover.
-    if (hasFineHover && !prefersReducedMotion) {
-      void import('gsap').then(({ default: gsap }) => {
-        if (cancelled) return;
-        gsapModule = gsap;
-        setupHover(gsap);
-      });
     }
 
     const handleReducedMotionChange = (e: MediaQueryListEvent) => {
       prefersReducedMotion = e.matches;
-      if (prefersReducedMotion) resetTransforms();
+      if (prefersReducedMotion) {
+        target.x = 0;
+        target.y = 0;
+        startTick();
+      }
     };
 
     const handleHoverChange = (e: MediaQueryListEvent) => {
       hasFineHover = e.matches;
-      if (!hasFineHover) resetTransforms();
+      if (!hasFineHover) {
+        target.x = 0;
+        target.y = 0;
+        startTick();
+      }
     };
 
     reducedMotionQuery.addEventListener('change', handleReducedMotionChange);
     hoverQuery.addEventListener('change', handleHoverChange);
 
     return () => {
-      cancelled = true;
       heroEl.removeEventListener('pointermove', handlePointerMove);
       heroEl.removeEventListener('pointerleave', handlePointerLeave);
-      window.removeEventListener('resize', syncHeroBounds);
-      window.removeEventListener('scroll', syncHeroBounds);
       reducedMotionQuery.removeEventListener('change', handleReducedMotionChange);
       hoverQuery.removeEventListener('change', handleHoverChange);
-      resetTransforms();
+      if (frameId) window.cancelAnimationFrame(frameId);
+      portraitEl.style.transform = '';
     };
   }, []);
 
@@ -213,7 +125,6 @@ export default function Hero() {
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="lg:col-span-7">
             <div
-              ref={statusRef}
               id="hero-status"
               className="hero-reveal hero-reveal-delay-0 mb-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1"
             >
@@ -227,36 +138,22 @@ export default function Hero() {
             </div>
 
             <div className="space-y-5">
-              <div
-                className="hero-reveal hero-reveal-delay-1 inline-block"
-                style={{ perspective: '620px', perspectiveOrigin: 'left center' }}
+              <h1
+                id="hero-name"
+                className="hero-reveal hero-reveal-delay-1 font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block"
               >
-                <h1
-                  ref={namePlaneRef}
-                  id="hero-name"
-                  className="font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text inline-block origin-left"
-                  style={{ transformStyle: 'preserve-3d' }}
-                >
-                  {PERSONAL_INFO.name}
-                </h1>
-              </div>
+                {PERSONAL_INFO.name}
+              </h1>
 
-              <div
-                ref={midgroundRef}
-                className="origin-left"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <div ref={headlineRef} id="hero-tagline" className="hero-reveal hero-reveal-delay-2">
-                  <h2 className="font-display text-2xl sm:text-3xl lg:text-[2rem] xl:text-4xl font-bold text-slate-100 leading-snug max-w-2xl">
-                    Pixel-perfect for users. <br className="hidden sm:inline" />
-                    Editable for teams. <br className="hidden sm:inline" />
-                    Maintainable for developers.
-                  </h2>
-                </div>
+              <div id="hero-tagline" className="hero-reveal hero-reveal-delay-2">
+                <h2 className="font-display text-2xl sm:text-3xl lg:text-[2rem] xl:text-4xl font-bold text-slate-100 leading-snug max-w-2xl">
+                  Pixel-perfect for users. <br className="hidden sm:inline" />
+                  Editable for teams. <br className="hidden sm:inline" />
+                  Maintainable for developers.
+                </h2>
               </div>
 
               <p
-                ref={descRef}
                 id="hero-desc"
                 className="hero-reveal hero-reveal-delay-3 font-sans text-sm sm:text-base text-slate-400 max-w-[38rem] leading-relaxed"
               >
@@ -265,7 +162,6 @@ export default function Hero() {
             </div>
 
             <div
-              ref={ctaRef}
               id="hero-cta"
               className="hero-reveal hero-reveal-delay-4 mt-8 flex flex-wrap items-center gap-4"
             >
@@ -283,15 +179,20 @@ export default function Hero() {
               >
                 <span>View All Projects</span>
               </button>
-
             </div>
           </div>
 
-          <div className="flex justify-center lg:col-span-5">
-            <AsciiArtCanvas
-              src="/hero-portrait.webp"
-              label="ASCII portrait of Dmitry Bashkatov"
-            />
+          <div className="flex justify-center lg:col-span-5" style={{ perspective: '1100px' }}>
+            <div
+              ref={portraitRef}
+              className="origin-center"
+              style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
+            >
+              <AsciiArtCanvas
+                src="/hero-portrait.webp"
+                label="ASCII portrait of Dmitry Bashkatov"
+              />
+            </div>
           </div>
         </div>
       </div>
