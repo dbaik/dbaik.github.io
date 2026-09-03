@@ -17,15 +17,15 @@ function resolveSection(target: string): HTMLElement | null {
   );
 }
 
-function scrollToElement(targetEl: HTMLElement, targetOffset: number) {
+function scrollToElement(targetEl: HTMLElement, targetOffset: number, immediate = false) {
   const globalLenis = (window as unknown as { __lenis?: { scrollTo: (target: unknown, opts: unknown) => void } }).__lenis;
 
   if (globalLenis && typeof globalLenis.scrollTo === 'function') {
     globalLenis.scrollTo(targetEl, {
       offset: targetOffset,
-      duration: 0.9,
+      duration: immediate ? 0 : 0.9,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      immediate: false,
+      immediate,
     });
     return;
   }
@@ -68,18 +68,20 @@ export function scrollToSection(
     window.history.pushState(null, '', hash);
   }
 
-  const tryScroll = () => {
+  const tryScroll = (immediate = false) => {
     const targetEl = resolveSection(target);
     if (!targetEl) return false;
-    scrollToElement(targetEl, targetOffset);
+    scrollToElement(targetEl, targetOffset, immediate);
     return targetEl.id === id;
   };
 
-  if (tryScroll()) return;
+  tryScroll(false);
 
   const started = performance.now();
   const poll = () => {
-    if (tryScroll() || performance.now() - started > 2000) return;
+    const elapsed = performance.now() - started;
+    tryScroll(elapsed > 200);
+    if (elapsed > 1800) return;
     window.requestAnimationFrame(poll);
   };
   window.requestAnimationFrame(poll);

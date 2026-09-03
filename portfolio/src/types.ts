@@ -14,6 +14,10 @@ export interface Project {
   period?: string;
   technologies: string[];
   description: string;
+  caseHeadline?: string;
+  challenge?: string;
+  contribution?: string;
+  outcome?: string;
   responsibilities: string[];
   highlights: {
     label: string;
@@ -72,6 +76,16 @@ export interface ScrollStoryFrame {
     label: string;
     badge: string;
   }[];
+}
+
+export interface ServiceItem {
+  title: string;
+  description: string;
+}
+
+export interface WhyMeItem {
+  audience: string;
+  statement: string;
 }
 
 export interface BenchmarkStat {

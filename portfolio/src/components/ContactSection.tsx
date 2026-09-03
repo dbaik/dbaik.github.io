@@ -6,11 +6,10 @@ import { PERSONAL_INFO } from '../data/portfolioData'
 const FORMSPREE_FORM_ID = 'xaeywwjb'
 
 const projectTypes = [
-  'Custom WordPress & Gutenberg Theme',
-  'Shopify E-Commerce Storefront',
-  'Performance & Core Web Vitals Optimization',
-  'Figma to Pixel-Perfect HTML/CSS',
-  'B2B / Contract Engagement'
+  'WordPress development',
+  'Shopify development',
+  'Frontend / performance',
+  'Other',
 ]
 
 const inputClassName =
@@ -81,7 +80,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           <label htmlFor="contact-name" className={labelClassName}>
             YOUR NAME *
           </label>
-          <input id="contact-name" type="text" name="name" placeholder="Jane Doe" className={inputClassName} required />
+          <input id="contact-name" type="text" name="name" autoComplete="name" placeholder="Jane Doe" className={inputClassName} required />
           <ValidationError prefix="Name" field="name" errors={state.errors} className="font-mono text-xs text-rose-400" />
         </div>
 
@@ -93,6 +92,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
             id="contact-email"
             type="email"
             name="email"
+            autoComplete="email"
             placeholder="jane@company.com"
             className={inputClassName}
             required
@@ -103,7 +103,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
 
       <div className="space-y-1.5">
         <label id="contact-project-type-label" htmlFor="contact-project-type" className={labelClassName}>
-          PROJECT / ROLE FOCUS
+          PROJECT TYPE
         </label>
         <select
           id="contact-project-type"
@@ -114,7 +114,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
         >
           <option value="" disabled hidden>
-            Select project focus…
+            Select project type…
           </option>
           {projectTypes.map((type) => (
             <option key={type} value={type} className="bg-slate-900 text-white">
@@ -138,7 +138,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           id="contact-message"
           name="message"
           rows={4}
-          placeholder="Tell me about your project, timeline, or open role..."
+          placeholder="Brief, Figma link, existing site, or contract requirements…"
           className={`${inputClassName} resize-none`}
           required
         />
@@ -147,13 +147,17 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
 
       <ValidationError errors={state.errors} className="font-mono text-xs text-rose-400" />
 
+      <p className="font-sans text-sm text-slate-400">
+        {PERSONAL_INFO.replyNote}
+      </p>
+
       <button
         type="submit"
         disabled={state.submitting}
         className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 font-sans text-sm font-bold text-white hover:bg-indigo-500 disabled:opacity-50 transition-all cursor-pointer shadow-lg shadow-indigo-600/20 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
       >
         <Send size={15} />
-        <span>{state.submitting ? 'Sending…' : 'Send Message'}</span>
+        <span>{state.submitting ? 'Sending…' : 'Send Project Details'}</span>
       </button>
     </form>
   )
@@ -177,15 +181,15 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[10px] text-indigo-400 uppercase tracking-widest font-bold">
-              <span>07 / GET IN TOUCH</span>
+              <span>05 / CONTACT</span>
             </div>
 
             <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              Let’s build something clean, fast, and maintainable.
+              Have a WordPress or Shopify project that needs senior execution?
             </h2>
 
             <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed">
-              {PERSONAL_INFO.availability} WordPress and Shopify from Figma to production — including performance, technical SEO, analytics, and AI-assisted workflows.
+              Available for B2B and contract engagements. Send the brief, Figma link, existing site, or contract requirements.
             </p>
 
             <div className="pt-2 flex flex-col sm:flex-row lg:flex-col gap-3">

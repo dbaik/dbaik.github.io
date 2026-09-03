@@ -10,7 +10,13 @@ export default function CustomCursor() {
 
   const [mounted, setMounted] = useState(false);
   const [isTouchDevice] = useState(
-    () => typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0),
+    () =>
+      typeof window !== 'undefined' &&
+      (
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ),
   );
 
   const applyCursorStyles = () => {
@@ -65,11 +71,12 @@ export default function CustomCursor() {
 
     const handleMouseMove = (e: MouseEvent) => {
       positionRef.current = { x: e.clientX, y: e.clientY };
-      const overPhoto = Boolean(
-        document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-cursor="hide"]'),
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      const overHidden = Boolean(
+        hit?.closest('[data-cursor="hide"], input, select, textarea, [contenteditable="true"]'),
       );
-      if (overPhoto !== hoverRef.current.hidden) {
-        setHoverState(hoverRef.current.hovered, hoverRef.current.label, overPhoto);
+      if (overHidden !== hoverRef.current.hidden) {
+        setHoverState(hoverRef.current.hovered, hoverRef.current.label, overHidden);
       }
       applyCursorStyles();
       if (!hoverRef.current.hidden) {
@@ -91,7 +98,13 @@ export default function CustomCursor() {
         return;
       }
 
-      const standardInteractive = target.closest('a, button, select, input, textarea');
+      const overFormField = Boolean(target.closest('input, select, textarea, [contenteditable="true"]'));
+      if (overFormField) {
+        setHoverState(false, null, true);
+        return;
+      }
+
+      const standardInteractive = target.closest('a, button');
       setHoverState(Boolean(standardInteractive), null, false);
     };
 

@@ -3,12 +3,17 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowUpRight, ExternalLink, X, 
-  CheckCircle2, Info
+  CheckCircle2
 } from 'lucide-react';
 import { FEATURED_PROJECT_IDS, PROJECTS_DATA } from '../data/portfolioData';
 import { COVER_IMAGES } from '../data/coverImages';
 import { Project } from '../types';
 import { BrowserFrame } from './BrowserFrame';
+import { scrollToSection } from '../utils/scroll';
+
+function pageSpeedInsightsUrl(url: string): string {
+  return `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(url)}`;
+}
 
 function projectCoverImage(project: Project) {
   return project.coverKey ? COVER_IMAGES[project.coverKey] : undefined;
@@ -17,7 +22,7 @@ function projectCoverImage(project: Project) {
 export default function ProjectsShowcase() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
-  const [revealedCardId, setRevealedCardId] = useState<string | null>(null);
+  const [archiveOpen, setArchiveOpen] = useState(false);
   const triggerButtonRef = useRef<HTMLElement | null>(null);
   const modalCloseBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -111,16 +116,23 @@ export default function ProjectsShowcase() {
     setActiveModalProject(project);
   };
 
+  useEffect(() => {
+    const syncHash = () => {
+      if (window.location.hash === '#archive') {
+        setArchiveOpen(true);
+      }
+    };
+    syncHash();
+    window.addEventListener('hashchange', syncHash);
+    return () => window.removeEventListener('hashchange', syncHash);
+  }, []);
+
   const handleCloseModal = () => {
     setActiveModalProject(null);
     if (triggerButtonRef.current) {
       triggerButtonRef.current.focus();
       triggerButtonRef.current = null;
     }
-  };
-
-  const toggleRevealCard = (projectId: string) => {
-    setRevealedCardId((prev) => (prev === projectId ? null : projectId));
   };
 
   return (
@@ -132,25 +144,23 @@ export default function ProjectsShowcase() {
       >
         <div className="mx-auto max-w-6xl">
           
-          {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-4 border-b border-white/10 pb-6 sm:pb-8">
             <div>
               <div className="inline-flex items-center gap-2 font-mono text-[10px] text-indigo-400 uppercase tracking-widest mb-2 font-bold">
-                <span>01 / SELECTED WORK</span>
+                <span>01 / WORK</span>
               </div>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
-                Featured Projects
+                Selected Case Studies
               </h2>
             </div>
             <p className="max-w-md font-sans text-xs sm:text-sm text-slate-400 leading-relaxed">
-              Selected work from the current CV: Shopify storefronts and custom WordPress themes. Hover or tap a project for technical details.
+              Three projects. The technical problem, what I owned, and the system that shipped.
             </p>
           </div>
 
-          {/* Progressive Disclosure Projects Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-7">
             {featuredProjects.map((project, idx) => {
-              const isRevealed = revealedCardId === project.id;
+              const cover = projectCoverImage(project);
 
               return (
                 <motion.article
@@ -159,181 +169,99 @@ export default function ProjectsShowcase() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.4, delay: idx * 0.06, ease: 'easeOut' }}
-                  className="group/card relative flex flex-col justify-between rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-6 backdrop-blur-xl hover:border-white/20 transition-colors shadow-lg overflow-hidden"
+                  className="group/card relative flex flex-col rounded-2xl border border-white/10 bg-slate-950/60 p-4 sm:p-5 backdrop-blur-xl hover:border-white/20 transition-colors shadow-lg overflow-hidden"
                 >
-                  {/* Default Top Bar: Short Eyebrow + Project Title */}
-                  <div className="flex items-start justify-between gap-3 mb-3.5 sm:mb-4">
-                    <div className="min-w-0 flex-1">
-                      {/* Short Category Eyebrow */}
-                      <span className="font-mono text-xs uppercase font-bold tracking-wider text-indigo-400 block mb-1">
-                        {project.categoryLabel}
-                      </span>
-
-                      {/* Project Title with External Arrow Cue - Arrow strictly shows only on title hover/focus */}
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group/title inline-flex items-center gap-1.5 font-display text-xl sm:text-2xl font-extrabold text-white hover:text-indigo-300 focus-visible:text-indigo-300 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg leading-snug"
-                        title={`Visit ${project.title} (${project.domain})`}
-                      >
-                        <span className="break-words">{project.title}</span>
-                        <ArrowUpRight 
-                          size={18} 
-                          className="text-indigo-400 opacity-0 -translate-x-1 translate-y-1 group-hover/title:opacity-100 group-hover/title:translate-x-0 group-hover/title:translate-y-0 group-focus-visible/title:opacity-100 group-focus-visible/title:translate-x-0 group-focus-visible/title:translate-y-0 transition-all duration-200 shrink-0 motion-reduce:transition-none motion-reduce:transform-none" 
-                          aria-hidden="true"
-                        />
-                      </a>
-                    </div>
-
-                    {/* Mobile Tap Toggle Indicator */}
-                    <button
-                      type="button"
-                      onClick={() => toggleRevealCard(project.id)}
-                      className="lg:hidden p-1.5 rounded-lg border border-white/10 bg-white/5 text-slate-400 hover:text-white hover:bg-white/10 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none cursor-pointer shrink-0"
-                      aria-label={isRevealed ? `Hide details for ${project.title}` : `Show technical details for ${project.title}`}
-                      title={isRevealed ? "Hide details" : "Technical details"}
-                    >
-                      <Info size={15} className={isRevealed ? "text-indigo-400" : ""} />
-                    </button>
-                  </div>
-
-                  {/* Visual Work First: BrowserFrame with Progressive Disclosure Overlay */}
-                  {projectCoverImage(project) ? (
-                    <div className="relative mt-1">
+                  {cover ? (
+                    <div className="mb-4">
                       <BrowserFrame
-                        src={projectCoverImage(project)!}
+                        src={cover}
                         alt={`${project.title} (${project.domain}) live production website`}
                         domain={project.domain}
-                        onClick={() => toggleRevealCard(project.id)}
+                        onClick={(e) => handleOpenModal(project, e)}
                         className="cursor-pointer"
-                      >
-                        {/* Progressive Disclosure Information Layer (Revealed strictly on BrowserFrame interaction) */}
-                        <div
-                          className={`absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/80 to-slate-950/40 backdrop-blur-[2px] p-5 sm:p-6 flex flex-col justify-end gap-3.5 transition-all duration-300 ease-out motion-reduce:transition-none motion-reduce:translate-y-0 rounded-b-[11px] ${
-                            isRevealed
-                              ? 'opacity-100 translate-y-0 pointer-events-auto'
-                              : 'opacity-0 translate-y-2 pointer-events-none group-hover/browser:opacity-100 group-hover/browser:translate-y-0 group-hover/browser:pointer-events-auto group-focus-within/browser:opacity-100 group-focus-within/browser:translate-y-0 group-focus-within/browser:pointer-events-auto'
-                          }`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {/* Short Description */}
-                          <p className="font-sans text-xs sm:text-sm text-slate-200 leading-relaxed line-clamp-3">
-                            {project.description}
-                          </p>
-
-                          {/* Tech Stack & Action Links */}
-                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-                            {/* Technology Stack (3-4 items) */}
-                            <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs text-slate-300">
-                              {project.technologies.slice(0, 4).map((tech, i) => (
-                                <span key={tech} className="inline-flex items-center gap-1.5">
-                                  <span>{tech}</span>
-                                  {i < Math.min(project.technologies.length, 4) - 1 && (
-                                    <span className="text-slate-600 font-normal select-none">·</span>
-                                  )}
-                                </span>
-                              ))}
-                            </div>
-
-                            {/* Action Links */}
-                            <div className="flex items-center gap-2 shrink-0 justify-end">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleOpenModal(project, e);
-                                }}
-                                className="rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 px-3 py-1.5 font-mono text-xs font-semibold text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                              >
-                                Case Study
-                              </button>
-                              <a
-                                href={project.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 font-mono text-xs font-semibold inline-flex items-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                                title={`Visit ${project.title} live site`}
-                              >
-                                <span>Visit</span>
-                                <ExternalLink size={12} />
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </BrowserFrame>
+                      />
                     </div>
-                  ) : (
-                    <div className="relative mt-1 flex flex-1 flex-col justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-5">
-                      <p className="font-sans text-sm text-slate-300 leading-relaxed">
-                        {project.description}
-                      </p>
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs text-slate-400">
-                          {project.technologies.slice(0, 4).map((tech, i) => (
-                            <span key={tech} className="inline-flex items-center gap-1.5">
-                              <span>{tech}</span>
-                              {i < Math.min(project.technologies.length, 4) - 1 && (
-                                <span className="text-slate-600 font-normal select-none">·</span>
-                              )}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={(e) => handleOpenModal(project, e)}
-                            className="rounded-lg border border-white/20 bg-white/10 hover:bg-white/20 px-3 py-1.5 font-mono text-xs font-semibold text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                          >
-                            Case Study
-                          </button>
-                          <a
-                            href={project.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 font-mono text-xs font-semibold inline-flex items-center gap-1.5 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                            title={`Visit ${project.title} live site`}
-                          >
-                            <span>Visit</span>
-                            <ExternalLink size={12} />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  ) : null}
 
+                  <p className="font-mono text-[10px] uppercase font-bold tracking-wider text-indigo-400 mb-2">
+                    {project.title}
+                  </p>
+
+                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-white leading-snug mb-4">
+                    {project.caseHeadline ?? project.description}
+                  </h3>
+
+                  {project.challenge ? (
+                    <p className="font-sans text-sm text-slate-400 leading-relaxed mb-2">
+                      <span className="font-semibold text-slate-300">Challenge. </span>
+                      {project.challenge}
+                    </p>
+                  ) : null}
+
+                  {project.outcome ? (
+                    <p className="font-sans text-sm text-slate-400 leading-relaxed mb-5">
+                      <span className="font-semibold text-slate-300">Outcome. </span>
+                      {project.outcome}
+                    </p>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    onClick={(e) => handleOpenModal(project, e)}
+                    className="mt-auto inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-indigo-300 hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+                  >
+                    <span>View case</span>
+                    <ArrowUpRight size={13} aria-hidden="true" />
+                  </button>
                 </motion.article>
               );
             })}
           </div>
 
+          <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-white/10 pt-6">
+            <button
+              type="button"
+              onClick={() => scrollToSection('#contact')}
+              className="font-sans text-sm font-semibold text-white hover:text-indigo-300 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+            >
+              Have a similar project?
+            </button>
+            <a
+              href="#archive"
+              onClick={(e) => {
+                e.preventDefault();
+                setArchiveOpen(true);
+                scrollToSection('#archive');
+              }}
+              className="font-mono text-xs text-slate-400 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+            >
+              More work →
+            </a>
+          </div>
+
         </div>
       </section>
 
-      {/* 2. SELECTED PROJECTS ARCHIVE (COMPACT EDITORIAL INDEX) */}
-      <section 
-        id="archive" 
-        className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5"
-      >
+      <section className="relative bg-[#070b15] pb-14 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-white/5">
         <div className="mx-auto max-w-6xl">
-          
-          {/* Section Header with Category Filters */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-white/10 pb-6">
-            <div>
-              <div className="inline-flex items-center gap-2 font-mono text-[10px] text-indigo-400 uppercase tracking-widest mb-1 font-bold">
-                <span>02 / PROJECT ARCHIVE</span>
-              </div>
-              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                Selected Projects Archive
-              </h2>
-            </div>
+          <details
+            id="archive"
+            className="group rounded-2xl border border-white/10 bg-slate-950/40 scroll-mt-24"
+            open={archiveOpen}
+            onToggle={(event) => setArchiveOpen(event.currentTarget.open)}
+          >
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-display text-lg font-bold text-white marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
+              <span>More work</span>
+              <span className="font-mono text-xs font-semibold text-slate-400 group-open:hidden">Show archive</span>
+              <span className="font-mono text-xs font-semibold text-slate-400 hidden group-open:inline">Hide archive</span>
+            </summary>
 
-            {/* Filter Pills */}
-            <div className="flex flex-wrap gap-1.5">
+            <div className="px-5 pb-6">
+          <search className="flex flex-wrap gap-1.5 mb-6" aria-label="Filter archived projects">
               {categories.map((cat) => (
                 <button
                   key={cat.id}
+                  type="button"
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`rounded-lg px-3 py-1.5 font-mono text-xs transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
                     selectedCategory === cat.id
@@ -344,8 +272,7 @@ export default function ProjectsShowcase() {
                   {cat.label}
                 </button>
               ))}
-            </div>
-          </div>
+          </search>
 
           {/* Desktop & Tablet Table (sm:block) */}
           <div className="hidden sm:block overflow-x-auto rounded-xl border border-white/10 bg-slate-950/60 backdrop-blur-md">
@@ -461,6 +388,8 @@ export default function ProjectsShowcase() {
             ))}
           </div>
 
+            </div>
+          </details>
         </div>
       </section>
 
@@ -525,11 +454,16 @@ export default function ProjectsShowcase() {
                     </a>
                   </div>
 
-                  <p className="font-sans text-sm text-slate-300 leading-relaxed mb-6">
-                    {activeModalProject.description}
-                  </p>
+                  {activeModalProject.caseHeadline ? (
+                    <p className="font-sans text-sm text-slate-300 leading-relaxed mb-6">
+                      {activeModalProject.caseHeadline}
+                    </p>
+                  ) : (
+                    <p className="font-sans text-sm text-slate-300 leading-relaxed mb-6">
+                      {activeModalProject.description}
+                    </p>
+                  )}
 
-                  {/* Original Production Screenshot Preview */}
                   {projectCoverImage(activeModalProject) && (
                     <div className="mb-6">
                       <BrowserFrame
@@ -541,13 +475,37 @@ export default function ProjectsShowcase() {
                     </div>
                   )}
 
-                  {/* Key Responsibilities */}
+                  {activeModalProject.challenge ? (
+                    <div className="mb-5">
+                      <h4 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">
+                        Challenge
+                      </h4>
+                      <p className="font-sans text-sm text-slate-300 leading-relaxed">
+                        {activeModalProject.challenge}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  {activeModalProject.contribution ? (
+                    <div className="mb-5">
+                      <h4 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">
+                        What I owned
+                      </h4>
+                      <p className="font-sans text-sm text-slate-300 leading-relaxed">
+                        {activeModalProject.contribution}
+                      </p>
+                    </div>
+                  ) : null}
+
                   <div className="mb-6">
                     <h4 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-3">
-                      WHAT I BUILT & DELIVERED
+                      What I built
                     </h4>
                     <ul className="space-y-2.5">
-                      {activeModalProject.responsibilities.map((resp, i) => (
+                      {(activeModalProject.caseHeadline
+                        ? activeModalProject.responsibilities.slice(0, 3)
+                        : activeModalProject.responsibilities
+                      ).map((resp, i) => (
                         <li key={i} className="flex items-start gap-2.5 text-sm text-slate-300">
                           <CheckCircle2 size={15} className="text-indigo-400 mt-0.5 shrink-0" />
                           <span className="leading-relaxed">{resp}</span>
@@ -555,6 +513,17 @@ export default function ProjectsShowcase() {
                       ))}
                     </ul>
                   </div>
+
+                  {activeModalProject.outcome ? (
+                    <div className="mb-6">
+                      <h4 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">
+                        Outcome
+                      </h4>
+                      <p className="font-sans text-sm text-slate-300 leading-relaxed">
+                        {activeModalProject.outcome}
+                      </p>
+                    </div>
+                  ) : null}
 
                   {/* Tech Stack */}
                   <div className="mb-6">
@@ -570,19 +539,30 @@ export default function ProjectsShowcase() {
                     </div>
                   </div>
 
-                  {/* Action CTA */}
-                  <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                    <a
-                      href={activeModalProject.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
-                    >
-                      <span>Visit Live Website</span>
-                      <ExternalLink size={14} />
-                    </a>
+                  <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <a
+                        href={activeModalProject.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
+                      >
+                        <span>Visit live site</span>
+                        <ExternalLink size={14} />
+                      </a>
+                      <a
+                        href={pageSpeedInsightsUrl(activeModalProject.url)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
+                      >
+                        <span>PageSpeed Insights</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    </div>
 
                     <button
+                      type="button"
                       onClick={handleCloseModal}
                       className="font-mono text-xs text-slate-400 hover:text-white cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded px-2 py-1"
                     >

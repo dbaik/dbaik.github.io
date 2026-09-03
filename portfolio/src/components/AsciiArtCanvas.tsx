@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   readPinnedColorScheme,
   resolvedColorScheme,
@@ -9,6 +9,7 @@ interface AsciiArtCanvasProps {
   src: string;
   className?: string;
   label?: string;
+  followRootRef?: RefObject<HTMLElement | null>;
 }
 
 interface Glyph {
@@ -26,12 +27,22 @@ const CELL_WIDTH_RATIO = 0.72;
 const CELL_HEIGHT_RATIO = 1.12;
 
 function glyphFontSize(width: number): number {
-  return width <= 270 ? 6 : 7;
+  if (width <= 270) return 6;
+  if (width <= 460) return 7;
+  return 8;
 }
 
 function canvasBox(viewportWidth: number): { w: number; h: number } {
   const size =
-    viewportWidth <= 480 ? 340 : viewportWidth <= 900 ? 380 : viewportWidth <= 1280 ? 400 : 420;
+    viewportWidth <= 480
+      ? 340
+      : viewportWidth <= 900
+        ? 380
+        : viewportWidth < 1024
+          ? 400
+          : viewportWidth < 1280
+            ? 448
+            : 580;
   return { w: size, h: Math.round(size / SOURCE_ASPECT) };
 }
 
@@ -91,6 +102,9 @@ function processImage(img: HTMLImageElement, width: number, height: number): Gly
     drawWidth = sampleW;
     drawHeight = sampleW / imgAspect;
   }
+  const desktopZoom = width >= 448 ? 1.28 : 1;
+  drawWidth *= desktopZoom;
+  drawHeight *= desktopZoom;
   const focusY = 0.19;
   const dx = (sampleW - drawWidth) / 2;
   const dy = (sampleH - drawHeight) * focusY;
@@ -142,7 +156,7 @@ function glyphLook(
   }
 }
 
-export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtCanvasProps) {
+export default function AsciiArtCanvas({ src, className = '', label, followRootRef }: AsciiArtCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glyphsRef = useRef<Glyph[]>([]);
   const pointerRef = useRef({ x: -1000, y: -1000, active: false });
@@ -286,9 +300,11 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
       drawFrame(!stillRevealing());
     };
 
+    const followRoot = followRootRef?.current ?? canvas;
+
     if (!reducedMotion) {
-      canvas.addEventListener('pointermove', onMove, { passive: true });
-      canvas.addEventListener('pointerleave', onLeave, { passive: true });
+      followRoot.addEventListener('pointermove', onMove, { passive: true });
+      followRoot.addEventListener('pointerleave', onLeave, { passive: true });
     }
 
     const observer = new IntersectionObserver(
@@ -317,10 +333,10 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
       observer.disconnect();
       schemeObserver.disconnect();
       schemeMedia.removeEventListener('change', redrawForScheme);
-      canvas.removeEventListener('pointermove', onMove);
-      canvas.removeEventListener('pointerleave', onLeave);
+      followRoot.removeEventListener('pointermove', onMove);
+      followRoot.removeEventListener('pointerleave', onLeave);
     };
-  }, [ready, box.w, box.h]);
+  }, [ready, box.w, box.h, followRootRef]);
 
   return (
     <div className={`relative flex items-center justify-center ${className}`}>

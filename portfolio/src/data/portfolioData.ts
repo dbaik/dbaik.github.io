@@ -1,13 +1,34 @@
-import { Project, ExperienceItem, SkillGroup, ScrollStoryFrame, BenchmarkStat } from '../types';
+import { Project, ExperienceItem, SkillGroup, ScrollStoryFrame, BenchmarkStat, ServiceItem, WhyMeItem } from '../types';
 
 export const PERSONAL_INFO = {
   name: 'Dmitry Bashkatov',
   nickname: 'dbaik',
-  title: 'Web Developer | WordPress & Shopify',
-  subtitle: 'Pixel-perfect for users. Editable for teams. Maintainable for developers.',
+  title: 'Senior WordPress & Shopify Developer',
+  subtitle: 'From Figma to a fast, editable production site.',
   experienceSummary:
-    '15+ years in frontend development across WordPress and Shopify, from Figma to production. Custom themes, Gutenberg/ACF, Liquid, responsive frontend, performance, technical SEO, analytics, and AI-assisted workflows.',
-  availability: 'Open to B2B and contract opportunities.',
+    'I help agencies and product teams turn approved designs into reliable WordPress and Shopify builds.',
+  availability: 'Available for B2B and contract engagements. I usually reply within 24 hours.',
+  trustLine: '15+ years shipping production websites · Agency & direct-client experience · WordPress · Shopify',
+  replyNote: 'I usually reply within 24 hours.',
+  whyMeIntro: 'Built for everyone who has to use the site after launch.',
+  whyMe: [
+    {
+      audience: 'For designers',
+      statement: 'The production frontend stays faithful to the intended layouts and interaction system.',
+    },
+    {
+      audience: 'For content teams',
+      statement: 'Routine updates can happen through reusable CMS or storefront components instead of developer tickets.',
+    },
+    {
+      audience: 'For developers',
+      statement: 'The project is handed over as maintainable production code rather than a fragile collection of one-off fixes.',
+    },
+    {
+      audience: 'For the business',
+      statement: 'The result is a site that can keep evolving after launch.',
+    },
+  ] satisfies WhyMeItem[],
   email: 'dbashkatoff@gmail.com',
   github: 'https://github.com/dbaik',
   linkedin: 'https://www.linkedin.com/in/dbashkatoff/',
@@ -59,6 +80,24 @@ export const PERSONAL_INFO = {
   ]
 };
 
+export const SERVICES: ServiceItem[] = [
+  {
+    title: 'Custom WordPress Development',
+    description:
+      'Figma-to-production builds, custom themes, Gutenberg and ACF, integrations, multilingual sites, WooCommerce, and maintainable editorial systems.',
+  },
+  {
+    title: 'Shopify Storefront Development',
+    description:
+      'Custom Liquid themes, reusable sections, product and collection templates, variants, and specialized quote, request, or upload workflows.',
+  },
+  {
+    title: 'Frontend & Performance Work',
+    description:
+      'Responsive implementation, Core Web Vitals, frontend cleanup, animation, technical SEO, analytics integration, and production stabilization.',
+  },
+];
+
 export const PROJECTS_DATA: Project[] = [
   {
     id: 'wwf-canada',
@@ -71,6 +110,12 @@ export const PROJECTS_DATA: Project[] = [
     role: 'Frontend Developer',
     technologies: ['WordPress CMS', 'PHP', 'SCSS', 'JavaScript', 'Gutenberg', 'Figma', 'Accessibility'],
     description: 'Canada\'s largest international conservation organization website, featuring high-engagement campaign hubs, species at risk indexes, and bilingual donation architectures.',
+    caseHeadline: 'Accessible WordPress architecture for content-heavy conservation campaigns',
+    challenge:
+      'Campaign, species, and conservation content needed a responsive frontend and reusable editorial system that could support accessibility and media-heavy pages.',
+    contribution:
+      'Owned the frontend for campaign hubs, species-at-risk indexes, and bilingual donation architectures within the WWF Canada WordPress platform.',
+    outcome: 'Editors can create campaign and conservation pages using reusable Gutenberg blocks.',
     responsibilities: [
       'Engineered high-performance custom WordPress theme structure meeting WCAG AA accessibility standards.',
       'Built modular Gutenberg blocks for interactive habitat case studies and species conservation tracking.',
@@ -96,6 +141,13 @@ export const PROJECTS_DATA: Project[] = [
     role: 'Shopify Developer',
     technologies: ['Shopify', 'Liquid', 'HTML', 'SCSS', 'JavaScript', 'jQuery', 'Figma'],
     description: 'Custom Shopify theme from Figma using Liquid; reusable sections, artwork uploads, variants, and quote flows.',
+    caseHeadline: 'Custom Shopify storefront for personalized orders and artwork uploads',
+    challenge:
+      'The storefront needed customizable products, customer artwork uploads, variants, and quote requests without making routine merchandising depend on a developer.',
+    contribution:
+      'Owned the custom Shopify theme and storefront workflows for custom products, artwork uploads, and request-a-quote.',
+    outcome:
+      'Merchants can manage everyday merchandising in Shopify while custom-order and artwork-upload flows stay in the storefront.',
     responsibilities: [
       'Built a custom Shopify theme from Figma with Liquid, SCSS/CSS, and JavaScript.',
       'Set up reusable sections so storefront content could be updated without touching theme code.',
@@ -176,6 +228,13 @@ export const PROJECTS_DATA: Project[] = [
     role: 'WordPress Developer',
     technologies: ['WordPress CMS', 'PHP', 'SCSS', 'JavaScript', 'jQuery', 'Git', 'Figma'],
     description: 'Custom WordPress theme with Gutenberg, dark/light mode, animations, and micro-interactions.',
+    caseHeadline: 'Custom WordPress frontend combining editorial control with interaction and motion',
+    challenge:
+      'The site required a distinctive responsive frontend with interactive details while remaining manageable inside WordPress.',
+    contribution:
+      'Owned the custom WordPress theme, reusable Gutenberg content structures, dark/light theme behavior, and motion implementation.',
+    outcome:
+      'Editors can update pages through reusable Gutenberg blocks while the branded frontend, theme switching, and motion stay in place.',
     responsibilities: [
       'Built the site as a custom WordPress theme from Figma.',
       'Set up reusable Gutenberg blocks for day-to-day content updates.',
@@ -509,12 +568,9 @@ export const PROJECTS_DATA: Project[] = [
 ];
 
 export const FEATURED_PROJECT_IDS = [
-  'wwf-canada',
   'mvp-visuals',
-  '11-nil',
-  'precision-approach-sports',
+  'wwf-canada',
   'bopper-media',
-  'the-energy-coalition',
 ] as const;
 
 export const EXPERIENCE_DATA: ExperienceItem[] = [

@@ -20,7 +20,7 @@ export default function Footer() {
             {PERSONAL_INFO.name}
           </span>
           <span className="font-mono text-xs text-slate-400 mt-0.5">
-            {PERSONAL_INFO.title} · {PERSONAL_INFO.subtitle}
+            {PERSONAL_INFO.title}
           </span>
         </div>
 

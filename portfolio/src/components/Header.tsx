@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
-import { PERSONAL_INFO, PROJECTS_DATA } from '../data/portfolioData';
+import { PERSONAL_INFO } from '../data/portfolioData';
 import { scrollToSection } from '../utils/scroll';
 import ThemeToggle from './ThemeToggle';
 
@@ -12,14 +12,11 @@ export default function Header() {
   const logoStageRef = useRef<HTMLDivElement | null>(null);
   const logoBoxRef = useRef<HTMLDivElement | null>(null);
 
-  const totalBuildsCount = PROJECTS_DATA.length;
-
   const navLinks = [
-    { name: 'Featured', href: '#featured-work' },
-    { name: `Archive (${totalBuildsCount})`, href: '#archive' },
-    { name: 'How I Build', href: '#how-i-work' },
+    { name: 'Work', href: '#featured-work' },
+    { name: 'Services', href: '#services' },
+    { name: 'Why Me', href: '#why-me' },
     { name: 'Experience', href: '#experience' },
-    { name: 'Skills', href: '#skills' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -60,7 +57,7 @@ export default function Header() {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
-    const sectionIds = ['hero', 'featured-work', 'archive', 'how-i-work', 'experience', 'skills', 'contact'];
+    const sectionIds = ['hero', 'featured-work', 'services', 'why-me', 'experience', 'contact'];
     const anchorY = 140;
     let rafId: number | null = null;
 
@@ -262,6 +259,17 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setActiveSection('contact');
+              scrollToSection('#contact');
+            }}
+            className="hidden sm:inline-flex items-center rounded-xl bg-indigo-600 px-3.5 py-2 font-sans text-xs font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
+          >
+            Discuss a Project
+          </button>
           <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -278,7 +286,7 @@ export default function Header() {
       <div
         id="mobile-nav"
         className={`mx-auto w-full max-w-6xl md:hidden overflow-hidden transition-[max-height,opacity] duration-300 ease-out ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          isMobileMenuOpen ? 'max-h-[32rem] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <nav className="flex flex-col gap-1 py-5" aria-hidden={!isMobileMenuOpen}>
@@ -293,6 +301,18 @@ export default function Header() {
               {link.name}
             </a>
           ))}
+          <button
+            type="button"
+            tabIndex={isMobileMenuOpen ? 0 : -1}
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setActiveSection('contact');
+              scrollToSection('#contact');
+            }}
+            className="mt-2 rounded-xl bg-indigo-600 px-3.5 py-2.5 text-left font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer sm:hidden"
+          >
+            Discuss a Project
+          </button>
         </nav>
       </div>
     </header>
