@@ -3,35 +3,18 @@ import { lazy, useEffect } from 'react';
 import CustomCursor from './components/CustomCursor';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import MarqueeStrip from './components/MarqueeStrip';
 import Footer from './components/Footer';
 import LazyWhenVisible from './components/LazyWhenVisible';
 
 const ProjectsShowcase = lazy(() => import('./components/ProjectsShowcase'));
+const ServicesSection = lazy(() => import('./components/ServicesSection'));
 const HowIWork = lazy(() => import('./components/HowIWork'));
-const ScrollStoryCanvas = lazy(() => import('./components/ScrollStoryCanvas'));
 const ExperienceTimeline = lazy(() => import('./components/ExperienceTimeline'));
-const SkillsRadar = lazy(() => import('./components/SkillsRadar'));
 const ContactSection = lazy(() => import('./components/ContactSection'));
 
 function SectionFallback() {
   return <div className="min-h-[16rem]" aria-hidden="true" />;
 }
-
-const MARQUEE_ITEMS = [
-  'WordPress',
-  'Shopify',
-  'Gutenberg',
-  'ACF',
-  'Liquid',
-  'WooCommerce',
-  'Tailwind CSS',
-  'Core Web Vitals',
-  'Technical SEO',
-  'GA4',
-  'Figma',
-  'GSAP',
-];
 
 function prefersCoarsePointer(): boolean {
   return (
@@ -148,18 +131,14 @@ export default function App() {
         <LazyWhenVisible fallback={<SectionFallback />} anchors="featured-work archive">
           <ProjectsShowcase />
         </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />} anchors="how-i-work">
-          <HowIWork />
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="services">
+          <ServicesSection />
         </LazyWhenVisible>
-        <MarqueeStrip items={MARQUEE_ITEMS} />
-        <LazyWhenVisible fallback={<SectionFallback />} anchors="scroll-story">
-          <ScrollStoryCanvas />
+        <LazyWhenVisible fallback={<SectionFallback />} anchors="why-me how-i-work">
+          <HowIWork />
         </LazyWhenVisible>
         <LazyWhenVisible fallback={<SectionFallback />} anchors="experience">
           <ExperienceTimeline />
-        </LazyWhenVisible>
-        <LazyWhenVisible fallback={<SectionFallback />} anchors="skills">
-          <SkillsRadar />
         </LazyWhenVisible>
         <LazyWhenVisible fallback={<SectionFallback />} anchors="contact">
           <ContactSection />

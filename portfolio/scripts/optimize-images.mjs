@@ -8,12 +8,6 @@ const ORIGINALS_DIR = path.join(SRC_DIR, 'originals');
 const COVERS_DIR = path.join(SRC_DIR, 'covers');
 const PUBLIC_DIR = path.join(ROOT, 'public');
 const COVER_IMAGES_MODULE = path.join(ROOT, 'src/data/coverImages.ts');
-const HERO_PORTRAIT_SOURCE = path.join(SRC_DIR, 'hero-portrait-source.jpg');
-const HERO_PORTRAIT_OUTPUT = path.join(PUBLIC_DIR, 'hero-portrait.webp');
-const HERO_PORTRAIT_WIDTH = 560;
-const HERO_BG = [176, 173, 168];
-const HERO_BG_DISTANCE = 22;
-
 const OUTPUT_WIDTHS = [640, 688, 960, 1376, 2752];
 const WEBP_QUALITY = 82;
 const AVIF_QUALITY = 62;
@@ -132,98 +126,22 @@ function toImportName(slug, width, format) {
   return `${slug}_w${width}_${format}`;
 }
 
-async function cutoutHeroPortrait(inputPath) {
-  const { data, info } = await createImagePipeline(inputPath)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  const width = info.width;
-  const height = info.height;
-  const channels = info.channels;
-  const alpha = new Uint8Array(width * height);
-  alpha.fill(255);
-
-  const colorDist = (i) => {
-    const dr = data[i] - HERO_BG[0];
-    const dg = data[i + 1] - HERO_BG[1];
-    const db = data[i + 2] - HERO_BG[2];
-    return Math.sqrt(dr * dr + dg * dg + db * db);
-  };
-
-  const seen = new Uint8Array(width * height);
-  const queue = [];
-  const push = (x, y) => {
-    if (x < 0 || y < 0 || x >= width || y >= height) return;
-    const idx = y * width + x;
-    if (seen[idx]) return;
-    seen[idx] = 1;
-    queue.push(idx);
-  };
-
-  for (let x = 0; x < width; x += 1) {
-    push(x, 0);
-    push(x, height - 1);
-  }
-  for (let y = 0; y < height; y += 1) {
-    push(0, y);
-    push(width - 1, y);
-  }
-
-  let cursor = 0;
-  while (cursor < queue.length) {
-    const idx = queue[cursor];
-    cursor += 1;
-    const distance = colorDist(idx * channels);
-    if (distance > HERO_BG_DISTANCE) continue;
-
-    const t = Math.min(1, distance / HERO_BG_DISTANCE);
-    alpha[idx] = Math.round(t * t * 255);
-
-    const x = idx % width;
-    const y = (idx - x) / width;
-    push(x + 1, y);
-    push(x - 1, y);
-    push(x, y + 1);
-    push(x, y - 1);
-  }
-
-  const pixels = Buffer.from(data);
-  for (let p = 0; p < width * height; p += 1) {
-    pixels[p * 4 + 3] = alpha[p];
-    if (alpha[p] === 0) {
-      pixels[p * 4] = 0;
-      pixels[p * 4 + 1] = 0;
-      pixels[p * 4 + 2] = 0;
-    }
-  }
-
-  return sharp(pixels, { raw: { width, height, channels: 4 } });
-}
-
-async function optimizeHeroPortrait() {
-  if (!fs.existsSync(HERO_PORTRAIT_SOURCE)) {
-    throw new Error(`Missing hero portrait source: ${HERO_PORTRAIT_SOURCE}`);
+function publishHeroPortraitSvg() {
+  const svgSource = path.join(SRC_DIR, 'hero-portrait-source.svg');
+  const svgOutput = path.join(PUBLIC_DIR, 'hero-portrait.svg');
+  if (!fs.existsSync(svgSource)) {
+    throw new Error(`Missing hero portrait source: ${svgSource}`);
   }
 
   ensureDir(PUBLIC_DIR);
-  await (await cutoutHeroPortrait(HERO_PORTRAIT_SOURCE))
-    .resize(HERO_PORTRAIT_WIDTH, HERO_PORTRAIT_WIDTH, {
-      kernel: sharp.kernel.lanczos3,
-    })
-    .webp({ quality: 80, alphaQuality: 90, effort: 6 })
-    .toFile(HERO_PORTRAIT_OUTPUT);
+  fs.copyFileSync(svgSource, svgOutput);
 
-  const legacyJpg = path.join(PUBLIC_DIR, 'hero-portrait.jpg');
-  const legacyPng = path.join(PUBLIC_DIR, 'hero-portrait.png');
-  if (fs.existsSync(legacyJpg)) fs.unlinkSync(legacyJpg);
-  if (fs.existsSync(legacyPng)) fs.unlinkSync(legacyPng);
+  for (const staleName of ['hero-portrait.webp', 'hero-portrait.jpg', 'hero-portrait.png']) {
+    const stale = path.join(PUBLIC_DIR, staleName);
+    if (fs.existsSync(stale)) fs.unlinkSync(stale);
+  }
 
-  const sourceBytes = fs.statSync(HERO_PORTRAIT_SOURCE).size;
-  const outputBytes = fs.statSync(HERO_PORTRAIT_OUTPUT).size;
-  console.log(
-    `  hero-portrait: ${formatBytes(sourceBytes)} -> ${path.relative(ROOT, HERO_PORTRAIT_OUTPUT)} (${formatBytes(outputBytes)})`,
-  );
+  console.log(`  hero-portrait: ${path.relative(ROOT, svgSource)} -> ${path.relative(ROOT, svgOutput)}`);
 }
 
 function generateCoverImagesModule() {
@@ -275,7 +193,7 @@ async function main() {
   const stats = { inputBytes: 0, outputBytes: 0 };
 
   console.log('Optimizing hero portrait...');
-  await optimizeHeroPortrait();
+  publishHeroPortraitSvg();
 
   console.log('Optimizing project covers...');
 

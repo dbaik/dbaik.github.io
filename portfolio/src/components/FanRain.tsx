@@ -11,12 +11,16 @@ type FallingFan = {
   drift: number;
 };
 
-function makeFans(count: number): FallingFan[] {
-  return Array.from({ length: count }, (_, id) => ({
-    id,
+const MAX_INTENSITY = 4;
+const STEP_COUNTS = [28, 16, 16, 12] as const;
+const STEP_DELAYS = [0.45, 0.34, 0.24, 0.16] as const;
+
+function makeFans(count: number, startId: number, delayMax: number): FallingFan[] {
+  return Array.from({ length: count }, (_, offset) => ({
+    id: startId + offset,
     left: Math.random() * 100,
     duration: 2.4 + Math.random() * 1.8,
-    delay: Math.random() * 0.45,
+    delay: Math.random() * delayMax,
     size: 18 + Math.round(Math.random() * 22),
     spin: 360 + Math.round(Math.random() * 540),
     drift: -40 + Math.random() * 80,
@@ -25,6 +29,7 @@ function makeFans(count: number): FallingFan[] {
 
 export default function FanRain() {
   const [fans, setFans] = useState<FallingFan[]>([]);
+  const [intensity, setIntensity] = useState(0);
   const [status, setStatus] = useState('');
   const statusId = useId();
 
@@ -33,6 +38,7 @@ export default function FanRain() {
     const longest = Math.max(...fans.map((fan) => (fan.duration + fan.delay) * 1000));
     const timer = window.setTimeout(() => {
       setFans([]);
+      setIntensity(0);
       setStatus('');
     }, longest + 200);
     return () => window.clearTimeout(timer);
@@ -45,8 +51,20 @@ export default function FanRain() {
       window.setTimeout(() => setStatus(''), 2400);
       return;
     }
+
+    const active = fans.length > 0;
+    if (active && intensity >= MAX_INTENSITY) {
+      return;
+    }
+
+    const nextIntensity = active ? intensity + 1 : 1;
+    const stepIndex = nextIntensity - 1;
+    const startId = active ? Math.max(...fans.map((fan) => fan.id)) + 1 : 0;
+    const batch = makeFans(STEP_COUNTS[stepIndex], startId, STEP_DELAYS[stepIndex]);
+
+    setIntensity(nextIntensity);
+    setFans(active ? [...fans, ...batch] : batch);
     setStatus('Only fans.');
-    setFans(makeFans(28));
   };
 
   return (

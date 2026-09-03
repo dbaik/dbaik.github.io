@@ -13,9 +13,9 @@ function isLightScheme(): boolean {
 
 function gridInk(alpha: number): string {
   if (isLightScheme()) {
-    return `rgba(15, 23, 42, ${Math.min(1, alpha * 2.2)})`;
+    return `rgba(15, 23, 42, ${Math.min(1, alpha * 3.1)})`;
   }
-  return `rgba(255, 255, 255, ${alpha})`;
+  return `rgba(255, 255, 255, ${Math.min(1, alpha * 1.35)})`;
 }
 
 interface GridNode {
@@ -439,6 +439,8 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
     container.addEventListener('pointerenter', handlePointerEnter, { passive: true });
     container.addEventListener('pointerleave', handlePointerLeave, { passive: true });
     window.addEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(container);
 
     // Initial setup
     handleResize();
@@ -446,6 +448,7 @@ export default function HeroVisualGrid({ containerRef }: HeroVisualGridProps) {
     return () => {
       if (animFrameId) cancelAnimationFrame(animFrameId);
       observer.disconnect();
+      resizeObserver.disconnect();
       mediaQuery.removeEventListener('change', handleMediaChange);
       hoverMediaQuery.removeEventListener('change', handleHoverMediaChange);
       schemeMedia.removeEventListener('change', redrawForScheme);

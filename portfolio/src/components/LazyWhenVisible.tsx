@@ -76,6 +76,10 @@ export default function LazyWhenVisible({
 
     let observer: IntersectionObserver | null = null;
 
+    const mountNow = () => {
+      setShouldRender(true);
+    };
+
     const armObserver = () => {
       const node = sentinelRef.current;
       if (!node || observer) return;
@@ -83,7 +87,7 @@ export default function LazyWhenVisible({
       observer = new IntersectionObserver(
         (entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
-            setShouldRender(true);
+            mountNow();
             observer?.disconnect();
           }
         },
@@ -98,7 +102,7 @@ export default function LazyWhenVisible({
       return () => observer?.disconnect();
     }
 
-    const detachScrollIntent = onFirstScrollIntent(armObserver);
+    const detachScrollIntent = onFirstScrollIntent(mountNow);
     return () => {
       detachScrollIntent();
       observer?.disconnect();

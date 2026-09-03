@@ -16,6 +16,8 @@
   --fg-dark: #f1f5f9;
   --muted-light: #475569;
   --muted-dark: #94a3b8;
+  --text-secondary-light: #334155;
+  --text-secondary-dark: #cbd5e1;
   --line-light: rgb(15 23 42 / 0.12);
   --line-dark: rgb(255 255 255 / 0.1);
   --card-light: rgb(255 255 255 / 0.72);
@@ -25,6 +27,7 @@
   --canvas-footer: var(--canvas-footer-dark);
   --fg: var(--fg-dark);
   --muted: var(--muted-dark);
+  --text-secondary: var(--text-secondary-dark);
   --line: var(--line-dark);
   --card: var(--card-dark);
 
@@ -38,6 +41,7 @@
     --canvas-footer: var(--canvas-footer-light);
     --fg: var(--fg-light);
     --muted: var(--muted-light);
+    --text-secondary: var(--text-secondary-light);
     --line: var(--line-light);
     --card: var(--card-light);
   }
@@ -49,6 +53,7 @@ html.scheme-light {
   --canvas-footer: var(--canvas-footer-light);
   --fg: var(--fg-light);
   --muted: var(--muted-light);
+  --text-secondary: var(--text-secondary-light);
   --line: var(--line-light);
   --card: var(--card-light);
 }
@@ -59,6 +64,7 @@ html.scheme-dark {
   --canvas-footer: var(--canvas-footer-dark);
   --fg: var(--fg-dark);
   --muted: var(--muted-dark);
+  --text-secondary: var(--text-secondary-dark);
   --line: var(--line-dark);
   --card: var(--card-dark);
 }
@@ -69,6 +75,7 @@ html.scheme-dark {
   --canvas-footer: var(--canvas-footer-dark);
   --fg: var(--fg-dark);
   --muted: var(--muted-dark);
+  --text-secondary: var(--text-secondary-dark);
   --line: var(--line-dark);
   --card: var(--card-dark);
   color: var(--fg);
@@ -80,6 +87,7 @@ html.scheme-dark {
     --canvas-footer: light-dark(var(--canvas-footer-light), var(--canvas-footer-dark));
     --fg: light-dark(var(--fg-light), var(--fg-dark));
     --muted: light-dark(var(--muted-light), var(--muted-dark));
+    --text-secondary: light-dark(var(--text-secondary-light), var(--text-secondary-dark));
     --line: light-dark(var(--line-light), var(--line-dark));
     --card: light-dark(var(--card-light), var(--card-dark));
   }
@@ -101,6 +109,189 @@ body {
 
 #hero canvas {
   background-color: transparent;
+}
+
+/* Scoped ~12% contrast bump vs --muted; do not change global tokens. */
+#hero-trust {
+  color: light-dark(#3e4b5c, #a1aec1);
+}
+
+#hero-trust [aria-hidden="true"] {
+  color: light-dark(#445468, #97a5b8);
+}
+
+@supports not (color: light-dark(white, black)) {
+  #hero-trust {
+    color: #a1aec1;
+  }
+
+  #hero-trust [aria-hidden="true"] {
+    color: #97a5b8;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not(.scheme-dark) #hero-trust {
+      color: #3e4b5c;
+    }
+
+    :root:not(.scheme-dark) #hero-trust [aria-hidden="true"] {
+      color: #445468;
+    }
+  }
+
+  html.scheme-light #hero-trust {
+    color: #3e4b5c;
+  }
+
+  html.scheme-light #hero-trust [aria-hidden="true"] {
+    color: #445468;
+  }
+}
+
+.custom-cursor {
+  color: var(--fg);
+}
+
+.custom-cursor-ring {
+  border-color: currentColor;
+}
+
+html.scheme-dark .custom-cursor {
+  mix-blend-mode: difference;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.scheme-light) .custom-cursor {
+    mix-blend-mode: difference;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-custom-cursor:not(.has-custom-cursor-native),
+  html.has-custom-cursor:not(.has-custom-cursor-native) * {
+    cursor: none;
+  }
+
+  html.has-custom-cursor.has-custom-cursor-native :is(input:not([type='radio']):not([type='checkbox']), select, textarea, [contenteditable='true']) {
+    cursor: text;
+  }
+
+  html.has-custom-cursor.has-custom-cursor-native :is(label, input[type='radio'], input[type='checkbox']) {
+    cursor: pointer;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  clip-path: inset(50%);
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .ascii-portrait-frame {
+    max-height: 260px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+  }
+}
+
+@media (hover: hover) {
+  .case-card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .case-card:hover {
+    transform: translateY(-4px);
+    border-color: light-dark(rgb(15 23 42 / 0.22), rgb(255 255 255 / 0.22));
+  }
+
+  .case-card:hover .case-card-arrow {
+    color: var(--fg);
+  }
+}
+
+.contact-heading {
+  text-wrap: pretty;
+}
+
+.contact-type-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 40px;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--card);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+@media (min-width: 640px) {
+  .contact-type-chip {
+    min-height: 42px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8125rem;
+  }
+}
+
+.contact-type-chip:has(input:checked),
+.contact-type-chip.is-selected {
+  border: 2px solid #7c3aed;
+  background: light-dark(rgb(124 58 237 / 0.14), rgb(167 139 250 / 0.28));
+  color: light-dark(#5b21b6, #ede9fe);
+  box-shadow: inset 0 0 0 1px light-dark(rgb(124 58 237 / 0.18), rgb(196 181 253 / 0.22));
+}
+
+.contact-type-chip:has(input:checked)::before,
+.contact-type-chip.is-selected::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #7c3aed;
+  box-shadow: 0 0 0 2px light-dark(rgb(124 58 237 / 0.2), rgb(167 139 250 / 0.35));
+}
+
+.contact-type-chip:has(input:focus-visible) {
+  outline: 2px solid #818cf8;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .contact-type-chip:hover {
+    border-color: light-dark(rgb(15 23 42 / 0.32), rgb(255 255 255 / 0.36));
+  }
+
+  .contact-type-chip:has(input:checked):hover,
+  .contact-type-chip.is-selected:hover {
+    border-color: #6d28d9;
+  }
+
+  .contact-field:hover {
+    border-color: light-dark(rgb(15 23 42 / 0.32), rgb(255 255 255 / 0.38));
+  }
+}
+
+.contact-field:focus,
+.contact-field:focus-visible {
+  border-color: #6366f1;
 }
 
 .bg-\[\#070b15\],
@@ -245,6 +436,10 @@ html.lenis, html.lenis body {
   background-color: light-dark(rgb(255 255 255 / 0.9), rgb(0 0 0 / 0.4));
 }
 
+.mobile-nav-backdrop {
+  background-color: light-dark(rgb(15 23 42 / 0.22), rgb(2 6 23 / 0.45));
+}
+
 .bg-white\/3 {
   background-color: light-dark(rgb(15 23 42 / 0.03), rgb(255 255 255 / 0.03));
 }
@@ -282,8 +477,8 @@ html.lenis, html.lenis body {
 
 .page-ambient-grid {
   background-image:
-    linear-gradient(to right, light-dark(rgb(15 23 42 / 0.06), rgb(255 255 255 / 0.012)) 1px, transparent 1px),
-    linear-gradient(to bottom, light-dark(rgb(15 23 42 / 0.06), rgb(255 255 255 / 0.012)) 1px, transparent 1px);
+    linear-gradient(to right, light-dark(rgb(15 23 42 / 0.09), rgb(255 255 255 / 0.028)) 1px, transparent 1px),
+    linear-gradient(to bottom, light-dark(rgb(15 23 42 / 0.09), rgb(255 255 255 / 0.028)) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 

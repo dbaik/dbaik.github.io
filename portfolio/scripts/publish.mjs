@@ -40,7 +40,7 @@ for (const fileName of [
   'favicon.ico',
   'favicon.svg',
   'apple-touch-icon.png',
-  'hero-portrait.webp',
+  'hero-portrait.svg',
 ]) {
   const from = path.join(distDir, fileName);
   if (fs.existsSync(from)) {
@@ -48,7 +48,7 @@ for (const fileName of [
   }
 }
 
-for (const staleName of ['hero-portrait.jpg', 'hero-portrait.png']) {
+for (const staleName of ['hero-portrait.jpg', 'hero-portrait.png', 'hero-portrait.webp']) {
   const stale = path.join(siteRoot, staleName);
   if (fs.existsSync(stale)) {
     fs.unlinkSync(stale);

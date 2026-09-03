@@ -1,7 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { GraduationCap } from 'lucide-react';
-import { EXPERIENCE_DATA, PERSONAL_INFO } from '../data/portfolioData';
+import { ChevronDown } from 'lucide-react';
+import { EXPERIENCE_DATA } from '../data/portfolioData';
 
 export default function ExperienceTimeline() {
   return (
@@ -14,72 +12,56 @@ export default function ExperienceTimeline() {
         {/* Section Header */}
         <div className="mb-10 sm:mb-16 border-b border-white/10 pb-6 sm:pb-8">
           <div className="inline-flex items-center gap-2 font-mono text-[10px] text-indigo-400 uppercase tracking-widest mb-2 font-bold">
-            <span>05 / CAREER & TRACK RECORD</span>
+            <span>04 / EXPERIENCE</span>
           </div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             Professional Experience
           </h2>
-          <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-slate-400">
+          <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-[var(--text-secondary)]">
             Independent contractor since 2017. 15+ years in frontend across WordPress and Shopify.
           </p>
         </div>
 
-        {/* Compact Clean Editorial Timeline */}
-        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-3 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-px before:bg-[var(--line)]">
-          {EXPERIENCE_DATA.map((exp, idx) => {
-            const isRecent = idx < 2;
-
-            return (
-              <motion.div
+        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-0 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-px before:bg-[var(--line)]">
+          {EXPERIENCE_DATA.slice(0, 2).map((exp) => (
+              <div
                 key={exp.id}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.35, delay: idx * 0.04 }}
                 className="relative pl-9 sm:pl-11 group"
               >
-                {/* Timeline Marker Dot */}
-                <div 
-                  className={`absolute left-3 sm:left-4 top-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 bg-[#070b15] transition-all z-10 ${
-                    isRecent 
-                      ? 'h-3.5 w-3.5 border-indigo-400' 
-                      : 'h-2.5 w-2.5 border-indigo-400/35 group-hover:border-indigo-400/55'
-                  }`} 
-                />
+                <div className="absolute left-3 sm:left-4 top-5 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400 bg-[var(--canvas)] z-10" />
 
-                <div className={`rounded-xl border border-white/5 bg-slate-950/40 backdrop-blur-sm group-hover:border-white/15 transition-all ${
-                  isRecent ? 'p-5 sm:p-6' : 'p-4 sm:p-5'
-                }`}>
-                  {/* Header row: Company, Role, Period */}
+                <div className="rounded-xl border border-white/5 bg-slate-950/40 backdrop-blur-sm group-hover:border-white/15 transition-all p-5 sm:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 mb-2">
                     <div className="flex flex-wrap items-baseline gap-2.5">
-                      <h3 className={`font-display font-bold text-white group-hover:text-indigo-300 transition-colors ${
-                        isRecent ? 'text-lg sm:text-xl' : 'text-base sm:text-lg'
-                      }`}>
+                      <h3 className="font-display font-bold text-white group-hover:text-indigo-300 transition-colors text-lg sm:text-xl">
                         {exp.company}
                       </h3>
-                      <span className="text-slate-400/60">·</span>
+                      <span className="text-[var(--muted)]">·</span>
                       <span className="font-mono text-xs sm:text-sm font-semibold text-indigo-400">
                         {exp.role}
                       </span>
                     </div>
 
-                    <div className="font-mono text-xs text-slate-400 shrink-0">
+                    <div className="font-mono text-xs text-[var(--text-secondary)] shrink-0">
                       {exp.period}
                       {exp.location ? ` · ${exp.location}` : ''}
                     </div>
                   </div>
 
-                  {/* Scope description */}
+                  {exp.id === 'valant-current' ? (
+                    <p className="mb-2 font-mono text-xs font-semibold text-[var(--text-secondary)]">
+                      Ongoing engagement since 2017
+                    </p>
+                  ) : null}
+
                   <p className="font-sans text-sm text-slate-300 leading-relaxed">
                     {exp.description}
                   </p>
 
-                  {/* Highlights (only on recent major positions to keep older roles compact) */}
-                  {isRecent && exp.highlights && exp.highlights.length > 0 && (
+                  {exp.highlights.length > 0 && (
                     <ul className="mt-3 space-y-1.5 pt-2 border-t border-white/5">
-                      {exp.highlights.map((hl, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
+                      {exp.highlights.map((hl) => (
+                        <li key={hl} className="flex items-start gap-2 text-sm text-slate-300">
                           <span className="text-indigo-400 mt-0.5">›</span>
                           <span className="leading-relaxed">{hl}</span>
                         </li>
@@ -87,28 +69,46 @@ export default function ExperienceTimeline() {
                     </ul>
                   )}
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Education & Certificates */}
-        <div className="mt-16 pt-12 border-t border-white/10">
-          <h3 className="font-mono text-xs uppercase font-bold text-slate-400 tracking-wider mb-6 flex items-center gap-2">
-            <GraduationCap size={16} className="text-indigo-400" />
-            <span>Education & Certificates</span>
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {PERSONAL_INFO.education.map((edu, i) => (
-              <div key={i} className="rounded-xl border border-white/5 bg-slate-950/40 p-5">
-                <div className="font-display text-sm font-bold text-white">{edu.institution}</div>
-                <div className="font-sans text-xs sm:text-sm text-indigo-400 font-medium mt-0.5">{edu.degree}</div>
-                <div className="font-mono text-xs text-slate-400 mt-2">{edu.period}</div>
               </div>
-            ))}
-          </div>
+          ))}
+
+          <details className="group relative pl-9 sm:pl-11">
+            <div className="absolute left-3 sm:left-4 top-6 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400/50 bg-[var(--canvas)] z-10" />
+            <div className="rounded-2xl border border-white/10 bg-slate-950/40">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--canvas)] rounded-2xl">
+                <span>Earlier roles</span>
+                <ChevronDown
+                  size={16}
+                  aria-hidden="true"
+                  className="shrink-0 text-[var(--text-secondary)] transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div className="space-y-3 border-t border-white/5 px-5 pb-5 pt-1">
+                {EXPERIENCE_DATA.slice(2).map((exp) => (
+                  <div key={exp.id} className="border-t border-white/5 pt-3 first:border-t-0 first:pt-3">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                      <p className="font-display text-sm font-bold text-white">
+                        {exp.company} <span className="text-[var(--muted)]">·</span>{' '}
+                        <span className="font-mono text-xs font-semibold text-indigo-400">{exp.role}</span>
+                      </p>
+                      <p className="font-mono text-xs text-[var(--text-secondary)]">
+                        {exp.period}
+                        {exp.location ? ` · ${exp.location}` : ''}
+                      </p>
+                    </div>
+                    <p className="mt-1 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
+                      {exp.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </details>
         </div>
+
+        <p className="mt-10 pt-8 border-t border-white/10 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
+          Formal web-design training (2009) and an engineering degree, applied to production frontend work since then.
+        </p>
 
       </div>
     </section>

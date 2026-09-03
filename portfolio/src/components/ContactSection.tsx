@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, ValidationError } from '@formspree/react'
 import { Mail, Send, CheckCircle2, Copy, Check } from 'lucide-react'
 import { PERSONAL_INFO } from '../data/portfolioData'
+import { CONTACT_TYPE_EVENT, consumePendingContactType } from '../utils/scroll'
 
 const FORMSPREE_FORM_ID = 'xaeywwjb'
 
 const projectTypes = [
-  'Custom WordPress & Gutenberg Theme',
-  'Shopify E-Commerce Storefront',
-  'Performance & Core Web Vitals Optimization',
-  'Figma to Pixel-Perfect HTML/CSS',
-  'B2B / Contract Engagement'
-]
+  { value: 'WordPress development', label: 'WordPress' },
+  { value: 'Shopify development', label: 'Shopify' },
+  { value: 'Frontend / performance', label: 'Frontend / Performance' },
+  { value: 'Other', label: 'Other' },
+] as const
 
 const inputClassName =
-  'w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors'
+  'contact-field w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder-slate-600 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors'
 
 const labelClassName = 'font-mono text-xs font-semibold text-slate-300 tracking-wider'
 
@@ -50,6 +50,26 @@ async function copyText(text: string): Promise<boolean> {
 
 function InquiryForm({ onReset }: { onReset: () => void }) {
   const [state, handleSubmit] = useForm(FORMSPREE_FORM_ID)
+  const [selectedType, setSelectedType] = useState('')
+
+  useEffect(() => {
+    const applyType = (type: string) => {
+      if (projectTypes.some((option) => option.value === type)) {
+        setSelectedType(type)
+      }
+    }
+
+    const pending = consumePendingContactType()
+    if (pending) applyType(pending)
+
+    const onContactType = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail
+      if (typeof detail === 'string') applyType(detail)
+    }
+
+    window.addEventListener(CONTACT_TYPE_EVENT, onContactType)
+    return () => window.removeEventListener(CONTACT_TYPE_EVENT, onContactType)
+  }, [])
 
   if (state.succeeded) {
     return (
@@ -61,7 +81,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
         <p className="mt-2 font-sans text-sm text-slate-400 max-w-sm leading-relaxed">
           Thank you for reaching out.
           <br />
-          Dmitry will respond within 24 hours.
+          I usually reply within 24 hours.
         </p>
         <button
           type="button"
@@ -81,7 +101,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           <label htmlFor="contact-name" className={labelClassName}>
             YOUR NAME *
           </label>
-          <input id="contact-name" type="text" name="name" placeholder="Jane Doe" className={inputClassName} required />
+          <input id="contact-name" type="text" name="name" autoComplete="name" placeholder="Jane Doe" className={inputClassName} required />
           <ValidationError prefix="Name" field="name" errors={state.errors} className="font-mono text-xs text-rose-400" />
         </div>
 
@@ -93,6 +113,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
             id="contact-email"
             type="email"
             name="email"
+            autoComplete="email"
             placeholder="jane@company.com"
             className={inputClassName}
             required
@@ -101,34 +122,34 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label id="contact-project-type-label" htmlFor="contact-project-type" className={labelClassName}>
-          PROJECT / ROLE FOCUS
-        </label>
-        <select
-          id="contact-project-type"
-          name="project_type"
-          aria-labelledby="contact-project-type-label"
-          defaultValue=""
-          required
-          className="w-full rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-sm text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors"
-        >
-          <option value="" disabled hidden>
-            Select project focus…
-          </option>
+      <fieldset className="space-y-2">
+        <legend className={labelClassName}>PROJECT TYPE</legend>
+        <div className="grid grid-cols-2 gap-2">
           {projectTypes.map((type) => (
-            <option key={type} value={type} className="bg-slate-900 text-white">
-              {type}
-            </option>
+            <label
+              key={type.value}
+              className={`contact-type-chip${selectedType === type.value ? ' is-selected' : ''}`}
+            >
+              <input
+                type="radio"
+                name="project_type"
+                value={type.value}
+                checked={selectedType === type.value}
+                onChange={() => setSelectedType(type.value)}
+                required
+                className="visually-hidden"
+              />
+              <span>{type.label}</span>
+            </label>
           ))}
-        </select>
+        </div>
         <ValidationError
           prefix="Project type"
           field="project_type"
           errors={state.errors}
           className="font-mono text-xs text-rose-400"
         />
-      </div>
+      </fieldset>
 
       <div className="space-y-1.5">
         <label htmlFor="contact-message" className={labelClassName}>
@@ -138,7 +159,7 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
           id="contact-message"
           name="message"
           rows={4}
-          placeholder="Tell me about your project, timeline, or open role..."
+          placeholder="Brief, Figma link, existing site, or contract requirements…"
           className={`${inputClassName} resize-none`}
           required
         />
@@ -147,13 +168,17 @@ function InquiryForm({ onReset }: { onReset: () => void }) {
 
       <ValidationError errors={state.errors} className="font-mono text-xs text-rose-400" />
 
+      <p className="font-sans text-sm text-slate-400">
+        {PERSONAL_INFO.replyNote}
+      </p>
+
       <button
         type="submit"
         disabled={state.submitting}
         className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 py-3.5 font-sans text-sm font-bold text-white hover:bg-indigo-500 disabled:opacity-50 transition-all cursor-pointer shadow-lg shadow-indigo-600/20 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
       >
         <Send size={15} />
-        <span>{state.submitting ? 'Sending…' : 'Send Message'}</span>
+        <span>{state.submitting ? 'Sending…' : 'Send Project Details'}</span>
       </button>
     </form>
   )
@@ -172,47 +197,53 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5">
+    <section id="contact" className="relative bg-[#070b15] pt-14 pb-6 sm:pt-20 sm:pb-8 lg:pt-24 lg:pb-10 px-4 sm:px-6 lg:px-8 border-b border-white/5">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-5 space-y-6">
+          <div className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[10px] text-indigo-400 uppercase tracking-widest font-bold">
-              <span>07 / GET IN TOUCH</span>
+              <span>05 / CONTACT</span>
             </div>
 
-            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              Let’s build something clean, fast, and maintainable.
+            <h2 className="contact-heading font-display text-[1.625rem] sm:text-[1.75rem] lg:text-[1.8125rem] font-extrabold text-white tracking-tight leading-[1.2]">
+              Have a WordPress or Shopify project that needs senior execution?
             </h2>
 
             <p className="font-sans text-sm sm:text-base text-slate-400 leading-relaxed">
-              {PERSONAL_INFO.availability} WordPress and Shopify from Figma to production — including performance, technical SEO, analytics, and AI-assisted workflows.
+              Available for B2B and contract engagements. Send the brief, Figma link, existing site, or contract requirements.
             </p>
 
-            <div className="pt-2 flex flex-col sm:flex-row lg:flex-col gap-3">
-              <div className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5">
-                <a
-                  href={`mailto:${PERSONAL_INFO.email}`}
-                  className="flex items-center gap-2 font-mono text-xs text-slate-300 hover:text-white truncate focus-visible:outline-none"
-                >
-                  <Mail size={14} className="text-indigo-400 shrink-0" />
-                  <span className="truncate">{PERSONAL_INFO.email}</span>
-                </a>
+            <div className="pt-2 flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5">
+              <a
+                href={`mailto:${PERSONAL_INFO.email}`}
+                className="flex items-center gap-2 font-mono text-xs text-slate-300 hover:text-white truncate focus-visible:outline-none"
+              >
+                <Mail size={14} className="text-indigo-400 shrink-0" />
+                <span className="truncate">{PERSONAL_INFO.email}</span>
+              </a>
 
-                <button
-                  type="button"
-                  onClick={handleCopyEmail}
-                  className="flex items-center gap-1.5 rounded border border-white/10 bg-white/3 px-2.5 py-1 text-xs font-mono text-slate-400 hover:text-indigo-400 hover:border-indigo-400/30 transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
-                  title="Copy email to clipboard"
-                >
-                  {copiedEmail ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                  <span>{copiedEmail ? 'Copied' : 'Copy'}</span>
-                </button>
-              </div>
-
+              <button
+                type="button"
+                onClick={handleCopyEmail}
+                className="flex items-center gap-1.5 rounded border border-white/10 bg-white/3 px-2.5 py-1 text-xs font-mono text-slate-400 hover:text-indigo-400 hover:border-indigo-400/30 transition-colors shrink-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+                title="Copy email to clipboard"
+              >
+                {copiedEmail ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                <span>{copiedEmail ? 'Copied' : 'Copy'}</span>
+              </button>
             </div>
+
+            <a
+              href={PERSONAL_INFO.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex font-mono text-xs text-slate-400 hover:text-indigo-400 transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            >
+              LinkedIn →
+            </a>
           </div>
 
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-6">
             <div className="rounded-2xl border border-white/10 bg-slate-950/80 p-6 sm:p-8 backdrop-blur-xl shadow-xl">
               <div key={formKey}>
                 <InquiryForm onReset={() => setFormKey((key) => key + 1)} />

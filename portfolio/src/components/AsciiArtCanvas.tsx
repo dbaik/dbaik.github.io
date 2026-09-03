@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   readPinnedColorScheme,
   resolvedColorScheme,
@@ -9,30 +9,53 @@ interface AsciiArtCanvasProps {
   src: string;
   className?: string;
   label?: string;
+  followRootRef?: RefObject<HTMLElement | null>;
 }
 
 interface Glyph {
   x: number;
   y: number;
+  liveX: number;
+  liveY: number;
+  vx: number;
+  vy: number;
   ink: number;
   row: number;
+  size: number;
+  feature?: 'tone' | 'pupil' | 'catch';
+}
+
+interface Pupil {
+  x: number;
+  y: number;
 }
 
 const CHARS = ' .:-=+*#%@'.split('');
 const SOURCE_ASPECT = 1;
 const PAPER_LUMA = 0.93;
 const MIN_INK = 0.07;
-const CELL_WIDTH_RATIO = 0.72;
-const CELL_HEIGHT_RATIO = 1.12;
+const CELL_WIDTH_RATIO = 0.68;
+const CELL_HEIGHT_RATIO = 1.02;
 
 function glyphFontSize(width: number): number {
-  return width <= 270 ? 6 : 7;
+  if (width <= 270) return 4;
+  if (width <= 460) return 4.5;
+  return 5;
 }
 
 function canvasBox(viewportWidth: number): { w: number; h: number } {
   const size =
-    viewportWidth <= 480 ? 340 : viewportWidth <= 900 ? 380 : viewportWidth <= 1280 ? 400 : 420;
-  return { w: size, h: Math.round(size / SOURCE_ASPECT) };
+    viewportWidth < 768
+      ? 260
+      : viewportWidth <= 900
+        ? 380
+        : viewportWidth < 1024
+          ? 400
+          : viewportWidth < 1280
+            ? 400
+            : 516;
+  const tall = viewportWidth >= 1024 ? 1.06 : 1;
+  return { w: size, h: Math.round((size * tall) / SOURCE_ASPECT) };
 }
 
 function sampleLuma(data: Uint8ClampedArray, width: number, height: number, x: number, y: number): number {
@@ -45,7 +68,7 @@ function sampleLuma(data: Uint8ClampedArray, width: number, height: number, x: n
   return luma * alpha + (1 - alpha);
 }
 
-function cellAvg(
+function cellStats(
   data: Uint8ClampedArray,
   width: number,
   height: number,
@@ -53,47 +76,55 @@ function cellAvg(
   originY: number,
   cellW: number,
   cellH: number,
-): number {
+): { avg: number; min: number } {
   let sum = 0;
+  let min = 1;
   let count = 0;
-  const stepX = Math.max(1, cellW / 4);
-  const stepY = Math.max(1, cellH / 4);
+  const stepX = Math.max(1, cellW / 5);
+  const stepY = Math.max(1, cellH / 5);
 
   for (let y = originY; y < originY + cellH; y += stepY) {
     for (let x = originX; x < originX + cellW; x += stepX) {
-      sum += sampleLuma(data, width, height, x, y);
+      const luma = sampleLuma(data, width, height, x, y);
+      sum += luma;
+      if (luma < min) min = luma;
       count += 1;
     }
   }
 
-  return count > 0 ? sum / count : 1;
+  return { avg: count > 0 ? sum / count : 1, min };
 }
 
-function processImage(img: HTMLImageElement, width: number, height: number): Glyph[] {
+function processImage(
+  img: HTMLImageElement,
+  width: number,
+  height: number,
+): { glyphs: Glyph[]; pupils: Pupil[] } {
   const offscreen = document.createElement('canvas');
   const ctx = offscreen.getContext('2d', { willReadFrequently: true });
-  if (!ctx) return [];
+  if (!ctx) return { glyphs: [], pupils: [] };
 
-  const scale = 2;
+  const scale = 4;
   const sampleW = width * scale;
   const sampleH = height * scale;
   offscreen.width = sampleW;
   offscreen.height = sampleH;
 
-  const imgAspect = img.width / Math.max(1, img.height);
+  const imgAspect = img.naturalWidth / Math.max(1, img.naturalHeight);
   const boxAspect = width / height;
   let drawWidth = sampleW;
   let drawHeight = sampleH;
   if (imgAspect > boxAspect) {
-    drawHeight = sampleH;
-    drawWidth = sampleH * imgAspect;
-  } else {
     drawWidth = sampleW;
     drawHeight = sampleW / imgAspect;
+  } else {
+    drawHeight = sampleH;
+    drawWidth = sampleH * imgAspect;
   }
-  const focusY = 0.19;
   const dx = (sampleW - drawWidth) / 2;
-  const dy = (sampleH - drawHeight) * focusY;
+  const dy = (sampleH - drawHeight) / 2;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.drawImage(img, dx, dy, drawWidth, drawHeight);
 
   const { data } = ctx.getImageData(0, 0, sampleW, sampleH);
@@ -101,25 +132,41 @@ function processImage(img: HTMLImageElement, width: number, height: number): Gly
   const cellW = fontSize * CELL_WIDTH_RATIO;
   const cellH = fontSize * CELL_HEIGHT_RATIO;
   const glyphs: Glyph[] = [];
+  let row = 0;
 
-  for (let y = 0, row = 0; y < height; y += cellH, row += 1) {
+  for (let y = 0; y < height; y += cellH, row += 1) {
     for (let x = 0; x < width; x += cellW) {
-      const avg = cellAvg(data, sampleW, sampleH, x * scale, y * scale, cellW * scale, cellH * scale);
-      if (avg > PAPER_LUMA) continue;
-
-      const ink = Math.min(1, Math.max(0, (PAPER_LUMA - avg) / 0.72));
+      const { avg, min } = cellStats(
+        data,
+        sampleW,
+        sampleH,
+        x * scale,
+        y * scale,
+        cellW * scale,
+        cellH * scale,
+      );
+      const sample = avg * 0.4 + min * 0.6;
+      if (sample > PAPER_LUMA && min > 0.7) continue;
+      const ink = Math.min(1, Math.max(0, (PAPER_LUMA - sample) / 0.62));
       if (ink < MIN_INK) continue;
-
+      const homeX = Number((x + cellW / 2).toFixed(1));
+      const homeY = Number((y + cellH / 2).toFixed(1));
       glyphs.push({
-        x: Number((x + cellW / 2).toFixed(1)),
-        y: Number((y + cellH / 2).toFixed(1)),
+        x: homeX,
+        y: homeY,
+        liveX: homeX,
+        liveY: homeY,
+        vx: 0,
+        vy: 0,
         ink: Number(ink.toFixed(3)),
         row,
+        size: fontSize,
+        feature: 'tone',
       });
     }
   }
 
-  return glyphs;
+  return { glyphs, pupils: [] };
 }
 
 function glyphLook(
@@ -132,8 +179,9 @@ function glyphLook(
       return { char: CHARS[charIndex], r: 226, g: 232, b: 240, alpha: 0.55 + ink * 0.45 };
     }
     case 'light': {
-      const charIndex = Math.min(CHARS.length - 1, Math.floor(ink * (CHARS.length - 1)));
-      return { char: CHARS[charIndex], r: 15, g: 23, b: 42, alpha: 0.55 + ink * 0.45 };
+      const thinnedInk = Math.min(1, Math.max(0, (ink - 0.08) / 0.92));
+      const charIndex = Math.min(CHARS.length - 1, Math.floor(thinnedInk * (CHARS.length - 1) * 0.88));
+      return { char: CHARS[charIndex], r: 51, g: 65, b: 85, alpha: 0.28 + thinnedInk * 0.48 };
     }
     default: {
       const _exhaustive: never = scheme;
@@ -142,10 +190,10 @@ function glyphLook(
   }
 }
 
-export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtCanvasProps) {
+export default function AsciiArtCanvas({ src, className = '', label, followRootRef }: AsciiArtCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glyphsRef = useRef<Glyph[]>([]);
-  const pointerRef = useRef({ x: -1000, y: -1000, active: false });
+  const pointerRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false });
   const startTimeRef = useRef(0);
   const [box, setBox] = useState(() =>
     typeof window === 'undefined' ? { w: 400, h: 400 } : canvasBox(window.innerWidth),
@@ -167,7 +215,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     img.src = src;
     img.onload = () => {
       if (cancelled) return;
-      glyphsRef.current = processImage(img, box.w, box.h);
+      glyphsRef.current = processImage(img, box.w, box.h).glyphs;
       startTimeRef.current = performance.now();
       setReady(true);
     };
@@ -190,53 +238,83 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     canvas.height = box.h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const fontSize = glyphFontSize(box.w);
+    const baseFontSize = glyphFontSize(box.w);
     const maxRow = glyphsRef.current.reduce((max, glyph) => Math.max(max, glyph.row), 0);
     let frameId = 0;
     let visible = true;
 
     const currentScheme = (): PinnedColorScheme => resolvedColorScheme(readPinnedColorScheme());
 
+    const span = Math.min(box.w, box.h);
+    const radius = span * 0.22;
+    const holeRadius = span * 0.031;
+    let motionEnergy = 0;
+
     const drawFrame = (instant = false) => {
       ctx.clearRect(0, 0, box.w, box.h);
-      ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      let lastSize = 0;
+      motionEnergy = 0;
 
       const elapsed = (performance.now() - startTimeRef.current) / 1000;
       const revealRow = instant || reducedMotion ? Number.POSITIVE_INFINITY : elapsed * 88;
       const pointer = pointerRef.current;
+      pointer.x += (pointer.targetX - pointer.x) * 0.16;
+      pointer.y += (pointer.targetY - pointer.y) * 0.16;
       const scheme = currentScheme();
 
       for (const glyph of glyphsRef.current) {
         if (glyph.row > revealRow) continue;
 
         const appear = instant || reducedMotion ? 1 : Math.min(1, revealRow - glyph.row);
-        let ink = glyph.ink;
-        let drawX = glyph.x;
-        let drawY = glyph.y;
 
-        if (!reducedMotion && pointer.active) {
-          const dx = pointer.x - glyph.x;
-          const dy = pointer.y - glyph.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const radius = box.w * 0.32;
-          if (dist < radius) {
-            const t = 1 - dist / radius;
-            const falloff = t * t;
-            const pull = falloff * 11;
-            if (dist > 0.6) {
-              drawX += (dx / dist) * pull;
-              drawY += (dy / dist) * pull;
-            }
-            ink = Math.min(1, ink + falloff * 0.5);
+        if (!reducedMotion && !instant) {
+          const homeX = glyph.x - pointer.x;
+          const homeY = glyph.y - pointer.y;
+          const homeDist = Math.sqrt(homeX * homeX + homeY * homeY);
+          const displaced = Math.abs(glyph.liveX - glyph.x) + Math.abs(glyph.liveY - glyph.y);
+          const moving = Math.abs(glyph.vx) + Math.abs(glyph.vy);
+
+          let targetX = glyph.x;
+          let targetY = glyph.y;
+          if (pointer.active && homeDist < radius && homeDist > 0.5) {
+            const t = 1 - homeDist / radius;
+            const travel = t * t * holeRadius;
+            targetX = glyph.x + (homeX / homeDist) * travel;
+            targetY = glyph.y + (homeY / homeDist) * travel;
           }
+
+          if (pointer.active || displaced > 0.15 || moving > 0.02) {
+            glyph.vx += (targetX - glyph.liveX) * 0.12;
+            glyph.vy += (targetY - glyph.liveY) * 0.12;
+            glyph.vx *= 0.86;
+            glyph.vy *= 0.86;
+            glyph.liveX += glyph.vx;
+            glyph.liveY += glyph.vy;
+            motionEnergy = Math.max(motionEnergy, displaced + moving);
+          } else {
+            glyph.liveX = glyph.x;
+            glyph.liveY = glyph.y;
+            glyph.vx = 0;
+            glyph.vy = 0;
+          }
+        } else if (instant) {
+          glyph.liveX = glyph.x;
+          glyph.liveY = glyph.y;
+          glyph.vx = 0;
+          glyph.vy = 0;
         }
 
-        const look = glyphLook(scheme, ink);
-        const alpha = look.alpha * (0.6 + appear * 0.4);
-        ctx.fillStyle = `rgba(${look.r}, ${look.g}, ${look.b}, ${alpha})`;
-        ctx.fillText(look.char, drawX, drawY);
+        const painted = glyphLook(scheme, glyph.ink);
+        const alpha = painted.alpha * (0.65 + appear * 0.35);
+        const size = glyph.size || baseFontSize;
+        if (size !== lastSize) {
+          ctx.font = `${size}px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`;
+          lastSize = size;
+        }
+        ctx.fillStyle = `rgba(${painted.r}, ${painted.g}, ${painted.b}, ${alpha})`;
+        ctx.fillText(painted.char, glyph.liveX, glyph.liveY);
       }
     };
 
@@ -252,7 +330,11 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
         return;
       }
       drawFrame(false);
-      if (stillRevealing() || pointerRef.current.active) {
+      if (
+        stillRevealing() ||
+        pointerRef.current.active ||
+        motionEnergy > 0.08
+      ) {
         frameId = requestAnimationFrame(loop);
       } else {
         frameId = 0;
@@ -274,21 +356,25 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     const onMove = (e: PointerEvent) => {
       if (reducedMotion) return;
       const rect = canvas.getBoundingClientRect();
-      pointerRef.current.x = e.clientX - rect.left;
-      pointerRef.current.y = e.clientY - rect.top;
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+      pointerRef.current.targetX = px;
+      pointerRef.current.targetY = py;
       pointerRef.current.active = true;
       startLoop();
     };
     const onLeave = () => {
       pointerRef.current.active = false;
-      pointerRef.current.x = -1000;
-      pointerRef.current.y = -1000;
-      drawFrame(!stillRevealing());
+      pointerRef.current.targetX = -1000;
+      pointerRef.current.targetY = -1000;
+      startLoop();
     };
 
+    const followRoot = followRootRef?.current ?? canvas;
+
     if (!reducedMotion) {
-      canvas.addEventListener('pointermove', onMove, { passive: true });
-      canvas.addEventListener('pointerleave', onLeave, { passive: true });
+      followRoot.addEventListener('pointermove', onMove, { passive: true });
+      followRoot.addEventListener('pointerleave', onLeave, { passive: true });
     }
 
     const observer = new IntersectionObserver(
@@ -305,7 +391,10 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
     observer.observe(canvas);
 
     const redrawForScheme = () => {
-      drawFrame(!stillRevealing());
+      // Theme/class mutations must not snap live glyphs home. CustomCursor toggles
+      // documentElement class (has-custom-cursor-native) on every hide-target enter.
+      drawFrame(reducedMotion);
+      if (!reducedMotion) startLoop();
     };
     const schemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
     schemeMedia.addEventListener('change', redrawForScheme);
@@ -317,13 +406,13 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
       observer.disconnect();
       schemeObserver.disconnect();
       schemeMedia.removeEventListener('change', redrawForScheme);
-      canvas.removeEventListener('pointermove', onMove);
-      canvas.removeEventListener('pointerleave', onLeave);
+      followRoot.removeEventListener('pointermove', onMove);
+      followRoot.removeEventListener('pointerleave', onLeave);
     };
-  }, [ready, box.w, box.h]);
+  }, [ready, box.w, box.h, followRootRef]);
 
   return (
-    <div className={`relative flex items-center justify-center ${className}`}>
+    <div className={`ascii-portrait-frame relative flex items-center justify-center overflow-visible ${className}`}>
       <canvas
         ref={canvasRef}
         width={box.w}
@@ -332,7 +421,7 @@ export default function AsciiArtCanvas({ src, className = '', label }: AsciiArtC
         aria-label={label ?? 'ASCII art'}
         data-cursor="hide"
         className="block h-auto max-w-full cursor-none touch-none bg-transparent"
-        style={{ width: box.w, aspectRatio: `${SOURCE_ASPECT}`, backgroundColor: 'transparent' }}
+        style={{ width: box.w, height: box.h, backgroundColor: 'transparent' }}
       />
     </div>
   );

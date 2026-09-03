@@ -1,5 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 
+function prefersCustomCursor(): boolean {
+  return (
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+}
+
+function setNativeCursor(hidden: boolean) {
+  document.documentElement.classList.toggle('has-custom-cursor-native', hidden);
+}
+
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
@@ -9,9 +20,7 @@ export default function CustomCursor() {
   const hoverRef = useRef({ hovered: false, label: null as string | null, hidden: false });
 
   const [mounted, setMounted] = useState(false);
-  const [isTouchDevice] = useState(
-    () => typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0),
-  );
+  const [enabled] = useState(() => typeof window !== 'undefined' && prefersCustomCursor());
 
   const applyCursorStyles = () => {
     const cursorEl = cursorRef.current;
@@ -29,20 +38,20 @@ export default function CustomCursor() {
 
     if (label) {
       ringEl.className =
-        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-16 w-16 bg-white text-black mix-blend-normal';
+        'custom-cursor-ring flex items-center justify-center rounded-full border transition-all duration-300 h-16 w-16 bg-white text-black mix-blend-normal';
       labelEl.textContent = label;
       labelEl.classList.remove('hidden');
       dotEl.classList.add('hidden');
     } else if (hovered) {
       ringEl.className =
-        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-10 w-10 bg-white/20';
+        'custom-cursor-ring flex items-center justify-center rounded-full border transition-all duration-300 h-10 w-10 bg-current/20';
       labelEl.classList.add('hidden');
-      dotEl.className = 'rounded-full bg-white transition-all duration-300 h-1.5 w-1.5 bg-black block';
+      dotEl.className = 'custom-cursor-dot rounded-full bg-current transition-all duration-300 h-1.5 w-1.5 block';
     } else {
       ringEl.className =
-        'flex items-center justify-center rounded-full border border-white transition-all duration-300 h-6 w-6';
+        'custom-cursor-ring flex items-center justify-center rounded-full border transition-all duration-300 h-6 w-6';
       labelEl.classList.add('hidden');
-      dotEl.className = 'rounded-full bg-white transition-all duration-300 h-1 w-1 block';
+      dotEl.className = 'custom-cursor-dot rounded-full bg-current transition-all duration-300 h-1 w-1 block';
     }
   };
 
@@ -59,17 +68,21 @@ export default function CustomCursor() {
   };
 
   useEffect(() => {
-    if (isTouchDevice) return;
+    if (!enabled) return;
 
     setMounted(true);
+    document.documentElement.classList.add('has-custom-cursor');
+    setNativeCursor(false);
 
     const handleMouseMove = (e: MouseEvent) => {
       positionRef.current = { x: e.clientX, y: e.clientY };
-      const overPhoto = Boolean(
-        document.elementFromPoint(e.clientX, e.clientY)?.closest('[data-cursor="hide"]'),
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      const overHidden = Boolean(
+        hit?.closest('[data-cursor="hide"], input, select, textarea, label, [contenteditable="true"]'),
       );
-      if (overPhoto !== hoverRef.current.hidden) {
-        setHoverState(hoverRef.current.hovered, hoverRef.current.label, overPhoto);
+      if (overHidden !== hoverRef.current.hidden) {
+        setNativeCursor(overHidden);
+        setHoverState(hoverRef.current.hovered, hoverRef.current.label, overHidden);
       }
       applyCursorStyles();
       if (!hoverRef.current.hidden) {
@@ -84,14 +97,24 @@ export default function CustomCursor() {
       if (hoverTarget) {
         const label = hoverTarget.getAttribute('data-cursor');
         if (label === 'hide') {
+          setNativeCursor(true);
           setHoverState(false, null, true);
           return;
         }
+        setNativeCursor(false);
         setHoverState(true, label && label !== 'true' ? label : null, false);
         return;
       }
 
-      const standardInteractive = target.closest('a, button, select, input, textarea');
+      const overFormField = Boolean(target.closest('input, select, textarea, label, [contenteditable="true"]'));
+      if (overFormField) {
+        setNativeCursor(true);
+        setHoverState(false, null, true);
+        return;
+      }
+
+      const standardInteractive = target.closest('a, button');
+      setNativeCursor(false);
       setHoverState(Boolean(standardInteractive), null, false);
     };
 
@@ -113,25 +136,26 @@ export default function CustomCursor() {
       window.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseleave', handleMouseLeave);
       document.removeEventListener('mouseenter', handleMouseEnter);
+      document.documentElement.classList.remove('has-custom-cursor', 'has-custom-cursor-native');
     };
-  }, [isTouchDevice]);
+  }, [enabled]);
 
-  if (isTouchDevice || !mounted) return null;
+  if (!enabled || !mounted) return null;
 
   return (
     <div
       ref={cursorRef}
-      className="pointer-events-none fixed top-0 left-0 z-[99999] mix-blend-difference will-change-transform opacity-0"
+      className="custom-cursor pointer-events-none fixed top-0 left-0 z-[99999] will-change-transform opacity-0"
       style={{
         transition: 'transform 0.08s cubic-bezier(0.2, 0, 0.2, 1)',
       }}
     >
       <div
         ref={ringRef}
-        className="flex items-center justify-center rounded-full border border-white transition-all duration-300 h-6 w-6"
+        className="custom-cursor-ring flex items-center justify-center rounded-full border transition-all duration-300 h-6 w-6"
       >
         <span ref={labelRef} className="hidden font-mono text-[10px] font-bold tracking-widest text-black" />
-        <div ref={dotRef} className="rounded-full bg-white transition-all duration-300 h-1 w-1" />
+        <div ref={dotRef} className="custom-cursor-dot rounded-full bg-current transition-all duration-300 h-1 w-1" />
       </div>
     </div>
   );
