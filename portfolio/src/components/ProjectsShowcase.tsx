@@ -139,7 +139,7 @@ export default function ProjectsShowcase() {
       {/* 1. FEATURED WORK SECTION */}
       <section 
         id="featured-work" 
-        className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
+        className="relative bg-[#070b15] pt-14 pb-16 sm:pt-20 sm:pb-20 lg:pt-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-6xl">
           
@@ -227,24 +227,19 @@ export default function ProjectsShowcase() {
             })}
           </div>
 
-          <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-white/10 pt-6">
-            <button
-              type="button"
-              onClick={() => scrollToSection('#contact')}
-              className="font-sans text-sm font-semibold text-white hover:text-indigo-300 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
-            >
+          <div className="mt-10 border-t border-white/10 pt-6">
+            <p className="font-sans text-sm font-semibold text-white">
               Have a similar project?
-            </button>
+            </p>
             <a
-              href="#archive"
+              href="#contact"
               onClick={(e) => {
                 e.preventDefault();
-                setArchiveOpen(true);
-                scrollToSection('#archive');
+                scrollToSection('#contact');
               }}
-              className="font-mono text-xs text-slate-400 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+              className="mt-2 inline-flex items-center font-mono text-xs font-semibold text-indigo-300 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
             >
-              More work →
+              Discuss a Project →
             </a>
           </div>
 
@@ -268,7 +263,7 @@ export default function ProjectsShowcase() {
                   Browse additional client builds and past projects.
                 </span>
               </span>
-              <span className="font-mono text-xs font-semibold text-slate-400 group-open:hidden">Show archive</span>
+              <span className="font-mono text-xs font-semibold text-slate-400 group-open:hidden">Browse archive</span>
               <span className="font-mono text-xs font-semibold text-slate-400 hidden group-open:inline">Hide archive</span>
             </summary>
 

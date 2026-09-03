@@ -100,7 +100,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-0 flex-col justify-center overflow-visible bg-[#070b15] pt-24 pb-10 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      className="relative flex min-h-0 flex-col justify-start overflow-visible bg-[#070b15] pt-24 pb-6 px-4 sm:px-6 md:min-h-[90vh] md:justify-center md:pt-28 md:pb-16 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
@@ -169,7 +169,7 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="hidden w-full min-w-0 justify-center overflow-visible px-2 py-10 lg:col-span-6 lg:flex" style={{ perspective: '1100px' }}>
+          <div className="hidden w-full min-w-0 justify-center overflow-visible px-2 py-10 max-lg:h-0 max-lg:min-h-0 max-lg:p-0 max-lg:overflow-hidden lg:col-span-6 lg:flex" style={{ perspective: '1100px' }}>
             <div
               ref={portraitRef}
               className="origin-center w-full max-w-[33rem] overflow-visible"
