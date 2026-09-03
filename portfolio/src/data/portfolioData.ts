@@ -1,4 +1,4 @@
-import { Project, ExperienceItem, SkillGroup, ScrollStoryFrame, BenchmarkStat, ServiceItem, WhyMeItem } from '../types';
+import { Project, ExperienceItem, SkillGroup, ScrollStoryFrame, ServiceItem, WhyMeItem } from '../types';
 
 export const PERSONAL_INFO = {
   name: 'Dmitry Bashkatov',
@@ -8,7 +8,7 @@ export const PERSONAL_INFO = {
   experienceSummary:
     'I help agencies and product teams turn approved designs into reliable WordPress and Shopify builds.',
   availability: 'Available for B2B and contract engagements. I usually reply within 24 hours.',
-  trustLine: '15+ years shipping production websites · Agency & direct-client experience · WordPress · Shopify',
+  trustLine: '15+ years shipping production websites · Agency & direct-client delivery · Custom WordPress & Shopify development',
   replyNote: 'I usually reply within 24 hours.',
   whyMeIntro: 'Built for everyone who has to use the site after launch.',
   whyMe: [
@@ -32,6 +32,8 @@ export const PERSONAL_INFO = {
   email: 'dbashkatoff@gmail.com',
   github: 'https://github.com/dbaik',
   linkedin: 'https://www.linkedin.com/in/dbashkatoff/',
+  telegram: 'https://t.me/dbaik',
+  telegramHandle: '@dbaik',
   experienceYears: 15,
   howIWork: [
     {
@@ -85,16 +87,40 @@ export const SERVICES: ServiceItem[] = [
     title: 'Custom WordPress Development',
     description:
       'Figma-to-production builds, custom themes, Gutenberg and ACF, integrations, multilingual sites, WooCommerce, and maintainable editorial systems.',
+    deliverables: [
+      'Figma → production',
+      'Custom Gutenberg / ACF blocks',
+      'Multilingual',
+      'WooCommerce / integrations',
+    ],
+    ctaLabel: 'Discuss a WordPress project',
+    projectType: 'WordPress development',
   },
   {
     title: 'Shopify Storefront Development',
     description:
       'Custom Liquid themes, reusable sections, product and collection templates, variants, and specialized quote, request, or upload workflows.',
+    deliverables: [
+      'Custom Liquid themes',
+      'Reusable sections and schema',
+      'Product / collection templates',
+      'Custom quote / upload / product workflows',
+    ],
+    ctaLabel: 'Discuss a Shopify project',
+    projectType: 'Shopify development',
   },
   {
     title: 'Frontend & Performance Work',
     description:
       'Responsive implementation, Core Web Vitals, frontend cleanup, animation, technical SEO, analytics integration, and production stabilization.',
+    deliverables: [
+      'Responsive frontend',
+      'Core Web Vitals optimization',
+      'Accessibility-focused frontend',
+      'Technical SEO / analytics',
+    ],
+    ctaLabel: 'Discuss a frontend project',
+    projectType: 'Frontend / performance',
   },
 ];
 
@@ -109,7 +135,7 @@ export const PROJECTS_DATA: Project[] = [
     categoryLabel: 'WordPress · Global Conservation NGO',
     role: 'Frontend Developer',
     technologies: ['WordPress CMS', 'PHP', 'SCSS', 'JavaScript', 'Gutenberg', 'Figma', 'Accessibility'],
-    description: 'Canada\'s largest international conservation organization website, featuring high-engagement campaign hubs, species at risk indexes, and bilingual donation architectures.',
+    description: 'Canada\'s largest international conservation organization website, featuring campaign and conservation content, species at risk indexes, and bilingual donation architectures.',
     caseHeadline: 'Accessible WordPress architecture for content-heavy conservation campaigns',
     challenge:
       'Campaign, species, and conservation content needed a responsive frontend and reusable editorial system that could support accessibility and media-heavy pages.',
@@ -117,10 +143,11 @@ export const PROJECTS_DATA: Project[] = [
       'Owned the frontend for campaign hubs, species-at-risk indexes, and bilingual donation architectures within the WWF Canada WordPress platform.',
     outcome: 'Editors can create campaign and conservation pages using reusable Gutenberg blocks.',
     responsibilities: [
-      'Engineered high-performance custom WordPress theme structure meeting WCAG AA accessibility standards.',
+      'Engineered a custom WordPress theme structure with accessibility-focused implementation.',
       'Built modular Gutenberg blocks for interactive habitat case studies and species conservation tracking.',
-      'Optimized image pipelines and responsive media layouts across high-traffic donor campaign launches.'
+      'Optimized image pipelines and responsive media layouts across donor campaign launches.'
     ],
+    caseBadges: ['WordPress', 'Gutenberg', 'Accessibility'],
     highlights: [
       { label: 'Focus', value: 'National conservation platform' },
       { label: 'Architecture', value: 'Accessible custom Gutenberg' }
@@ -128,7 +155,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'wwf',
     featured: true,
     accentColor: '#10b981',
-    metrics: { speedScore: 99, loadTime: '0.44s', traffic: 'National NGO' }
   },
   {
     id: 'mvp-visuals',
@@ -161,8 +187,8 @@ export const PROJECTS_DATA: Project[] = [
     ],
     coverKey: 'mvp',
     featured: true,
+    caseBadges: ['Shopify', 'Liquid', 'Custom Order Workflow'],
     accentColor: '#3b82f6',
-    metrics: { speedScore: 98, loadTime: '0.52s', traffic: 'B2B Enterprise' }
   },
   {
     id: 'precision-approach-sports',
@@ -189,7 +215,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'precision',
     featured: true,
     accentColor: '#06b6d4',
-    metrics: { speedScore: 99, loadTime: '0.49s', traffic: 'Alpine Tech' }
   },
   {
     id: 'learn-with-mochi',
@@ -215,7 +240,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'mochi',
     featured: false,
     accentColor: '#ec4899',
-    metrics: { speedScore: 99, loadTime: '0.48s', traffic: 'Global EdTech' }
   },
   {
     id: 'bopper-media',
@@ -250,8 +274,8 @@ export const PROJECTS_DATA: Project[] = [
     ],
     coverKey: 'bopper',
     featured: true,
+    caseBadges: ['WordPress', 'Gutenberg', 'Motion'],
     accentColor: '#a855f7',
-    metrics: { speedScore: 99, loadTime: '0.42s', traffic: 'Web3 Branding' }
   },
   {
     id: 'the-energy-coalition',
@@ -303,7 +327,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'eleven',
     featured: true,
     accentColor: '#6366f1',
-    metrics: { speedScore: 99, loadTime: '0.46s', traffic: 'Direct Retail' }
   },
   {
     id: 'schoolhouse-moolah',
@@ -331,7 +354,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'schoolhouse',
     featured: false,
     accentColor: '#8b5cf6',
-    metrics: { speedScore: 98, loadTime: '0.55s', traffic: 'K-12 Classrooms' }
   },
   {
     id: 'gaido',
@@ -356,7 +378,6 @@ export const PROJECTS_DATA: Project[] = [
     coverKey: 'gaido',
     featured: false,
     accentColor: '#38bdf8',
-    metrics: { speedScore: 99, loadTime: '0.45s', traffic: 'Travel Tech' }
   },
   {
     id: 'krazy-coupon-lady',
@@ -379,7 +400,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#84cc16',
-    metrics: { speedScore: 97, loadTime: '0.50s', traffic: 'High Volume' }
   },
   {
     id: 'hi-consumption',
@@ -402,7 +422,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#f97316',
-    metrics: { speedScore: 98, loadTime: '0.48s', traffic: 'Digital Publication' }
   },
   {
     id: 'integrate-health',
@@ -425,7 +444,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#059669',
-    metrics: { speedScore: 99, loadTime: '0.47s', traffic: 'Global NGO' }
   },
   {
     id: 'fed-and-fit',
@@ -448,7 +466,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#f43f5e',
-    metrics: { speedScore: 98, loadTime: '0.50s', traffic: 'Culinary Hub' }
   },
   {
     id: 'an-appetizing-life',
@@ -471,7 +488,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#fbbf24',
-    metrics: { speedScore: 98, loadTime: '0.49s', traffic: 'Lifestyle & Food' }
   },
   {
     id: 'alpha-facilities',
@@ -494,7 +510,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#38bdf8',
-    metrics: { speedScore: 99, loadTime: '0.44s', traffic: 'B2B Enterprise' }
   },
   {
     id: 'cal-drywall',
@@ -517,7 +532,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#f97316',
-    metrics: { speedScore: 98, loadTime: '0.48s', traffic: 'Commercial B2B' }
   },
   {
     id: 'lil-sucker',
@@ -540,7 +554,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#06b6d4',
-    metrics: { speedScore: 99, loadTime: '0.43s', traffic: 'D2C Retail' }
   },
   {
     id: 'return-to-freedom',
@@ -563,7 +576,6 @@ export const PROJECTS_DATA: Project[] = [
     ],
     featured: false,
     accentColor: '#10b981',
-    metrics: { speedScore: 98, loadTime: '0.49s', traffic: 'Non-Profit NGO' }
   }
 ];
 
@@ -765,40 +777,6 @@ export const SKILL_GROUPS: SkillGroup[] = [
   }
 ];
 
-export const BENCHMARK_DATA: BenchmarkStat[] = [
-  {
-    metric: 'Core Web Vitals',
-    standardTheme: 'Sluggish (40-60 score)',
-    dmitryArchitecture: '98-100 / 100 Optimized',
-    unit: 'Score',
-    difference: 'Green Vitals',
-    winner: 'dmitry'
-  },
-  {
-    metric: 'Largest Contentful Paint (LCP)',
-    standardTheme: '3.5s+ (Delayed)',
-    dmitryArchitecture: 'Fast & Optimized',
-    unit: 'Seconds',
-    difference: 'Quick Render',
-    winner: 'dmitry'
-  },
-  {
-    metric: 'Cumulative Layout Shift (CLS)',
-    standardTheme: '0.25+ (Jumpy Content)',
-    dmitryArchitecture: '0.00 (Stable Layout)',
-    unit: 'Score',
-    difference: 'Layout Stability',
-    winner: 'dmitry'
-  },
-  {
-    metric: 'Content Editing Experience',
-    standardTheme: 'Requires developer for text/images',
-    dmitryArchitecture: 'Editor / Merchant Managed',
-    unit: 'Control',
-    difference: 'No Code Needed',
-    winner: 'dmitry'
-  }
-];
 
 export const SCROLL_STORY_FRAMES: ScrollStoryFrame[] = [
   {

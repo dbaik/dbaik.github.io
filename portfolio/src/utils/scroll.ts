@@ -4,6 +4,27 @@
  */
 
 export const SCROLL_INTENT_EVENT = 'portfolio:scroll-intent';
+export const CONTACT_TYPE_EVENT = 'portfolio:contact-type';
+
+let pendingContactType: string | null = null;
+
+export function setPendingContactType(type: string) {
+  pendingContactType = type;
+}
+
+export function consumePendingContactType(): string | null {
+  const type = pendingContactType;
+  pendingContactType = null;
+  return type;
+}
+
+export function scrollToContactWithType(type: string) {
+  setPendingContactType(type);
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(CONTACT_TYPE_EVENT, { detail: type }));
+  }
+  scrollToSection('#contact');
+}
 
 function sectionId(target: string): string {
   return target.startsWith('#') ? target.slice(1) : target;

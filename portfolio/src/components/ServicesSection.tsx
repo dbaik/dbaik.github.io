@@ -1,4 +1,5 @@
 import { SERVICES } from '../data/portfolioData';
+import { scrollToContactWithType } from '../utils/scroll';
 
 export default function ServicesSection() {
   return (
@@ -14,8 +15,8 @@ export default function ServicesSection() {
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
             What you can hire me for
           </h2>
-          <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-slate-400">
-            Senior frontend execution without the hand-holding.
+          <p className="mt-3 max-w-2xl font-sans text-sm sm:text-base text-[var(--text-secondary)]">
+            Senior frontend execution that fits into your team and ships cleanly.
           </p>
         </div>
 
@@ -23,14 +24,30 @@ export default function ServicesSection() {
           {SERVICES.map((service) => (
             <article
               key={service.title}
-              className="rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-6 backdrop-blur-xl"
+              className="flex flex-col rounded-2xl border border-white/10 bg-slate-950/60 p-5 sm:p-6 backdrop-blur-xl"
             >
               <h3 className="font-display text-xl font-bold text-white tracking-tight leading-snug mb-3">
                 {service.title}
               </h3>
-              <p className="font-sans text-sm text-slate-300 leading-relaxed">
+              <p className="font-sans text-sm text-slate-300 leading-relaxed mb-4">
                 {service.description}
               </p>
+              <ul className="mb-5 space-y-1.5">
+                {service.deliverables.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-slate-300">
+                    <span className="text-indigo-400 mt-0.5" aria-hidden="true">›</span>
+                    <span className="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                type="button"
+                onClick={() => scrollToContactWithType(service.projectType)}
+                className="mt-auto inline-flex items-center gap-1 font-mono text-xs font-semibold text-indigo-300 hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
+              >
+                <span>{service.ctaLabel}</span>
+                <span aria-hidden="true">→</span>
+              </button>
             </article>
           ))}
         </div>

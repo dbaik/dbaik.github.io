@@ -19,10 +19,8 @@ export default function Hero() {
     if (!heroEl || !portraitEl) return;
 
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const hoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
 
     let prefersReducedMotion = reducedMotionQuery.matches;
-    let hasFineHover = hoverQuery.matches;
     const target = { x: 0, y: 0 };
     const current = { x: 0, y: 0 };
     let frameId = 0;
@@ -34,8 +32,8 @@ export default function Hero() {
     };
 
     const tick = () => {
-      current.x += (target.x - current.x) * 0.12;
-      current.y += (target.y - current.y) * 0.12;
+      current.x += (target.x - current.x) * 0.09;
+      current.y += (target.y - current.y) * 0.09;
 
       if (Math.abs(target.x - current.x) < 0.02 && Math.abs(target.y - current.y) < 0.02) {
         current.x = target.x;
@@ -55,7 +53,7 @@ export default function Hero() {
     };
 
     const handlePointerMove = (e: PointerEvent) => {
-      if (prefersReducedMotion || !hasFineHover) return;
+      if (prefersReducedMotion) return;
 
       const rect = heroEl.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
@@ -73,7 +71,7 @@ export default function Hero() {
       startTick();
     };
 
-    if (hasFineHover && !prefersReducedMotion) {
+    if (!prefersReducedMotion) {
       heroEl.addEventListener('pointermove', handlePointerMove, { passive: true });
       heroEl.addEventListener('pointerleave', handlePointerLeave, { passive: true });
     }
@@ -87,23 +85,12 @@ export default function Hero() {
       }
     };
 
-    const handleHoverChange = (e: MediaQueryListEvent) => {
-      hasFineHover = e.matches;
-      if (!hasFineHover) {
-        target.x = 0;
-        target.y = 0;
-        startTick();
-      }
-    };
-
     reducedMotionQuery.addEventListener('change', handleReducedMotionChange);
-    hoverQuery.addEventListener('change', handleHoverChange);
 
     return () => {
       heroEl.removeEventListener('pointermove', handlePointerMove);
       heroEl.removeEventListener('pointerleave', handlePointerLeave);
       reducedMotionQuery.removeEventListener('change', handleReducedMotionChange);
-      hoverQuery.removeEventListener('change', handleHoverChange);
       if (frameId) window.cancelAnimationFrame(frameId);
       portraitEl.style.transform = '';
     };
@@ -113,7 +100,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-0 flex-col justify-center overflow-hidden bg-[#070b15] pt-24 pb-10 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      className="relative flex min-h-0 flex-col justify-center overflow-visible bg-[#070b15] pt-24 pb-10 px-4 sm:min-h-[90vh] sm:pt-28 sm:pb-16 sm:px-6 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
@@ -126,7 +113,7 @@ export default function Hero() {
           <div className="lg:col-span-6 min-w-0">
             <p
               id="hero-status"
-              className="hero-reveal hero-reveal-delay-0 mb-6 font-mono text-[11px] sm:text-xs uppercase tracking-wider text-slate-400"
+              className="hero-reveal hero-reveal-delay-0 mb-5 font-mono text-[11px] sm:text-xs uppercase tracking-wider text-slate-400"
             >
               {PERSONAL_INFO.name} <span aria-hidden="true">·</span> {PERSONAL_INFO.title}
             </p>
@@ -134,29 +121,34 @@ export default function Hero() {
             <div className="space-y-5">
               <h1
                 id="hero-offer"
-                className="hero-reveal hero-reveal-delay-1 font-display text-3xl sm:text-5xl lg:text-[3.4rem] xl:text-6xl font-extrabold tracking-tight text-white leading-tight cursor-default select-text"
+                className="hero-reveal hero-reveal-delay-1 font-display text-3xl sm:text-4xl lg:text-[3.25rem] font-extrabold tracking-tight text-white leading-[1.08] cursor-default select-text"
               >
                 {PERSONAL_INFO.subtitle}
               </h1>
 
               <p
                 id="hero-desc"
-                className="hero-reveal hero-reveal-delay-2 font-sans text-sm sm:text-base text-slate-400 max-w-[38rem] leading-relaxed"
+                className="hero-reveal hero-reveal-delay-2 font-sans text-base sm:text-lg lg:text-[1.5rem] text-slate-400 max-w-[36rem] leading-relaxed"
               >
                 {PERSONAL_INFO.experienceSummary}
               </p>
 
-              <p
+              <ul
                 id="hero-trust"
-                className="hero-reveal hero-reveal-delay-3 font-mono text-[11px] sm:text-xs text-slate-400 tracking-wide"
+                className="hero-reveal hero-reveal-delay-3 space-y-1 font-mono text-xs sm:text-[13px] tracking-wide leading-6"
               >
-                {PERSONAL_INFO.trustLine}
-              </p>
+                {PERSONAL_INFO.trustLine.split(' · ').map((part) => (
+                  <li key={part} className="flex gap-2">
+                    <span aria-hidden="true">›</span>
+                    <span>{part}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div
               id="hero-cta"
-              className="hero-reveal hero-reveal-delay-4 mt-8 flex flex-wrap items-center gap-4"
+              className="hero-reveal hero-reveal-delay-4 mt-5 flex flex-wrap items-center gap-4"
             >
               <button
                 type="button"
@@ -171,20 +163,20 @@ export default function Hero() {
                 onClick={() => scrollTo('featured-work')}
                 className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
               >
-                <span>View 3 Case Studies</span>
+                <span>View Case Studies</span>
                 <ArrowDown size={15} />
               </button>
             </div>
           </div>
 
-          <div className="flex w-full min-w-0 justify-center lg:col-span-6" style={{ perspective: '1100px' }}>
+          <div className="hidden w-full min-w-0 justify-center overflow-visible px-2 py-10 lg:col-span-6 lg:flex" style={{ perspective: '1100px' }}>
             <div
               ref={portraitRef}
-              className="origin-center w-full max-w-[40rem]"
+              className="origin-center w-full max-w-[33rem] overflow-visible"
               style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
             >
               <AsciiArtCanvas
-                src="/hero-portrait.webp"
+                src="/hero-portrait.svg"
                 label="ASCII portrait of Dmitry Bashkatov"
                 followRootRef={heroRef}
               />

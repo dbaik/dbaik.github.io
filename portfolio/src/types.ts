@@ -25,11 +25,7 @@ export interface Project {
   }[];
   coverKey?: CoverImageSlug;
   featured: boolean;
-  metrics?: {
-    speedScore?: number;
-    loadTime?: string;
-    traffic?: string;
-  };
+  caseBadges?: string[];
   accentColor?: string;
   codeSnippet?: {
     title: string;
@@ -81,6 +77,9 @@ export interface ScrollStoryFrame {
 export interface ServiceItem {
   title: string;
   description: string;
+  deliverables: string[];
+  ctaLabel: string;
+  projectType: string;
 }
 
 export interface WhyMeItem {
@@ -88,11 +87,3 @@ export interface WhyMeItem {
   statement: string;
 }
 
-export interface BenchmarkStat {
-  metric: string;
-  standardTheme: string;
-  dmitryArchitecture: string;
-  unit: string;
-  difference: string;
-  winner: 'dmitry' | 'neutral';
-}

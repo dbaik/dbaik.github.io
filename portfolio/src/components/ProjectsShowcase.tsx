@@ -11,9 +11,8 @@ import { Project } from '../types';
 import { BrowserFrame } from './BrowserFrame';
 import { scrollToSection } from '../utils/scroll';
 
-function pageSpeedInsightsUrl(url: string): string {
-  return `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(url)}`;
-}
+const FEATURED_ID_SET = new Set<string>(FEATURED_PROJECT_IDS);
+const ARCHIVE_COUNT = PROJECTS_DATA.length - FEATURED_PROJECT_IDS.length;
 
 function projectCoverImage(project: Project) {
   return project.coverKey ? COVER_IMAGES[project.coverKey] : undefined;
@@ -30,14 +29,14 @@ export default function ProjectsShowcase() {
     .map((id) => PROJECTS_DATA.find((project) => project.id === id))
     .filter((project): project is Project => project !== undefined);
   
+  const archiveSource = PROJECTS_DATA.filter((project) => !FEATURED_ID_SET.has(project.id));
   const archiveProjects = selectedCategory === 'all'
-    ? PROJECTS_DATA
-    : PROJECTS_DATA.filter((p) => p.category === selectedCategory);
+    ? archiveSource
+    : archiveSource.filter((p) => p.category === selectedCategory);
 
-  // Dynamically calculate category counts directly from source data
-  const totalCount = PROJECTS_DATA.length;
-  const wpCount = PROJECTS_DATA.filter((p) => p.category === 'wordpress').length;
-  const shopifyCount = PROJECTS_DATA.filter((p) => p.category === 'shopify').length;
+  const totalCount = archiveSource.length;
+  const wpCount = archiveSource.filter((p) => p.category === 'wordpress').length;
+  const shopifyCount = archiveSource.filter((p) => p.category === 'shopify').length;
 
   const categories = [
     { id: 'all', label: `All Builds (${totalCount})` },
@@ -140,7 +139,7 @@ export default function ProjectsShowcase() {
       {/* 1. FEATURED WORK SECTION */}
       <section 
         id="featured-work" 
-        className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5"
+        className="relative bg-[#070b15] py-14 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8"
       >
         <div className="mx-auto max-w-6xl">
           
@@ -159,61 +158,71 @@ export default function ProjectsShowcase() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-7">
-            {featuredProjects.map((project, idx) => {
+            {featuredProjects.map((project) => {
               const cover = projectCoverImage(project);
 
               return (
-                <motion.article
+                <article
                   key={project.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.4, delay: idx * 0.06, ease: 'easeOut' }}
-                  className="group/card relative flex flex-col rounded-2xl border border-white/10 bg-slate-950/60 p-4 sm:p-5 backdrop-blur-xl hover:border-white/20 transition-colors shadow-lg overflow-hidden"
+                  className="case-card group/card relative flex flex-col rounded-2xl border border-white/10 bg-slate-950/60 p-4 sm:p-5 backdrop-blur-xl shadow-lg overflow-hidden"
                 >
+                  <button
+                    type="button"
+                    onClick={(e) => handleOpenModal(project, e)}
+                    aria-haspopup="dialog"
+                    aria-label={`View case study: ${project.title}`}
+                    className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                  />
                   {cover ? (
-                    <div className="mb-4">
+                    <div className="relative z-0 mb-4">
                       <BrowserFrame
                         src={cover}
                         alt={`${project.title} (${project.domain}) live production website`}
                         domain={project.domain}
-                        onClick={(e) => handleOpenModal(project, e)}
-                        className="cursor-pointer"
                       />
                     </div>
                   ) : null}
 
-                  <p className="font-mono text-[10px] uppercase font-bold tracking-wider text-indigo-400 mb-2">
+                  <p className="relative z-0 font-mono text-[10px] uppercase font-bold tracking-wider text-indigo-400 mb-2">
                     {project.title}
                   </p>
 
-                  <h3 className="font-display text-lg sm:text-xl font-extrabold text-white leading-snug mb-4">
+                  <h3 className="relative z-0 font-sans text-base font-extrabold text-white tracking-tight leading-snug mb-3">
                     {project.caseHeadline ?? project.description}
                   </h3>
 
+                  {project.caseBadges && project.caseBadges.length > 0 ? (
+                    <ul className="relative z-0 mb-4 flex flex-wrap gap-1.5">
+                      {project.caseBadges.map((badge) => (
+                        <li
+                          key={badge}
+                          className="rounded-md border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-300"
+                        >
+                          {badge}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
                   {project.challenge ? (
-                    <p className="font-sans text-sm text-slate-400 leading-relaxed mb-2">
+                    <p className="relative z-0 font-sans text-sm text-slate-400 leading-relaxed mb-2">
                       <span className="font-semibold text-slate-300">Challenge. </span>
                       {project.challenge}
                     </p>
                   ) : null}
 
                   {project.outcome ? (
-                    <p className="font-sans text-sm text-slate-400 leading-relaxed mb-5">
+                    <p className="relative z-0 font-sans text-sm text-slate-400 leading-relaxed mb-5">
                       <span className="font-semibold text-slate-300">Outcome. </span>
                       {project.outcome}
                     </p>
                   ) : null}
 
-                  <button
-                    type="button"
-                    onClick={(e) => handleOpenModal(project, e)}
-                    className="mt-auto inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-indigo-300 hover:text-white transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded"
-                  >
+                  <span className="case-card-arrow relative z-0 mt-auto inline-flex items-center gap-1.5 font-mono text-xs font-semibold text-indigo-300">
                     <span>View case</span>
                     <ArrowUpRight size={13} aria-hidden="true" />
-                  </button>
-                </motion.article>
+                  </span>
+                </article>
               );
             })}
           </div>
@@ -250,8 +259,15 @@ export default function ProjectsShowcase() {
             open={archiveOpen}
             onToggle={(event) => setArchiveOpen(event.currentTarget.open)}
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-display text-lg font-bold text-white marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
-              <span>More work</span>
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
+              <span>
+                <span className="block font-display text-lg font-bold text-white">
+                  More Work ({ARCHIVE_COUNT})
+                </span>
+                <span className="mt-1 block font-sans text-sm font-normal text-[var(--text-secondary)]">
+                  Browse additional client builds and past projects.
+                </span>
+              </span>
               <span className="font-mono text-xs font-semibold text-slate-400 group-open:hidden">Show archive</span>
               <span className="font-mono text-xs font-semibold text-slate-400 hidden group-open:inline">Hide archive</span>
             </summary>
@@ -549,15 +565,6 @@ export default function ProjectsShowcase() {
                       >
                         <span>Visit live site</span>
                         <ExternalLink size={14} />
-                      </a>
-                      <a
-                        href={pageSpeedInsightsUrl(activeModalProject.url)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 font-mono text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
-                      >
-                        <span>PageSpeed Insights</span>
-                        <ExternalLink size={12} />
                       </a>
                     </div>
 

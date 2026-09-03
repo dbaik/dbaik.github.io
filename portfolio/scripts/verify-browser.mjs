@@ -44,28 +44,29 @@ const domChecks = await page.evaluate(() => {
     (url) => url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com'),
   );
 
-  const select = document.querySelector('select[name="project_type"]');
-  const label = document.getElementById('contact-project-type-label');
+  const radios = [...document.querySelectorAll('input[type="radio"][name="project_type"]')];
+  const fieldset = document.querySelector('#contact fieldset');
+  const legend = fieldset?.querySelector('legend');
   const avifSources = [...document.querySelectorAll('picture source[type="image/avif"]')];
   const srcsets = avifSources.map((source) => source.getAttribute('srcset') ?? '');
   const sizes = avifSources.map((source) => source.getAttribute('sizes') ?? '');
 
   return {
     title: document.title,
-    heroVisible: !!document.querySelector('h1')?.textContent?.includes('Dmitry'),
+    heroVisible: !!document.querySelector('#hero h1')?.textContent?.includes('Figma'),
     googleFontRequests,
     selfHostedFonts: resources.filter((url) => url.includes('plus-jakarta-sans') || url.includes('syne-latin')),
-    selectExists: Boolean(select),
-    labelExists: Boolean(label),
-    labelFor: label?.htmlFor ?? null,
-    ariaLabelledBy: select?.getAttribute('aria-labelledby') ?? null,
-    labelText: label?.textContent?.trim() ?? null,
+    radioCount: radios.length,
+    radioValues: radios.map((radio) => radio.value),
+    fieldsetExists: Boolean(fieldset),
+    legendText: legend?.textContent?.trim() ?? null,
     pictureCount: avifSources.length,
     sampleSrcset: srcsets[0] ?? null,
     hasWidthDescriptors: srcsets.length > 0 && srcsets.every((srcset) => /\d+w/.test(srcset)),
     hasDensityDescriptors: srcsets.some((srcset) => /\b1x\b|\b2x\b/.test(srcset)),
     sampleSizes: sizes[0] ?? null,
     slate500Count: document.querySelectorAll('.text-slate-500').length,
+    textSecondary: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
     contactSectionVisible: Boolean(document.getElementById('contact')),
   };
 });
@@ -86,9 +87,15 @@ const checks = [
   { name: 'Hero renders', pass: domChecks.heroVisible },
   { name: 'No Google Fonts requests', pass: domChecks.googleFontRequests.length === 0 },
   { name: 'Self-hosted fonts requested', pass: domChecks.selfHostedFonts.length >= 2 },
-  { name: 'Contact select exists', pass: domChecks.selectExists },
-  { name: 'Contact label associated', pass: domChecks.labelExists && domChecks.labelFor === 'contact-project-type' },
-  { name: 'Select aria-labelledby set', pass: domChecks.ariaLabelledBy === 'contact-project-type-label' },
+  {
+    name: 'Contact radios exist',
+    pass:
+      domChecks.radioCount === 4 &&
+      JSON.stringify(domChecks.radioValues) ===
+        JSON.stringify(['WordPress development', 'Shopify development', 'Frontend / performance', 'Other']),
+  },
+  { name: 'Contact project type uses fieldset', pass: domChecks.fieldsetExists && domChecks.legendText === 'PROJECT TYPE' },
+  { name: 'Semantic contrast vars present', pass: Boolean(domChecks.textSecondary) },
   { name: 'Responsive srcset uses w descriptors', pass: domChecks.hasWidthDescriptors && !domChecks.hasDensityDescriptors },
   { name: 'Picture sizes attribute present', pass: Boolean(domChecks.sampleSizes?.includes('100vw')) },
   { name: 'Mobile avoids 2752w cover images', pass: !usesOversizedImagesOnMobile },

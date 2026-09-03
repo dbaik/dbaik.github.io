@@ -1,5 +1,7 @@
-import { motion } from 'motion/react';
+import { Layers, Palette, Terminal, TrendingUp, type LucideIcon } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+
+const WHY_ME_ICONS: LucideIcon[] = [Palette, Layers, Terminal, TrendingUp];
 
 export default function HowIWork() {
   return (
@@ -21,23 +23,23 @@ export default function HowIWork() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {PERSONAL_INFO.whyMe.map((item, index) => (
-            <motion.div
-              key={item.audience}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 sm:p-6"
-            >
-              <h3 className="font-display text-lg sm:text-xl font-bold text-white tracking-tight leading-snug mb-2">
-                {item.audience}
-              </h3>
-              <p className="font-sans text-sm sm:text-base text-slate-300 leading-relaxed">
-                {item.statement}
-              </p>
-            </motion.div>
-          ))}
+          {PERSONAL_INFO.whyMe.map((item, index) => {
+            const Icon = WHY_ME_ICONS[index] ?? Palette;
+            return (
+              <div
+                key={item.audience}
+                className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 sm:p-6"
+              >
+                <Icon size={20} className="mb-3 text-indigo-400" aria-hidden="true" />
+                <h3 className="font-display text-lg sm:text-xl font-bold text-white tracking-tight leading-snug mb-2">
+                  {item.audience}
+                </h3>
+                <p className="font-sans text-sm sm:text-base text-slate-300 leading-relaxed">
+                  {item.statement}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
