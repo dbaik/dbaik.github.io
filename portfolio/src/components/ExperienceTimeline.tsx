@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react';
 import { EXPERIENCE_DATA } from '../data/portfolioData';
 
 export default function ExperienceTimeline() {
@@ -21,13 +22,13 @@ export default function ExperienceTimeline() {
           </p>
         </div>
 
-        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-3 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-px before:bg-[var(--line)]">
+        <div className="space-y-6 relative before:absolute before:top-3 before:bottom-0 before:left-3 sm:before:left-4 before:-translate-x-1/2 before:w-px before:bg-[var(--line)]">
           {EXPERIENCE_DATA.slice(0, 2).map((exp) => (
               <div
                 key={exp.id}
                 className="relative pl-9 sm:pl-11 group"
               >
-                <div className="absolute left-3 sm:left-4 top-5 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400 bg-[#070b15] z-10" />
+                <div className="absolute left-3 sm:left-4 top-5 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400 bg-[var(--canvas)] z-10" />
 
                 <div className="rounded-xl border border-white/5 bg-slate-950/40 backdrop-blur-sm group-hover:border-white/15 transition-all p-5 sm:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4 mb-2">
@@ -70,32 +71,40 @@ export default function ExperienceTimeline() {
                 </div>
               </div>
           ))}
-        </div>
 
-        <details className="mt-8 rounded-2xl border border-white/10 bg-slate-950/40">
-          <summary className="cursor-pointer list-none px-5 py-4 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
-            Earlier roles
-          </summary>
-          <div className="space-y-3 px-5 pb-5">
-            {EXPERIENCE_DATA.slice(2).map((exp) => (
-              <div key={exp.id} className="border-t border-white/5 pt-3">
-                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                  <p className="font-display text-sm font-bold text-white">
-                    {exp.company} <span className="text-[var(--muted)]">·</span>{' '}
-                    <span className="font-mono text-xs font-semibold text-indigo-400">{exp.role}</span>
-                  </p>
-                  <p className="font-mono text-xs text-[var(--text-secondary)]">
-                    {exp.period}
-                    {exp.location ? ` · ${exp.location}` : ''}
-                  </p>
-                </div>
-                <p className="mt-1 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
-                  {exp.description}
-                </p>
+          <details className="group relative pl-9 sm:pl-11">
+            <div className="absolute left-3 sm:left-4 top-6 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400/50 bg-[var(--canvas)] z-10" />
+            <div className="rounded-2xl border border-white/10 bg-slate-950/40">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--canvas)] rounded-2xl">
+                <span>Earlier roles</span>
+                <ChevronDown
+                  size={16}
+                  aria-hidden="true"
+                  className="shrink-0 text-[var(--text-secondary)] transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <div className="space-y-3 border-t border-white/5 px-5 pb-5 pt-1">
+                {EXPERIENCE_DATA.slice(2).map((exp) => (
+                  <div key={exp.id} className="border-t border-white/5 pt-3 first:border-t-0 first:pt-3">
+                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                      <p className="font-display text-sm font-bold text-white">
+                        {exp.company} <span className="text-[var(--muted)]">·</span>{' '}
+                        <span className="font-mono text-xs font-semibold text-indigo-400">{exp.role}</span>
+                      </p>
+                      <p className="font-mono text-xs text-[var(--text-secondary)]">
+                        {exp.period}
+                        {exp.location ? ` · ${exp.location}` : ''}
+                      </p>
+                    </div>
+                    <p className="mt-1 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
+                      {exp.description}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </details>
+            </div>
+          </details>
+        </div>
 
         <p className="mt-10 pt-8 border-t border-white/10 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
           Formal web-design training (2009) and an engineering degree, applied to production frontend work since then.
