@@ -1,4 +1,4 @@
-import { SERVICES } from '../data/portfolioData';
+import { SERVICES } from '../data/servicesData';
 import { scrollToContactWithType } from '../utils/scroll';
 
 export default function ServicesSection() {

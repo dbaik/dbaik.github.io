@@ -216,7 +216,7 @@ export default function ContactSection() {
             <div className="pt-2 flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5">
               <a
                 href={`mailto:${PERSONAL_INFO.email}`}
-                className="flex items-center gap-2 font-mono text-xs text-slate-300 hover:text-white truncate focus-visible:outline-none"
+                className="flex items-center gap-2 font-mono text-xs text-slate-300 hover:text-white truncate focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
               >
                 <Mail size={14} className="text-indigo-400 shrink-0" />
                 <span className="truncate">{PERSONAL_INFO.email}</span>

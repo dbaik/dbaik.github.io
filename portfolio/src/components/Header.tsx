@@ -239,7 +239,7 @@ export default function Header() {
           ref={brandLinkRef}
           href="#hero"
           onClick={(e) => handleNavClick(e, '#hero')}
-          className="group flex items-center gap-2.5 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
+          className="group flex min-w-0 items-center gap-2.5 cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-lg"
         >
           <div
             ref={logoStageRef}
@@ -257,11 +257,13 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors whitespace-nowrap">
+          <div className="min-w-0 flex flex-col">
+            <span className="font-display text-sm font-bold tracking-tight text-white group-hover:text-indigo-300 transition-colors truncate">
               {PERSONAL_INFO.name}
             </span>
-            <span className="font-mono text-xs text-slate-400 tracking-wider whitespace-nowrap">WordPress & Shopify Developer</span>
+            <span className="hidden sm:block font-mono text-xs text-slate-400 tracking-wider truncate">
+              WordPress & Shopify Developer
+            </span>
           </div>
         </a>
 
@@ -278,7 +280,7 @@ export default function Header() {
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={`relative px-3 py-1.5 text-xs font-medium tracking-wide whitespace-nowrap transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none rounded-full ${
                   isActive
-                    ? 'text-white font-semibold bg-white/10 border border-white/15'
+                    ? 'text-white font-semibold bg-white/10 border border-white/15 hover:bg-white/15'
                     : 'text-slate-400 hover:text-slate-200 border border-transparent'
                 }`}
               >
@@ -296,14 +298,14 @@ export default function Header() {
               setActiveSection('contact')
               scrollToSection('#contact')
             }}
-            className="hidden sm:inline-flex items-center rounded-xl bg-indigo-600 px-3.5 py-2 font-sans text-xs font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
+            className="hidden md:inline-flex items-center rounded-xl bg-indigo-600 px-3.5 py-2 font-sans text-xs font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
           >
             Discuss a Project
           </button>
           <ThemeToggle />
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
+            className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none"
             aria-label={isMobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-nav"

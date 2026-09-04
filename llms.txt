@@ -1,0 +1,36 @@
+# Dmitry Bashkatov - Senior WordPress & Shopify Developer
+
+> Senior developer helping agencies and product teams turn approved designs into fast, maintainable, and reliable production websites.
+
+## Overview
+- **Name**: Dmitry Bashkatov
+- **Title**: Senior WordPress & Shopify Developer
+- **Website**: https://dbaik.github.io
+- **Email**: dbashkatoff@gmail.com
+- **LinkedIn**: https://www.linkedin.com/in/dbashkatoff/
+- **GitHub**: https://github.com/dbaik
+- **Experience**: 15+ years delivering production websites for agencies and direct clients.
+- **Availability**: Available for B2B and contract engagements. Usually replies within 24 hours.
+
+## Primary Services
+1. **Custom WordPress Development**:
+   - Figma-to-production builds
+   - Modular Gutenberg blocks and ACF integration
+   - Custom themes without bloated page builders
+   - Multilingual sites (Polylang, WPML) and WooCommerce
+2. **Shopify Storefront Development**:
+   - Custom Liquid themes and reusable sections
+   - Structured schema controls for easy merchant editing
+   - Product and collection templates with custom variants
+   - Specialized quote, request, or artwork upload workflows
+3. **Frontend & Performance Engineering**:
+   - Core Web Vitals optimization and layout stability (CLS 0)
+   - Accessibility-focused implementation (WCAG compliant)
+   - Technical SEO and analytics integration (GA4, GTM)
+
+## Selected Case Studies
+- **WWF Canada** (wwf.ca): Accessible WordPress architecture for content-heavy conservation campaigns, species indexes, and bilingual donation flows.
+- **MVP Visuals** (mvpvisuals.com): Custom Shopify storefront with artwork upload workflows, request-a-quote flows, and merchant-editable Liquid sections.
+- **Bopper Media** (boppermedia.com): Custom WordPress theme with Gutenberg blocks, dark/light theme switching, and subtle micro-interactions.
+- **The Energy Coalition** (energycoalition.org): Custom WordPress site with ACF, Polylang multilingual publishing, and Mailchimp integration.
+- **11-nil** (11-nil.com): Shopify Liquid store with product variant merchandising and responsive design.

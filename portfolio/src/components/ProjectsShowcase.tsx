@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowUpRight, ExternalLink, X, 
   CheckCircle2
 } from 'lucide-react';
-import { FEATURED_PROJECT_IDS, PROJECTS_DATA } from '../data/portfolioData';
+import { FEATURED_PROJECT_IDS, PROJECTS_DATA } from '../data/projectsData';
 import { COVER_IMAGES } from '../data/coverImages';
 import { Project } from '../types';
 import { BrowserFrame } from './BrowserFrame';
@@ -254,7 +253,7 @@ export default function ProjectsShowcase() {
             open={archiveOpen}
             onToggle={(event) => setArchiveOpen(event.currentTarget.open)}
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 marker:content-none [&::-webkit-details-marker]:hidden hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-2xl">
               <span>
                 <span className="block font-display text-lg font-bold text-white">
                   More Work ({ARCHIVE_COUNT})
@@ -276,7 +275,7 @@ export default function ProjectsShowcase() {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`rounded-lg px-3 py-1.5 font-mono text-xs transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none ${
                     selectedCategory === cat.id
-                      ? 'bg-white text-slate-950 font-bold'
+                      ? 'bg-white text-slate-950 font-bold hover:bg-slate-200'
                       : 'bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -338,7 +337,7 @@ export default function ProjectsShowcase() {
                           href={proj.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1 rounded-lg text-slate-400 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
+                          className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors"
                           title={`Visit ${proj.title} live site`}
                         >
                           <ExternalLink size={14} />
@@ -405,35 +404,27 @@ export default function ProjectsShowcase() {
       </section>
 
       {/* 3. CASE STUDY DETAIL MODAL (Positioned below fixed header z-50, header remains visible) */}
-      {typeof document !== 'undefined' && createPortal(
-        <AnimatePresence>
-          {activeModalProject && (
-            <div 
-              className="fixed inset-0 top-14 sm:top-16 z-40 flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="modal-project-title"
-              data-lenis-prevent="true"
-            >
-              {/* Backdrop (under header) */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={handleCloseModal}
-                className="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer z-0"
-              />
+      {typeof document !== 'undefined' && activeModalProject && createPortal(
+        <div 
+          className="fixed inset-0 top-14 sm:top-16 z-40 flex items-center justify-center p-4 sm:p-6 overflow-y-auto overscroll-contain animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-project-title"
+          data-lenis-prevent="true"
+        >
+          {/* Backdrop (under header) */}
+          <div
+            onClick={handleCloseModal}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer z-0"
+          />
 
-              {/* Modal Box */}
-              <motion.div
-                id="project-detail-modal-box"
-                tabIndex={-1}
-                initial={{ opacity: 0, scale: 0.96, y: 15 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.96, y: 15 }}
-                data-lenis-prevent="true"
-                className="relative w-full max-w-2xl sm:max-w-3xl rounded-2xl border p-6 sm:p-8 shadow-2xl z-10 my-auto max-h-[calc(100vh-5.5rem)] sm:max-h-[calc(100vh-6.5rem)] overflow-y-auto overscroll-contain isolate outline-none focus:outline-none [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full"
-              >
+          {/* Modal Box */}
+          <div
+            id="project-detail-modal-box"
+            tabIndex={-1}
+            data-lenis-prevent="true"
+            className="relative w-full max-w-2xl sm:max-w-3xl rounded-2xl border p-6 sm:p-8 shadow-2xl z-10 my-auto max-h-[calc(100vh-5.5rem)] sm:max-h-[calc(100vh-6.5rem)] overflow-y-auto overscroll-contain isolate outline-none focus:outline-none [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full animate-modal-enter"
+          >
                 {/* Close Button */}
                 <button
                   ref={modalCloseBtnRef}
@@ -573,10 +564,8 @@ export default function ProjectsShowcase() {
                   </div>
 
                 </div>
-              </motion.div>
-            </div>
-          )}
-        </AnimatePresence>,
+              </div>
+            </div>,
         document.body
       )}
     </>

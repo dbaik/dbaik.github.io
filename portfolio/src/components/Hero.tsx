@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowDown } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import AsciiArtCanvas from './AsciiArtCanvas';
@@ -8,6 +8,15 @@ import { scrollToSection } from '../utils/scroll';
 export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
   const portraitRef = useRef<HTMLDivElement | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
 
   const scrollTo = (id: string) => {
     scrollToSection(id);
@@ -100,7 +109,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-0 flex-col justify-start overflow-visible bg-[#070b15] pt-24 pb-6 px-4 sm:px-6 md:min-h-[90vh] md:justify-center md:pt-28 md:pb-16 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      className="relative flex min-h-[100dvh] flex-col justify-center overflow-visible bg-[#070b15] pt-24 pb-10 px-4 sm:px-6 md:min-h-[90vh] md:pt-28 md:pb-16 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
@@ -175,11 +184,13 @@ export default function Hero() {
               className="origin-center w-full max-w-[33rem] overflow-visible"
               style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
             >
-              <AsciiArtCanvas
-                src="/hero-portrait.svg"
-                label="ASCII portrait of Dmitry Bashkatov"
-                followRootRef={heroRef}
-              />
+              {isDesktop && (
+                <AsciiArtCanvas
+                  src="/hero-portrait.svg"
+                  label="ASCII portrait of Dmitry Bashkatov"
+                  followRootRef={heroRef}
+                />
+              )}
             </div>
           </div>
         </div>

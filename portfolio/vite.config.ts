@@ -48,7 +48,11 @@ function inlineCssAndPreloadFontsPlugin(): Plugin {
         const fontHrefs = Object.values(bundle)
           .filter((item) => item.type === 'asset' && item.fileName.endsWith('.woff2'))
           .map((item) => (item.type === 'asset' ? item.fileName : ''))
-          .filter((fileName) => fileName.includes('syne-latin-800'))
+          .filter(
+            (fileName) =>
+              fileName.includes('syne-latin-800') ||
+              fileName.includes('plus-jakarta-sans-latin-400'),
+          )
           .sort();
 
         if (fontHrefs.length === 0) return next;
@@ -92,10 +96,9 @@ export default defineConfig(() => {
       cssCodeSplit: true,
       modulePreload: {
         resolveDependencies(filename, deps) {
-          // Keep motion/gsap/lenis off the initial modulepreload list; they load on demand.
+          // Keep gsap/lenis off the initial modulepreload list; they load on demand.
           return deps.filter(
             (dep) =>
-              !dep.includes('motion') &&
               !dep.includes('gsap') &&
               !dep.includes('lenis'),
           );
@@ -114,10 +117,6 @@ export default defineConfig(() => {
 
             if (id.includes('lenis')) {
               return 'lenis';
-            }
-
-            if (id.includes('motion')) {
-              return 'motion';
             }
 
             if (id.includes('lucide-react')) {

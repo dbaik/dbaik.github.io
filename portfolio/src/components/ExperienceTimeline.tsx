@@ -1,5 +1,5 @@
 import { ChevronDown } from 'lucide-react';
-import { EXPERIENCE_DATA } from '../data/portfolioData';
+import { EXPERIENCE_DATA } from '../data/experienceData';
 
 export default function ExperienceTimeline() {
   return (
@@ -72,36 +72,37 @@ export default function ExperienceTimeline() {
               </div>
           ))}
 
-          <details className="group relative pl-9 sm:pl-11">
-            <div className="absolute left-3 sm:left-4 top-6 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400/50 bg-[var(--canvas)] z-10" />
-            <div className="rounded-2xl border border-white/10 bg-slate-950/40">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 marker:content-none [&::-webkit-details-marker]:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--canvas)] rounded-2xl">
-                <span>Earlier roles</span>
-                <ChevronDown
-                  size={16}
-                  aria-hidden="true"
-                  className="shrink-0 text-[var(--text-secondary)] transition-transform duration-200 group-open:rotate-180"
-                />
-              </summary>
-              <div className="space-y-3 border-t border-white/5 px-5 pb-5 pt-1">
-                {EXPERIENCE_DATA.slice(2).map((exp) => (
-                  <div key={exp.id} className="border-t border-white/5 pt-3 first:border-t-0 first:pt-3">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
-                      <p className="font-display text-sm font-bold text-white">
-                        {exp.company} <span className="text-[var(--muted)]">·</span>{' '}
-                        <span className="font-mono text-xs font-semibold text-indigo-400">{exp.role}</span>
-                      </p>
-                      <p className="font-mono text-xs text-[var(--text-secondary)]">
-                        {exp.period}
-                        {exp.location ? ` · ${exp.location}` : ''}
-                      </p>
-                    </div>
-                    <p className="mt-1 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
-                      {exp.description}
+          <details className="group relative pl-9 sm:pl-11 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3 sm:left-4 top-6 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border-2 border-indigo-400/50 bg-[var(--canvas)] z-10"
+            />
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-mono text-xs font-bold uppercase tracking-wider text-slate-300 marker:content-none [&::-webkit-details-marker]:hidden hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--canvas)]">
+              <span>Earlier roles</span>
+              <ChevronDown
+                size={16}
+                aria-hidden="true"
+                className="shrink-0 text-[var(--text-secondary)] transition-transform duration-200 group-open:rotate-180"
+              />
+            </summary>
+            <div className="space-y-3 border-t border-white/5 px-5 pb-5 pt-1">
+              {EXPERIENCE_DATA.slice(2).map((exp) => (
+                <div key={exp.id} className="border-t border-white/5 pt-3 first:border-t-0 first:pt-3">
+                  <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                    <p className="font-display text-sm font-bold text-white">
+                      {exp.company} <span className="text-[var(--muted)]">·</span>{' '}
+                      <span className="font-mono text-xs font-semibold text-indigo-400">{exp.role}</span>
+                    </p>
+                    <p className="font-mono text-xs text-[var(--text-secondary)]">
+                      {exp.period}
+                      {exp.location ? ` · ${exp.location}` : ''}
                     </p>
                   </div>
-                ))}
-              </div>
+                  <p className="mt-1 font-sans text-sm text-[var(--text-secondary)] leading-relaxed">
+                    {exp.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </details>
         </div>

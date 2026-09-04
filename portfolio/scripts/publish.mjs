@@ -41,6 +41,8 @@ for (const fileName of [
   'favicon.svg',
   'apple-touch-icon.png',
   'hero-portrait.svg',
+  'llms.txt',
+  'robots.txt',
 ]) {
   const from = path.join(distDir, fileName);
   if (fs.existsSync(from)) {
