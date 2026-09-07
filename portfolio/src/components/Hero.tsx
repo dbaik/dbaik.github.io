@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import AsciiArtCanvas from './AsciiArtCanvas';
 import HeroVisualGrid from './HeroVisualGrid';
@@ -109,7 +109,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       id="hero"
-      className="relative flex min-h-[100dvh] flex-col justify-center overflow-visible bg-[#070b15] pt-24 pb-10 px-4 sm:px-6 md:min-h-[90vh] md:pt-28 md:pb-16 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
+      className="relative flex min-h-[100dvh] flex-col justify-start overflow-visible bg-[#070b15] pt-24 pb-10 px-4 sm:px-6 md:min-h-[90vh] md:justify-center md:pt-28 md:pb-16 lg:px-8 scroll-mt-20 md:scroll-mt-24 border-b border-white/5"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-[450px] w-[800px] rounded-full bg-indigo-600/10 blur-[130px]" />
@@ -124,20 +124,20 @@ export default function Hero() {
               id="hero-status"
               className="hero-reveal hero-reveal-delay-0 mb-5 font-mono text-[11px] sm:text-xs uppercase tracking-wider text-slate-400"
             >
-              {PERSONAL_INFO.name} <span aria-hidden="true">·</span> {PERSONAL_INFO.title}
+              {PERSONAL_INFO.title}
             </p>
 
             <div className="space-y-5">
               <h1
                 id="hero-offer"
-                className="hero-reveal hero-reveal-delay-1 font-display text-3xl sm:text-4xl lg:text-[3.25rem] font-extrabold tracking-tight text-white leading-[1.08] cursor-default select-text"
+                className="hero-reveal hero-reveal-delay-1 font-display text-[clamp(1.875rem,4.8svh_+_0.05rem,2.5rem)] sm:text-4xl lg:text-[3.25rem] font-extrabold tracking-tight text-white leading-[1.08] cursor-default select-text"
               >
                 {PERSONAL_INFO.subtitle}
               </h1>
 
               <p
                 id="hero-desc"
-                className="hero-reveal hero-reveal-delay-2 font-sans text-base sm:text-lg lg:text-[1.5rem] text-slate-400 max-w-[36rem] leading-relaxed"
+                className="hero-reveal hero-reveal-delay-2 font-sans text-[clamp(1rem,0.55svh_+_0.85rem,1.125rem)] sm:text-lg lg:text-[1.5rem] text-slate-400 max-w-[36rem] leading-relaxed"
               >
                 {PERSONAL_INFO.experienceSummary}
               </p>
@@ -157,23 +157,24 @@ export default function Hero() {
 
             <div
               id="hero-cta"
-              className="hero-reveal hero-reveal-delay-4 mt-5 flex flex-wrap items-center gap-4"
+              className="hero-reveal hero-reveal-delay-4 mt-5 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:gap-4"
             >
               <button
                 type="button"
                 onClick={() => scrollTo('contact')}
-                className="flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 font-sans text-sm font-bold text-white hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-colors cursor-pointer sm:w-auto"
               >
                 <span>Discuss a Project</span>
+                <ArrowRight size={15} aria-hidden="true" />
               </button>
 
               <button
                 type="button"
                 onClick={() => scrollTo('featured-work')}
-                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-sans text-sm font-semibold text-slate-300 hover:bg-white/10 hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:outline-none transition-all cursor-pointer sm:w-auto"
               >
                 <span>View Case Studies</span>
-                <ArrowDown size={15} />
+                <ArrowDown size={15} aria-hidden="true" />
               </button>
             </div>
           </div>

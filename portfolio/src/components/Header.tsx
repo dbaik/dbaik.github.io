@@ -118,8 +118,20 @@ export default function Header() {
     const enableTilt = async () => {
       if (tiltReady || cancelled) return
       tiltReady = true
-      const { default: gsap } = await import('gsap')
-      if (cancelled || !brandEl.isConnected) return
+
+      let gsap: typeof import('gsap').default
+      try {
+        ;({ default: gsap } = await import('gsap'))
+      } catch {
+        // Allow a later hover/idle pass to retry if the chunk failed during HMR.
+        tiltReady = false
+        return
+      }
+
+      if (cancelled || !brandEl.isConnected) {
+        tiltReady = false
+        return
+      }
 
       gsap.set(logoEl, {
         transformOrigin: '50% 50%',
@@ -175,8 +187,11 @@ export default function Header() {
     }
 
     const handleFirstEnter = () => {
-      brandEl.removeEventListener('pointerenter', handleFirstEnter)
-      void enableTilt()
+      void enableTilt().then(() => {
+        if (tiltReady) {
+          brandEl.removeEventListener('pointerenter', handleFirstEnter)
+        }
+      })
     }
 
     brandEl.addEventListener('pointerenter', handleFirstEnter, { passive: true })

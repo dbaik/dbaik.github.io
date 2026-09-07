@@ -23,10 +23,11 @@ export type CoverImageSlug =
 
 export type CoverImageRegistry = Record<CoverImageSlug, CoverImageSet>;
 
-export const COVER_IMAGE_WIDTHS = [640, 688, 960, 1376, 2752] as const;
-
+// Mirrors the case-card layout: one column up to lg, three columns after it,
+// inside a 72rem grid. The subtracted values are the page gutters, the 1.75rem
+// grid gaps and the card padding, so the browser is told the real render width.
 export const COVER_IMAGE_SIZES =
-  '(min-width: 1024px) min(560px, calc((100vw - 3rem) / 2)), (min-width: 768px) min(688px, calc(100vw - 3rem)), calc(100vw - 2rem)';
+  '(min-width: 1024px) calc((min(100vw - 4rem, 72rem) - 3.5rem) / 3 - 2.75rem), (min-width: 640px) calc(100vw - 5.75rem), calc(100vw - 4.25rem)';
 
 export function coverImageSet(
   variants: CoverImageVariant[],

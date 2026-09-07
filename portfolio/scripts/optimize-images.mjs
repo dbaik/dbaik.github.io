@@ -8,7 +8,7 @@ const ORIGINALS_DIR = path.join(SRC_DIR, 'originals');
 const COVERS_DIR = path.join(SRC_DIR, 'covers');
 const PUBLIC_DIR = path.join(ROOT, 'public');
 const COVER_IMAGES_MODULE = path.join(ROOT, 'src/data/coverImages.ts');
-const OUTPUT_WIDTHS = [640, 688, 960, 1376, 2752];
+const OUTPUT_WIDTHS = [640, 960, 1376];
 const WEBP_QUALITY = 82;
 const AVIF_QUALITY = 62;
 
@@ -74,8 +74,8 @@ async function encodeVariant(inputPath, outputPath, width, format) {
     pipeline = pipeline.avif({ quality: AVIF_QUALITY, effort: 6 });
   }
 
-  await pipeline.toFile(outputPath);
-  return fs.statSync(outputPath).size;
+  const info = await pipeline.toFile(outputPath);
+  return { bytes: fs.statSync(outputPath).size, width: info.width };
 }
 
 function removeLegacyCoverOutputs() {
@@ -86,6 +86,12 @@ function removeLegacyCoverOutputs() {
   for (const fileName of fs.readdirSync(COVERS_DIR)) {
     if (/^[^.]+\.(avif|webp)$/.test(fileName) || /^[^.]+\@2x\.(avif|webp)$/.test(fileName)) {
       fs.unlinkSync(path.join(COVERS_DIR, fileName));
+      continue;
+    }
+
+    const widthMatch = fileName.match(/-w(\d+)\.(avif|webp)$/);
+    if (widthMatch && !OUTPUT_WIDTHS.includes(Number(widthMatch[1]))) {
+      fs.unlinkSync(path.join(COVERS_DIR, fileName));
     }
   }
 }
@@ -93,20 +99,46 @@ function removeLegacyCoverOutputs() {
 async function optimizeCoverSet(inputPath, slug, stats) {
   const metadata = await createImagePipeline(inputPath).metadata();
   const outputs = [];
+  const variants = [];
+  const seenWidths = new Set();
 
   for (const width of OUTPUT_WIDTHS) {
+    const encoded = {};
+    let actualWidth = width;
+
     for (const format of ['webp', 'avif']) {
       const fileName = `${slug}-w${width}.${format}`;
       const outputPath = path.join(COVERS_DIR, fileName);
-      const bytes = await encodeVariant(inputPath, outputPath, width, format);
-      outputs.push({ fileName, bytes });
-      stats.outputBytes += bytes;
+      const result = await encodeVariant(inputPath, outputPath, width, format);
+      encoded[format] = { fileName, outputPath, bytes: result.bytes };
+      actualWidth = result.width;
+    }
+
+    // withoutEnlargement caps sources smaller than the requested width, so
+    // several nominal widths can collapse onto one real width. Keep a single
+    // file per real width, otherwise srcset advertises a resolution the file
+    // does not have.
+    if (seenWidths.has(actualWidth)) {
+      for (const format of ['webp', 'avif']) {
+        fs.unlinkSync(encoded[format].outputPath);
+      }
+      continue;
+    }
+
+    seenWidths.add(actualWidth);
+    variants.push({ nominalWidth: width, width: actualWidth });
+
+    for (const format of ['webp', 'avif']) {
+      outputs.push({ fileName: encoded[format].fileName, bytes: encoded[format].bytes });
+      stats.outputBytes += encoded[format].bytes;
     }
   }
 
   console.log(
     `  ${slug}: ${metadata.width}x${metadata.height} -> ${outputs.map((item) => `${item.fileName} (${formatBytes(item.bytes)})`).join(', ')}`,
   );
+
+  return variants;
 }
 
 function moveOriginals() {
@@ -144,24 +176,25 @@ function publishHeroPortraitSvg() {
   console.log(`  hero-portrait: ${path.relative(ROOT, svgSource)} -> ${path.relative(ROOT, svgOutput)}`);
 }
 
-function generateCoverImagesModule() {
+function generateCoverImagesModule(coverVariants) {
   const importLines = [];
   const registryEntries = [];
 
   for (const { slug, width, height } of PROJECT_COVERS) {
     const variantLines = [];
+    const variants = coverVariants.get(slug);
 
-    for (const outputWidth of OUTPUT_WIDTHS) {
+    for (const { nominalWidth } of variants) {
       for (const format of ['avif', 'webp']) {
-        const importName = toImportName(slug, outputWidth, format);
-        const fileName = `${slug}-w${outputWidth}.${format}`;
+        const importName = toImportName(slug, nominalWidth, format);
+        const fileName = `${slug}-w${nominalWidth}.${format}`;
         importLines.push(`import ${importName} from '../assets/images/covers/${fileName}';`);
       }
     }
 
-    for (const outputWidth of OUTPUT_WIDTHS) {
+    for (const { nominalWidth, width: actualWidth } of variants) {
       variantLines.push(
-        `      { width: ${outputWidth}, avif: ${toImportName(slug, outputWidth, 'avif')}, webp: ${toImportName(slug, outputWidth, 'webp')} },`,
+        `      { width: ${actualWidth}, avif: ${toImportName(slug, nominalWidth, 'avif')}, webp: ${toImportName(slug, nominalWidth, 'webp')} },`,
       );
     }
 
@@ -191,6 +224,7 @@ async function main() {
   removeLegacyCoverOutputs();
 
   const stats = { inputBytes: 0, outputBytes: 0 };
+  const coverVariants = new Map();
 
   console.log('Optimizing hero portrait...');
   publishHeroPortraitSvg();
@@ -209,10 +243,10 @@ async function main() {
     }
 
     stats.inputBytes += fs.statSync(inputPath).size;
-    await optimizeCoverSet(inputPath, slug, stats);
+    coverVariants.set(slug, await optimizeCoverSet(inputPath, slug, stats));
   }
 
-  generateCoverImagesModule();
+  generateCoverImagesModule(coverVariants);
 
   const saved = stats.inputBytes - stats.outputBytes;
   const ratio = stats.inputBytes > 0 ? ((saved / stats.inputBytes) * 100).toFixed(1) : '0.0';
