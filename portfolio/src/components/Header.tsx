@@ -196,30 +196,8 @@ export default function Header() {
 
     brandEl.addEventListener('pointerenter', handleFirstEnter, { passive: true })
 
-    const idleWindow = window as Window &
-      typeof globalThis & {
-        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number
-        cancelIdleCallback?: (id: number) => void
-      }
-    let cancelIdle: () => void
-    if (typeof idleWindow.requestIdleCallback === 'function') {
-      const idleId = idleWindow.requestIdleCallback(
-        () => {
-          void enableTilt()
-        },
-        { timeout: 1800 }
-      )
-      cancelIdle = () => idleWindow.cancelIdleCallback?.(idleId)
-    } else {
-      const timeoutId = window.setTimeout(() => {
-        void enableTilt()
-      }, 400)
-      cancelIdle = () => window.clearTimeout(timeoutId)
-    }
-
     return () => {
       cancelled = true
-      cancelIdle()
       brandEl.removeEventListener('pointerenter', handleFirstEnter)
       cleanupTilt?.()
     }

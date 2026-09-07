@@ -2,9 +2,32 @@
 @import "@fontsource/plus-jakarta-sans/latin-400.css";
 @import "tailwindcss";
 
+/*
+  Metric-matched local fallbacks so font-display:swap does not shove the
+  hero headline. size-adjust from measured glyph widths on production fonts
+  (Syne 800 / Plus Jakarta 400 vs Arial at 52px).
+*/
+@font-face {
+  font-family: "Syne Fallback";
+  src: local("Arial");
+  size-adjust: 171.61%;
+  ascent-override: 90%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Jakarta Fallback";
+  src: local("Arial");
+  size-adjust: 104.55%;
+  ascent-override: 95%;
+  descent-override: 22%;
+  line-gap-override: 0%;
+}
+
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Syne", "Plus Jakarta Sans", sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Jakarta Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", "Syne Fallback", "Plus Jakarta Sans", "Jakarta Fallback", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 

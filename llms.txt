@@ -3,14 +3,14 @@
 > Senior developer helping agencies and product teams turn approved designs into fast, maintainable, and reliable production websites.
 
 ## Overview
-- **Name**: Dmitry Bashkatov
-- **Title**: Senior WordPress & Shopify Developer
-- **Website**: https://dbaik.github.io
-- **Email**: dbashkatoff@gmail.com
-- **LinkedIn**: https://www.linkedin.com/in/dbashkatoff/
-- **GitHub**: https://github.com/dbaik
-- **Experience**: 15+ years delivering production websites for agencies and direct clients.
-- **Availability**: Available for B2B and contract engagements. Usually replies within 24 hours.
+- Name: Dmitry Bashkatov
+- Title: Senior WordPress & Shopify Developer
+- Website: [https://dbaik.github.io](https://dbaik.github.io)
+- Email: [dbashkatoff@gmail.com](mailto:dbashkatoff@gmail.com)
+- LinkedIn: [linkedin.com/in/dbashkatoff](https://www.linkedin.com/in/dbashkatoff/)
+- GitHub: [github.com/dbaik](https://github.com/dbaik)
+- Experience: 15+ years delivering production websites for agencies and direct clients.
+- Availability: Available for B2B and contract engagements. Usually replies within 24 hours.
 
 ## Primary Services
 1. **Custom WordPress Development**:
@@ -24,13 +24,21 @@
    - Product and collection templates with custom variants
    - Specialized quote, request, or artwork upload workflows
 3. **Frontend & Performance Engineering**:
-   - Core Web Vitals optimization and layout stability (CLS 0)
+   - Core Web Vitals optimization and layout stability
    - Accessibility-focused implementation (WCAG compliant)
    - Technical SEO and analytics integration (GA4, GTM)
 
 ## Selected Case Studies
-- **WWF Canada** (wwf.ca): Accessible WordPress architecture for content-heavy conservation campaigns, species indexes, and bilingual donation flows.
-- **MVP Visuals** (mvpvisuals.com): Custom Shopify storefront with artwork upload workflows, request-a-quote flows, and merchant-editable Liquid sections.
-- **Bopper Media** (boppermedia.com): Custom WordPress theme with Gutenberg blocks, dark/light theme switching, and subtle micro-interactions.
-- **The Energy Coalition** (energycoalition.org): Custom WordPress site with ACF, Polylang multilingual publishing, and Mailchimp integration.
-- **11-nil** (11-nil.com): Shopify Liquid store with product variant merchandising and responsive design.
+- [WWF Canada](https://wwf.ca): Accessible WordPress architecture for content-heavy conservation campaigns, species indexes, and bilingual donation flows.
+- [MVP Visuals](https://mvpvisuals.com): Custom Shopify storefront with artwork upload workflows, request-a-quote flows, and merchant-editable Liquid sections.
+- [Bopper Media](https://boppermedia.com): Custom WordPress theme with Gutenberg blocks, dark/light theme switching, and subtle micro-interactions.
+- [The Energy Coalition](https://energycoalition.org): Custom WordPress site with ACF, Polylang multilingual publishing, and Mailchimp integration.
+- [11-nil](https://11-nil.com): Shopify Liquid store with product variant merchandising and responsive design.
+
+## Site Map
+- [Home / Offer](https://dbaik.github.io/#hero): Positioning and primary CTA
+- [Work](https://dbaik.github.io/#featured-work): Selected case studies
+- [Services](https://dbaik.github.io/#services): WordPress, Shopify, and frontend offers
+- [Why Me](https://dbaik.github.io/#why-me): Delivery approach
+- [Experience](https://dbaik.github.io/#experience): Career timeline
+- [Contact](https://dbaik.github.io/#contact): Project inquiry form

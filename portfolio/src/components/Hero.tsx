@@ -180,18 +180,25 @@ export default function Hero() {
           </div>
 
           <div className="hidden w-full min-w-0 justify-center overflow-visible px-2 py-10 max-lg:h-0 max-lg:min-h-0 max-lg:p-0 max-lg:overflow-hidden lg:col-span-6 lg:flex" style={{ perspective: '1100px' }}>
+            {/*
+              Reserve the ASCII portrait box before the canvas mounts so the
+              lg+ hero column does not shift when matchMedia flips isDesktop.
+              Aspect matches AsciiArtCanvas tall factor (1.06) at desktop.
+            */}
             <div
               ref={portraitRef}
-              className="origin-center w-full max-w-[33rem] overflow-visible"
+              className="origin-center relative w-full max-w-[33rem] overflow-visible aspect-[100/106]"
               style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
             >
-              {isDesktop && (
-                <AsciiArtCanvas
-                  src="/hero-portrait.svg"
-                  label="ASCII portrait of Dmitry Bashkatov"
-                  followRootRef={heroRef}
-                />
-              )}
+              {isDesktop ? (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <AsciiArtCanvas
+                    src="/hero-portrait.svg"
+                    label="ASCII portrait of Dmitry Bashkatov"
+                    followRootRef={heroRef}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
